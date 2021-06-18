@@ -122,7 +122,7 @@ if(this.state.isSoundActive){
         });
       } else {
         this.playSound("stop");
-        startRecording($("#resultBox").val(), sampleRate, speciality, language);
+        startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
         toast("Recording Audio", {
           position: "top-right",
           autoClose: 2000,

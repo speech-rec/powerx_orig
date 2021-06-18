@@ -30,7 +30,7 @@ class SettingPage extends React.Component{
 
         this.setState({
             sampleRate: sampleRate,
-            language: language,
+            language: language.split("\n")[0],
             speciality: speciality,
             isSoundActive: isSoundActive
         });

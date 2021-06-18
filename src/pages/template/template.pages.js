@@ -112,7 +112,7 @@ playSound = (type) => {
         });
       } else {
         this.playSound("stop");
-        startRecording($("#resultBox").val(), sampleRate, speciality, language);
+        startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
         toast("Recording Audio", {
           position: "top-right",
           autoClose: 2000,
@@ -461,7 +461,7 @@ playSound = (type) => {
             <div className="button1" hidden={this.state.isRecording ? false : true} onClick={this.saveRecording}>
               <div className="customIcon">
                 {/* <FontAwesomeIcon icon={faCheck} /> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>Submit</p>
+                <p style={{fontWeight:"bold", color: "#4C5470"}}>Save</p>
               </div>
             </div>
           </div>
@@ -496,7 +496,7 @@ playSound = (type) => {
                 />
 
                 <button onClick={this.sendMail} className="button">
-                  SUBMIT
+                  Save
                 </button>
               </form>
             </div>
