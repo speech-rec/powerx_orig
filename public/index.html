@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link rel="icon" href="./voice-search.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4C5470" />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+        
+    <meta name="description" content="PWA created for notes dictation"/>
+    <link rel="apple-touch-icon" href="./voice-search192.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>ALPHA NOTES</title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Source Sans Pro', sans-serif;
+        background-color: #E7E9EF;
+      }
+      .navbar {
+        height: 50px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+        background-color: #fff;
+        color: #4C5470;
+        align-items: flex-start;
+        text-align: left;
+      }
+      .loader {
+        
+        border: 2vw solid white;
+        border-radius: 100%;
+        border-top: 2vw solid #4C5470;
+        width: 8vw;
+        height: 8vw;
+        -webkit-animation: spin 1s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+        margin: auto;
+        margin-top: 30vh;
+      }
+      .noscript{
+        border-radius: 5px;
+        width: 300px;
+        height: 100px;
+        padding: 3px;
+        background-color: white;
+        color: #4C5470;
+        text-align: center;
+        top: 50%;
+        margin-left: 40vw;
+      }
+      .offline {
+        border-radius: 5px;
+        width: 300px;
+        height: auto;
+        padding: 3px;
+        background-color: white;
+        color: #4C5470;
+        text-align: center;
+        margin: auto;
+      }
+      .title{
+        color: #4C5470;
+      }
+      
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="navbar">
+        <h3 class="title">ALPHA NOTES</h3>
+      </div>
+      <div class="loader" id="loader"></div>
+      <div class="offline" id="offline" hidden>
+        Oops! seem to be offline.
+      </div>
+      <noscript class="noscript">You need to enable JavaScript to run this app.</noscript>
+      </div>
+      
+    <script>
+      if(window?.navigator?.onLine){
+        document.getElementById('loader').hidden = false;
+        document.getElementById('offline').hidden = true;
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('worker.js').then(function(registration) {
+            console.log('Worker registration successful', registration.scope);
+          }, function(err) {
+            console.log('Worker registration failed', err);
+          }).catch(function(err) {
+            console.log(err);
+          });
+        });
+      } else {
+        console.log('Service Worker is not supported by browser.');
+      }
+      }else{
+        document.getElementById('loader').hidden = true;
+        document.getElementById('offline').hidden = false;
+      }
+     
+
+    </script>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>

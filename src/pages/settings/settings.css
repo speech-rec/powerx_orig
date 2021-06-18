@@ -1,0 +1,209 @@
+
+
+  
+  .container{
+    width: 100%;
+  
+    
+  }
+ 
+  p{
+    
+    padding: 0px;
+    font-size: 18px !important;
+    font-weight: bold;
+    color:#464646;
+    margin-bottom: 5px;
+    margin-right: 2% !important;
+  }
+  
+.toggleDiv{
+  border-radius: 20px;
+  padding: 18px;
+  margin: 10px 35px;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  /* border: 2px;
+  outline: none;
+  text-align: center;
+  box-shadow: 0 0 3px 0 rgb(0 0 0 / 30%);
+  background-color: #ADB4C7; */
+}
+.button {
+    
+    color:#fff;
+    background-color: #0080FF;
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    width: 85%;
+    border: none;
+    outline: none;
+  }
+ 
+ 
+  .signup{
+    color: #0080FF;
+    text-decoration: none;
+  }
+  ::placeholder{
+    color: white;
+  }
+  
+    
+  p{
+    margin: 0px;
+    padding: 0px;
+    font-size: small;
+    color:#464646;
+    margin-bottom: 5px;
+  }
+  @media (min-width:280px)  { /* smartphones, iPhone, portrait 480x320 phones */ 
+  
+    .login-form ,.Signin-form{
+  
+  
+        width: 85%;
+        border-radius: 20px;
+        background: #fff;
+         padding: 2%;
+        /* margin: 8% auto 0; */
+        text-align: center;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+     
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+       
+       
+     
+    }
+  
+  }
+  @media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ 
+  
+    .login-form ,.Signin-form{
+  
+  
+        width: 60%;
+        border-radius: 20px;
+        background: #fff;
+         padding: 2%;
+        /* margin: 8% auto 0; */
+        text-align: center;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+     
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+       
+       
+     
+    }
+  }
+  @media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ 
+  
+    .login-form ,.Signin-form{
+  
+  
+        width: 60%;
+        border-radius: 20px;
+        background: #fff;
+         padding: 2%;
+        /* margin: 8% auto 0; */
+        text-align: center;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+     
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+       
+       
+     
+    }
+  
+  }
+  @media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ 
+  
+  
+    .login-form ,.Signin-form{
+  
+  
+        width: 60%;
+        border-radius: 20px;
+        background: #fff;
+         padding: 2%;
+        /* margin: 8% auto 0; */
+        text-align: center;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+     
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+       
+       
+     
+    }
+  
+  }
+  @media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ 
+  
+    .login-form ,.Signin-form{
+  
+  
+        width: 35%;
+        border-radius: 20px;
+        background: #fff;
+         padding: 2%;
+        /* margin: 8% auto 0; */
+        text-align: center;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+     
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+       
+       
+     
+    }
+  
+  }
+  @media (min-width:1281px) { /* hi-res laptops and desktops */ 
+  
+  
+    .login-form ,.Signin-form{
+  
+  
+        width: 35%;
+        border-radius: 20px;
+        background: #fff;
+         padding: 2%;
+        /* margin: 8% auto 0; */
+        text-align: center;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+     
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+       
+       
+     
+    }
+  
+  }
+  

@@ -1,0 +1,31 @@
+{
+  "short_name": "Alpha Notes",
+  "name": "ALPHA NOTES",
+  "icons": [
+    {
+      "src": "voice-search.ico",
+      "sizes": "128x128",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "voice-search192.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "voice-search512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "maskable_icon.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "fullscreen",
+  "theme_color": "#4C5470",
+  "background_color": "#ffffff"
+}
