@@ -28,12 +28,13 @@ let type = "DICTATION";
 let rec;
 var prevTranscript = ""
 var audioChunks = [];
+var recTime = 0.0;
 // check to see if the browser allows mic access
 if (!window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
     // Use our helper method to show an error on the page
     showError('We support the latest versions of Chrome, Firefox, Safari, and Edge. Update your browser and try your request again.');
     toast("No Audio recording device found.", {
-        position: "bottom-right",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -41,7 +42,6 @@ if (!window.navigator && window.navigator.mediaDevices && window.navigator.media
         draggable: false,
         progress: undefined,
         type: 'error'
-        
         });
     // maintain enabled/distabled state for the start and stop buttons
     
@@ -70,7 +70,7 @@ try{
     .then(streamAudioToWebSocket) 
     .catch(function (error) {
         toast('Oops! something went wrong.', {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -87,7 +87,7 @@ try{
 
 }catch(e){
     toast(e.message, {
-        position: "bottom-right",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -109,7 +109,7 @@ export const createAudio = (recordingName, recordingText, userId, successCallbac
         // recordedAudio.controls = true;
         // recordedAudio.autoplay = true;
         // recordedAudio.hidden = false;
-        console.log(blob);
+        //console.log(blob);
         var formData = new FormData()
         formData.append('file', blob);
         formData.append("userId", userId);
@@ -123,7 +123,7 @@ export const createAudio = (recordingName, recordingText, userId, successCallbac
     processData: false,
     contentType: false,
     success: function(data) {
-            console.log("response: ", JSON.parse(data));
+            //console.log("response: ", JSON.parse(data));
             audioChunks = [];
             successCallback(JSON.parse(data));
     }
@@ -158,7 +158,7 @@ export const stopRecording = () => {
         }
     }catch(e){
         toast(e.message, {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -254,7 +254,7 @@ function wireSocketEvents() {
             else {
                 transcribeException = true;
                 toast(messageBody.Message, {
-                    position: "bottom-right",
+                    position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -273,7 +273,7 @@ function wireSocketEvents() {
         socket.onerror = function () {
             socketError = true;
             toast('WebSocket connection error. Try again.', {
-                position: "bottom-right",
+                position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -301,7 +301,7 @@ function wireSocketEvents() {
         };
     }catch(e){
         toast(e.message, {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -346,9 +346,12 @@ let handleEventStreamMessage = function (messageJson) {
                 
                 // if this transcript segment is final, add it to the overall transcription
                 //return;
+                //console.log(results[0]);
+                //console.log(results[0].Alternatives[0]);
                 if (!results[0].IsPartial) {
                     //scroll the textarea down
-                    
+                    recTime += results[0].EndTime - results[0].StartTime;
+                    console.log("recTime: ", recTime);
                     $('#resultBox').val($('#resultBox').val() + transcript + " ");
                     $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
                     // transcription += transcript + "\n";
@@ -362,7 +365,7 @@ let handleEventStreamMessage = function (messageJson) {
     }
 }catch(e){
     toast(e.message, {
-        position: "bottom-right",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -425,7 +428,7 @@ export function convertAudioToBinaryMessage(audioChunk) {
     return binary;
     }catch(e){
         toast(e.message, {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,

@@ -48,7 +48,8 @@ class Recorder extends React.Component {
       isSaved: false,
       toggleRecording: false,
       showKeyboard: false,
-      isSoundActive: false
+      isSoundActive: false,
+      isProcessing: false
     };
   }
 
@@ -89,28 +90,78 @@ if(this.state.isSoundActive){
   };
   handleClick = (event) => {
     event.preventDefault();
-    console.log(this.props.awsSetting);
-    const { sampleRate, speciality } = this.props.awsSetting;
-    const language = this.props.awsSetting.language;
-    console.log(language);
-    try {
-      
-      this.setState({ toggleRecording: !this.state.toggleRecording,
-      });
-      if(!this.state.isRecording)
-        this.setState({isRecording: true});
-      if (this.state.toggleRecording) {
-        console.log($("#resultBox").val());
-        if (!!$("#resultBox").val()) {
+    if(!this.state.isProcessing){
+      console.log(this.props.awsSetting);
+      const { sampleRate, speciality } = this.props.awsSetting;
+      const language = this.props.awsSetting.language;
+      console.log(language);
+      try {
+        
+        this.setState({ toggleRecording: !this.state.toggleRecording,
+        });
+        if(!this.state.isRecording)
+          this.setState({isRecording: true});
+        if (this.state.toggleRecording) {
+          console.log($("#resultBox").val());
+          this.playSound("start");
+          toast("Processing", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            type: "info",
+          });
+          // if (!!$("#resultBox").val()) {
+          //   this.setState({
+          //     recordingText: $("#resultBox").val(),
+          //   });
+          // }
           this.setState({
-            recordingText: $("#resultBox").val(),
+            isProcessing: true,
           }, () => {
-            
+            setTimeout(() => {
+              stopRecording();
+              setTimeout(() => {
+                this.setState({
+                  isProcessing: false,
+                  recordingText: $("#resultBox").val()
+                }, () => {
+                  //console.log(this.state.recordingText);
+                });
+                
+              }, 1000);
+            }, 5000);
+          });
+         
+          // toast("Stopped Recording", {
+          //   position: "top-right",
+          //   autoClose: 2000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: false,
+          //   draggable: false,
+          //   progress: undefined,
+          //   type: "info",
+          // });
+        } else {
+          this.playSound("stop");
+          startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
+          toast("Recording Audio", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            type: "info",
           });
         }
-        this.playSound("start");
-        stopRecording();
-        toast("Stopped Recording", {
+      } catch (e) {
+        toast("Oops! something went wrong.", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -118,24 +169,12 @@ if(this.state.isSoundActive){
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          type: "info",
+          type: "error",
         });
-      } else {
-        this.playSound("stop");
-        startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
-        toast("Recording Audio", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          type: "info",
-        });
+        console.log(e.message);
       }
-    } catch (e) {
-      toast("Oops! something went wrong.", {
+    }else{
+      toast("Processing...", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -143,10 +182,10 @@ if(this.state.isSoundActive){
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        type: "error",
+        type: "info",
       });
-      console.log(e.message);
     }
+    
   };
 
   cancelRecording = event => {
@@ -155,40 +194,71 @@ if(this.state.isSoundActive){
     if(this.state.toggleRecording){
       this.playSound("start");
     }
-    this.setState({ isRecording: false, recordingText: '', toggleRecording: false });
-    
     stopRecording();
+    this.setState({ isRecording: false, recordingText: '', toggleRecording: false, isProcessing: false });
+    
+    
+    
   }
 
   saveRecording = event => {
     if(this.state.toggleRecording){
       this.playSound("start");
     }
-    stopRecording();
-    
+    toast("Processing...", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      type: "info",
+    });
     this.setState({
-        recordingText: $("#resultBox").val(),
-        toggleRecording: false,
-        isRecording: false
-      }, () => {
-        const {recordingText} = this.state;
-       
-        if(!!recordingText){
-          this.setState({ showPopUp: true});
-            return;
-        }else{
-          toast("Kindly record some text before saving it.", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              type: "error",
-            });
-        }
-      });
+      isProcessing: true
+    }, () => {
+      setTimeout(() => {
+        stopRecording();
+        this.setState({
+          recordingText: $("#resultBox").val(),
+          toggleRecording: false,
+          isRecording: false
+        }, () => {
+          const {recordingText} = this.state;
+         
+          if(!!recordingText){
+            this.setState({ showPopUp: true, isProcessing: false});
+              return;
+          }else{
+            toast("Kindly record some text before saving it.", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                type: "error",
+              });
+              setTimeout(() => {
+                this.setState({
+                  isProcessing: false
+                });
+              }, 1000);
+          }
+        });
+      }, 5000);
+     
+    });
+    // setTimeout(() => {
+      
+    // }, 5000);
+    
+      
+    
+    
+    
       
       
     
@@ -281,7 +351,7 @@ if(this.state.isSoundActive){
         const { id } = this.props.currentUser;
         createAudio(recordingName, recordingText, id, (response) => {
           var result = response;
-          console.log(result);
+          //console.log(result);
         if (result.type == "error") {
           
             toast(result.text, {
@@ -295,7 +365,7 @@ if(this.state.isSoundActive){
               type: "error",
             });
           } else {
-            console.log(result.text);
+            //console.log(result.text);
             toast(result.text, {
               position: "top-right",
               autoClose: 3000,
@@ -551,7 +621,7 @@ if(this.state.isSoundActive){
                 <p style={{fontWeight:"bold", color: "#4C5470"}}>Cancel</p>
               </div>
             </div>
-            <div className="button2" onClick={this.handleClick}>
+            <div className="button2" onClick={this.handleClick} style={this.state.isProcessing ? {background: "grey", cursor: "no-drop"} : {background: "#fff", cursor: "pointer"}}>
               <div className="icon2">
                 <FontAwesomeIcon
                   icon={this.state.toggleRecording ? faMicrophoneSlash : faMicrophone}
