@@ -15,7 +15,7 @@ import CustomButton from "../../components/custom-button/custom-button.component
 import {Languages} from '../../aws/constants';
 import startFile from '../../sounds/start.wav';
 import stopFile from '../../sounds/stop.wav';
-import { startRecording, stopRecording } from "../../aws/main2";
+import { startRecording, stopRecording } from "../../aws/main";
 import Popup from "reactjs-popup";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,7 +41,8 @@ class Template extends React.Component {
       isRecording: false,
       isSaved: false,
       toggleRecording: false,
-      isSoundActive: false
+      isSoundActive: false,
+      isProcessing: false
     };
   }
 
@@ -76,44 +77,81 @@ playSound = (type) => {
     sound.autoplay = true;
   }
    }
-  handleClick = (event) => {
+   handleClick = (event) => {
     event.preventDefault();
-    console.log(this.props.awsSetting);
-    const { sampleRate, speciality } = this.props.awsSetting;
-    const language = this.props.awsSetting.language;
-    console.log(language);
-    try {
-      
-      this.setState({ 
-        toggleRecording: !this.state.toggleRecording
-      });
-      if(!this.state.isRecording)
-        this.setState({isRecording: true});
-      if (this.state.toggleRecording) {
-        console.log($("#resultBox").val());
-        if (!!$("#resultBox").val()) {
+    if(!this.state.isProcessing){
+      console.log(this.props.awsSetting);
+      const { sampleRate, speciality } = this.props.awsSetting;
+      const language = this.props.awsSetting.language;
+      console.log(language);
+      try {
+        
+        this.setState({ toggleRecording: !this.state.toggleRecording,
+        });
+        if(!this.state.isRecording)
+          this.setState({isRecording: true});
+        if (this.state.toggleRecording) {
+          console.log($("#resultBox").val());
+          this.playSound("start");
+          toast("Processing", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            type: "info",
+          });
+          // if (!!$("#resultBox").val()) {
+          //   this.setState({
+          //     recordingText: $("#resultBox").val(),
+          //   });
+          // }
           this.setState({
-            templateText: $("#resultBox").val(),
+            isProcessing: true,
           }, () => {
-            
+            setTimeout(() => {
+              stopRecording();
+              setTimeout(() => {
+                console.log("....*", $("#resultBox").val());
+                this.setState({
+                  isProcessing: false,
+                  recordingText: $("#resultBox").val()
+                }, () => {
+                  console.log(this.state.recordingText);
+                });
+                
+              }, 1000);
+            }, 5000);
+          });
+         
+          // toast("Stopped Recording", {
+          //   position: "top-right",
+          //   autoClose: 2000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: false,
+          //   draggable: false,
+          //   progress: undefined,
+          //   type: "info",
+          // });
+        } else {
+          this.playSound("stop");
+          startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
+          toast("Recording Audio", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            type: "info",
           });
         }
-        this.playSound("start");
-        stopRecording();
-        toast("Stopped Recording", {
-          position: "top-right-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          type: "info",
-        });
-      } else {
-        this.playSound("stop");
-        startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
-        toast("Recording Audio", {
+      } catch (e) {
+        toast("Oops! something went wrong.", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -121,11 +159,12 @@ playSound = (type) => {
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          type: "info",
+          type: "error",
         });
+        console.log(e.message);
       }
-    } catch (e) {
-      toast("Oops! something went wrong.", {
+    }else{
+      toast("Processing...", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -133,10 +172,10 @@ playSound = (type) => {
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        type: "error",
+        type: "info",
       });
-      console.log(e.message);
     }
+    
   };
 
   cancelRecording = event => {
@@ -198,7 +237,7 @@ playSound = (type) => {
     
   }
   handleChange = (event) => {
-    // console.log('handle change');
+    console.log('handle change');
     event.preventDefault();
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -221,22 +260,94 @@ playSound = (type) => {
       const { templateText, templateName } = this.state;
 
       if (!!templateName && !!templateText) {
-        toast("Saving template…", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          type: "info",
-        });
-        const { id } = this.props.currentUser;
-        axios.get(`${url}/addTemplate/${encodeURIComponent(templateName)}/${encodeURIComponent(templateText)}/${id}`).then((response) =>  {
-        var result = response.data;  
-        if (result.type == "error") {
-          
-            toast(result.text, {
+        this.setState({
+          isProcessing: true
+        }, () => {
+          toast("Saving template…", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            type: "info",
+          });
+          const { id } = this.props.currentUser;
+          axios.get(`${url}/addTemplate/${encodeURIComponent(templateName)}/${encodeURIComponent(templateText)}/${id}`).then((response) =>  {
+          var result = response.data;  
+          if (result.type == "error") {
+              
+              toast(result.text, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                type: "error",
+              });
+            } else {
+              try{
+                  console.log('yes');
+                  fetch(`/GetTemplatesByUserId/${id}`).then(res => res.json()).then((result) => {
+                    console.log(result);
+                        const {setTemplates} = this.props;
+                        setTemplates(result);
+                        toast(result.text, {
+                          position: "top-right",
+                          autoClose: 3000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: false,
+                          draggable: false,
+                          progress: undefined,
+                          type: "success",
+                        });
+                        this.setState({
+                          templateName: "",
+                          templateText: "",
+                          isRecording: false
+                        });
+                        
+                    }).catch((e) => {
+                        
+                      toast("Oops! Somethig went wrong while updating templates. probably you need to re login to get updated templates.", {
+                          position: "top-right",
+                          autoClose: 2000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: false,
+                          draggable: false,
+                          progress: undefined,
+                          type: "error",
+                        });
+                    });
+                }
+                catch(e){
+                  toast("Oops! Somethig went wrong while updating templates. probably you need to re login to get updated templates.", {
+                      position: "top-right",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: false,
+                      draggable: false,
+                      progress: undefined,
+                      type: "error",
+                    });
+                }
+              
+            }
+            this.setState({
+              isProcessing: false
+            });
+          }).catch((error) => {
+            this.setState({
+              isProcessing: false
+            });
+            console.log(error);
+            toast(error.message, {
               position: "top-right",
               autoClose: 2000,
               hideProgressBar: false,
@@ -246,130 +357,68 @@ playSound = (type) => {
               progress: undefined,
               type: "error",
             });
-          } else {
-            try{
-                console.log('yes');
-                fetch(`/GetTemplatesByUserId/${id}`).then(res => res.json()).then((result) => {
-                  console.log(result);
-                      const {setTemplates} = this.props;
-                      setTemplates(result);
-                      toast(result.text, {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: false,
-                        progress: undefined,
-                        type: "success",
-                      });
-                      this.setState({
-                        templateName: "",
-                        templateText: "",
-                        isRecording: false
-                      });
-                      
-                  }).catch((e) => {
-                      
-                    toast("Oops! Somethig went wrong while updating templates. probably you need to re login to get updated templates.", {
-                        position: "top-right",
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: false,
-                        progress: undefined,
-                        type: "error",
-                      });
-                  });
-              }
-              catch(e){
-                toast("Oops! Somethig went wrong while updating templates. probably you need to re login to get updated templates.", {
-                    position: "top-right",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: false,
-                    progress: undefined,
-                    type: "error",
-                  });
-              }
-            
-          }
+          //   this.setState({
+          //     templateName: "",
+          //     templateText: "",
+          //     isRecording: false
+          //   });
+          });;
           
-        }).catch((error) => {
-          console.log(error);
-          toast(error.message, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            type: "error",
-          });
-        //   this.setState({
-        //     templateName: "",
-        //     templateText: "",
-        //     isRecording: false
-        //   });
-        });;
+          // fetch(`/sendmail/${encodeURIComponent(templateName)}/${encodeURIComponent(templateText)}/${id}`)
+          //   .then((res) => res.json())
+          //   .then((result) => {
+          //     if (result.type == "error") {
+          //       toast(result.text, {
+          //         position: "top-right",
+          //         autoClose: 2000,
+          //         hideProgressBar: false,
+          //         closeOnClick: true,
+          //         pauseOnHover: false,
+          //         draggable: false,
+          //         progress: undefined,
+          //         type: "error",
+          //       });
+          //     } else {
+          //       toast(result.text, {
+          //         position: "top-right",
+          //         autoClose: 3000,
+          //         hideProgressBar: false,
+          //         closeOnClick: true,
+          //         pauseOnHover: false,
+          //         draggable: false,
+          //         progress: undefined,
+          //         type: "success",
+          //       });
+          //     }
+          //     this.setState({
+          //       templateName: "",
+          //       templateText: "",
+          //     });
+          //   })
+          //   .catch((error) => {
+          //     console.log(error);
+          //     toast(error.message, {
+          //       position: "top-right",
+          //       autoClose: 2000,
+          //       hideProgressBar: false,
+          //       closeOnClick: true,
+          //       pauseOnHover: false,
+          //       draggable: false,
+          //       progress: undefined,
+          //       type: "error",
+          //     });
+          //     this.setState({
+          //       templateName: "",
+          //       templateText: "",
+          //     });
+          //   });
+          // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${this.props.currentUser.id}&name=${templateName}&text=${templateText}&email=${this.props.currentUser.email}`, headers).then(res => res.json()).then((result) => {
+          //     alert(result.text);
+          // }).catch((error) => {
+          //     console.log(error);
+          // });
+        });
         
-        // fetch(`/sendmail/${encodeURIComponent(templateName)}/${encodeURIComponent(templateText)}/${id}`)
-        //   .then((res) => res.json())
-        //   .then((result) => {
-        //     if (result.type == "error") {
-        //       toast(result.text, {
-        //         position: "top-right",
-        //         autoClose: 2000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: false,
-        //         draggable: false,
-        //         progress: undefined,
-        //         type: "error",
-        //       });
-        //     } else {
-        //       toast(result.text, {
-        //         position: "top-right",
-        //         autoClose: 3000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: false,
-        //         draggable: false,
-        //         progress: undefined,
-        //         type: "success",
-        //       });
-        //     }
-        //     this.setState({
-        //       templateName: "",
-        //       templateText: "",
-        //     });
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //     toast(error.message, {
-        //       position: "top-right",
-        //       autoClose: 2000,
-        //       hideProgressBar: false,
-        //       closeOnClick: true,
-        //       pauseOnHover: false,
-        //       draggable: false,
-        //       progress: undefined,
-        //       type: "error",
-        //     });
-        //     this.setState({
-        //       templateName: "",
-        //       templateText: "",
-        //     });
-        //   });
-        // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${this.props.currentUser.id}&name=${templateName}&text=${templateText}&email=${this.props.currentUser.email}`, headers).then(res => res.json()).then((result) => {
-        //     alert(result.text);
-        // }).catch((error) => {
-        //     console.log(error);
-        // });
       } else {
         toast("kindly provide name or record some audio", {
           position: "top-right",
@@ -438,7 +487,7 @@ playSound = (type) => {
           </div>
           <div className="flex-column-100">
           <ResultBox
-              value={this.state.templateText}
+              value={this.state.recordingText}
               handleChange={this.handleChange}
               name="templateText"
               id="resultBox"
@@ -451,7 +500,7 @@ playSound = (type) => {
                 <p style={{fontWeight:"bold", color: "#4C5470"}}>Cancel</p>
               </div>
             </div>
-            <div className="button2" onClick={this.handleClick}>
+            <div className="button2" onClick={this.handleClick} style={this.state.isProcessing ? {background: "grey", cursor: "no-drop"} : {background: "#fff", cursor: "pointer"}}>
               <div className="icon2">
                 <FontAwesomeIcon
                   icon={this.state.toggleRecording ? faMicrophoneSlash : faMicrophone}

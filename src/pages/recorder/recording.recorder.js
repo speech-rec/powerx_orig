@@ -125,6 +125,7 @@ if(this.state.isSoundActive){
             setTimeout(() => {
               stopRecording();
               setTimeout(() => {
+                console.log($("#resultBox").val());
                 this.setState({
                   isProcessing: false,
                   recordingText: $("#resultBox").val()

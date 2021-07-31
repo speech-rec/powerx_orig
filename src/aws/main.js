@@ -332,7 +332,7 @@ let handleEventStreamMessage = function (messageJson) {
              if(kw == undefined || kw == null){
                 //$('#resultBox').val(transcription + transcript + "\n");
                 
-                $('#resultBox').trigger("change");
+                //$('#resultBox').trigger("change");
                 console.log('transcript: ', transcript);
                 // console.log("previousTranscript:", prevTranscript);
                 // if(transcript != prevTranscript){
@@ -354,6 +354,7 @@ let handleEventStreamMessage = function (messageJson) {
                     console.log("recTime: ", recTime);
                     $('#resultBox').val($('#resultBox').val() + transcript + " ");
                     $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
+                   
                     // transcription += transcript + "\n";
                 }
                
