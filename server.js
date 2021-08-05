@@ -140,11 +140,11 @@ app.get('/register/:name/:email/:password', (req, res) => {
   
 });
 
-app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive', (req, res) => {
+app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive/:streamType', (req, res) => {
  
-  const {userId, language, speciality, sampleRate, isSoundActive} = req.params;
+  const {userId, language, speciality, sampleRate, isSoundActive, streamType} = req.params;
   var url = `${baseURL}/api/api.ashx?methodname=UpdateUserRecordingSettings&userId=${userId}&language=${language}
-  &speciality=${speciality}&sampleRate=${sampleRate}&isSoundActive=${isSoundActive}`;
+  &speciality=${speciality}&sampleRate=${sampleRate}&isSoundActive=${isSoundActive}&streamType=${streamType}`;
   //console.log(url);
   request(
     { url: url },
@@ -161,9 +161,9 @@ app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive
   
 });
 
-app.post('/sendmail/:recordingName/:recordingText/:userId', upload.any(), (req, res) => {
-  const {recordingName, recordingText, userId} = req.body;
-var url = `${baseURL}/api/api.ashx?methodname=sendmail&userId=${userId}&name=${recordingName}&text=${recordingText}`
+app.post('/sendmail/:recordingName/:recordingText/:userId/:recTime', upload.any(), (req, res) => {
+  const {recordingName, recordingText, userId, recTime} = req.body;
+var url = `${baseURL}/api/api.ashx?methodname=sendmail&userId=${userId}&name=${recordingName}&text=${recordingText}&recTime=${recTime}`
 let formData = req.body;
 let files = req.files;
 let path =  makeid(5) + req.params.userId + ".mp3";

@@ -92,7 +92,7 @@ if(this.state.isSoundActive){
     event.preventDefault();
     if(!this.state.isProcessing){
       console.log(this.props.awsSetting);
-      const { sampleRate, speciality } = this.props.awsSetting;
+      const { sampleRate, speciality, streamType } = this.props.awsSetting;
       const language = this.props.awsSetting.language;
       console.log(language);
       try {
@@ -102,7 +102,7 @@ if(this.state.isSoundActive){
         if(!this.state.isRecording)
           this.setState({isRecording: true});
         if (this.state.toggleRecording) {
-          console.log($("#resultBox").val());
+          console.log("stopping recording", $("#resultBox").val());
           this.playSound("start");
           toast("Processing", {
             position: "top-right",
@@ -114,11 +114,11 @@ if(this.state.isSoundActive){
             progress: undefined,
             type: "info",
           });
-          // if (!!$("#resultBox").val()) {
-          //   this.setState({
-          //     recordingText: $("#resultBox").val(),
-          //   });
-          // }
+          if (!!$("#resultBox").val()) {
+            this.setState({
+              recordingText: $("#resultBox").val(),
+            });
+          }
           this.setState({
             isProcessing: true,
           }, () => {
@@ -149,7 +149,7 @@ if(this.state.isSoundActive){
           // });
         } else {
           this.playSound("stop");
-          startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
+          startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0], streamType);
           toast("Recording Audio", {
             position: "top-right",
             autoClose: 2000,
@@ -277,9 +277,9 @@ if(this.state.isSoundActive){
         (template) => template.Id == value
       );
       if(selectedTemplate != null)
-        this.setState({ recordingText: selectedTemplate.TemplateText});
-      else
-      this.setState({ recordingText: '' });
+        this.setState({ recordingText: $("#resultBox").val() + " " + selectedTemplate.TemplateText});
+      // else
+      // this.setState({ recordingText: '' });
     }
   };
 

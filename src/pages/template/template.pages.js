@@ -81,7 +81,7 @@ playSound = (type) => {
     event.preventDefault();
     if(!this.state.isProcessing){
       console.log(this.props.awsSetting);
-      const { sampleRate, speciality } = this.props.awsSetting;
+      const { sampleRate, speciality, streamType } = this.props.awsSetting;
       const language = this.props.awsSetting.language;
       console.log(language);
       try {
@@ -138,7 +138,7 @@ playSound = (type) => {
           // });
         } else {
           this.playSound("stop");
-          startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0]);
+          startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0], streamType);
           toast("Recording Audio", {
             position: "top-right",
             autoClose: 2000,

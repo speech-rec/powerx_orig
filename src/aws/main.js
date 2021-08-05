@@ -26,7 +26,8 @@ let transcribeException = false;
 let specialty = "PRIMARYCARE";
 let type = "DICTATION";
 let rec;
-var prevTranscript = ""
+var prevTranscript = "";
+var streamType = "";
 var audioChunks = [];
 var recTime = 0.0;
 // check to see if the browser allows mic access
@@ -47,8 +48,9 @@ if (!window.navigator && window.navigator.mediaDevices && window.navigator.media
     
 }
 
-export const startRecording = (lastValue, sampleRate, inputSpecialty, language) => {
+export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType) => {
     console.log("started");
+
     transcription = lastValue;
 // $('#error').hide(); // hide any existing errors
 // toggleStartStop(true); // disable start and enable stop button
@@ -60,6 +62,7 @@ inputSampleRate = sampleRate;
 // type = inputType;
 specialty = inputSpecialty;
 languageCode = language;
+streamType = transcribeType;
 // first we get the microphone input from the browser (as a promise)...
 try{
     window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia({
@@ -115,9 +118,10 @@ export const createAudio = (recordingName, recordingText, userId, successCallbac
         formData.append("userId", userId);
         formData.append("recordingText", encodeURI(recordingText));
         formData.append("recordingName", recordingName);
+        formData.append("recTime", recTime);
   $.ajax({
     // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
-    url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0`,
+    url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
     type: "POST",
     data:formData,
     processData: false,
@@ -191,7 +195,7 @@ let streamAudioToWebSocket =  (userMediaStream) => {
     // Pre-signed URLs are a way to authenticate a request (or WebSocket connection, in this case)
     // via Query Parameters. Learn more: https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html
     let url = createPresignedUrl();
-    
+    console.log(url);
     // console.log(createPresignedUrl());
     //open up our WebSocket connection
     socket = new WebSocket(url);
@@ -461,7 +465,7 @@ function getAudioEventMessage(buffer) {
 }
 
 function createPresignedUrl() {
-    let endpoint = "transcribestreaming." + "us-east-1" + ".amazonaws.com:8443";
+    let endpoint =  "transcribestreaming." + "us-east-1" + ".amazonaws.com:8443";
     // fetch('/getCredentials').then(res => res.json()).then(result => {
     //    console.log(result);
     // });
@@ -469,7 +473,7 @@ function createPresignedUrl() {
     return v4.createPresignedURL(
         'GET',
         endpoint,
-        '/medical-stream-transcription-websocket',
+        '/' + streamType,
         'transcribe',
         crypto.createHash('sha256').update('', 'utf8').digest('hex'), {
             'key': process.env.REACT_APP_ACCESS_KEY,

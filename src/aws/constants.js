@@ -35,5 +35,9 @@ export const Languages = {
 };
 export const Specialities = ['PRIMARYCARE', 'CARDIOLOGY', 'NEUROLOGY', 'ONCOLOGY', 'RADIOLOGY', 'UROLOGY'];
 
-export const NoiseKW = ['Um', 'Uh', 'huh', 'Um,', 'Uh,', 'huh,'];
+export const NoiseKW = ['Um', 'Uh', 'huh', 'Um,', 'Uh,', 'huh,', 'Ah', 'ah'];
+export const StreamTypes = {
+    'Transcribe Streaming': 'stream-transcription-websocket',
+    'Medical Transcribe Streaming': 'medical-stream-transcription-websocket'
+};
 

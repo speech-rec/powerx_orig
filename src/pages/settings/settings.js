@@ -2,7 +2,7 @@ import React from 'react';
 import CustomDropDown from '../../components/customDropdown/dropdown.customDropdown';
 import CustomButton from '../../components/custom-button/custom-button.component';
 import ToggleButton from 'react-toggle-button';
-import {SampleRates, Languages, Specialities} from '../../aws/constants';
+import {SampleRates, Languages, Specialities, StreamTypes} from '../../aws/constants';
 import {connect} from 'react-redux';
 import {setSetting} from '../../redux/aws/aws.action';
 import {selectCurrentSetting} from '../../redux/aws/aws.selectors';
@@ -22,17 +22,26 @@ class SettingPage extends React.Component{
             sampleRate: '16000',
             language: 'en-US',
             speciality: 'PRIMARYCARE',
-            isSoundActive: false
+            streamType: 'stream-transcription-websocket',
+            isSoundActive: false,
+            isDisabled: false,
+            languages: []
         }
     }
     componentDidMount(){
-        const { sampleRate, language, speciality, isSoundActive } = this.props.awsSetting;
+        const { sampleRate, language, speciality, isSoundActive, streamType } = this.props.awsSetting;
 
         this.setState({
-            sampleRate: sampleRate,
-            language: language.split("\n")[0],
+            sampleRate: streamType == 'stream-transcription-websocket' ? sampleRate : 16000,
+            language: streamType == 'stream-transcription-websocket' ? language.split("\n")[0] : 'en-US',
             speciality: speciality,
-            isSoundActive: isSoundActive
+            isSoundActive: isSoundActive,
+            streamType: streamType,
+            languages: streamType == 'stream-transcription-websocket' ? Languages: {
+              'US English': 'en-US',
+              'British English': 'en-GB'
+            },
+            isDisabled: streamType == 'stream-transcription-websocket' ? false : true
         });
         console.log(language);
     }
@@ -40,15 +49,33 @@ class SettingPage extends React.Component{
         // console.log('handle change');
         const {value, name} = event.target;
         this.setState({[name]: value});
+        if(name == "streamType"){
+          if(value == "medical-stream-transcription-websocket"){
+            this.setState({
+              isDisabled: true,
+              sampleRate: 16000,
+              languages: {
+                'US English': 'en-US',
+                'British English': 'en-GB'
+              }
+            });
+          }else{
+            this.setState({
+              isDisabled: false,
+              sampleRate: 16000,
+              languages: Languages
+            });
+          }
+        }
         console.log(value);
        
     };
     handleClick = event => {
         const {setSetting, history} = this.props;
-        const {sampleRate, language, speciality, isSoundActive} = this.state;
+        const {sampleRate, language, speciality, isSoundActive, streamType} = this.state;
         const { id } = this.props.currentUser;
         try{
-            fetch(`/updateSetting/${id}/${language}/${speciality}/${sampleRate}/${isSoundActive}`).then(res => res.json()).then((result) => {
+            fetch(`/updateSetting/${id}/${language}/${speciality}/${sampleRate}/${isSoundActive}/${streamType}`).then(res => res.json()).then((result) => {
                 console.log(result);
                 
                 const {setSetting} = this.props;
@@ -57,7 +84,8 @@ class SettingPage extends React.Component{
                             language: language,
                             speciality: speciality,
                             sampleRate: sampleRate ,
-                            isSoundActive: isSoundActive
+                            isSoundActive: isSoundActive,
+                            streamType: streamType
                         });
             }).catch((e) => {
                 toast('Oops! something went wrong.', {
@@ -92,7 +120,8 @@ class SettingPage extends React.Component{
             sampleRate: sampleRate,
             language: language,
             speciality: speciality,
-            isSoundActive: isSoundActive
+            isSoundActive: isSoundActive,
+            streamType: streamType
         });
         history.push('/dashboard');
 
@@ -113,9 +142,10 @@ class SettingPage extends React.Component{
           type="info"
         />
         <div className="Signin-form"> 
-        <CustomDropDown type='json' value={this.state.language} selectedSetting={this.state.language} options={Languages} name='language' handleChange={this.handleChange} />
-                    <CustomDropDown  type='array' value={this.state.speciality} selectedSetting={this.state.speciality} options={Specialities} name='speciality' handleChange={this.handleChange} />
-                    <CustomDropDown type='array' value={this.state.sampleRate} selectedSetting={this.state.sampleRate} options={SampleRates} name='sampleRate' handleChange={this.handleChange} />
+        <CustomDropDown type='json' value={this.state.streamType} disabled={false} selectedSetting={this.state.streamType} options={StreamTypes} name='streamType' handleChange={this.handleChange} />
+        <CustomDropDown type='json' value={this.state.language} disabled={false} selectedSetting={this.state.language} options={this.state.languages} name='language' handleChange={this.handleChange} />
+                    <CustomDropDown  type='array' value={this.state.speciality} disabled={false} selectedSetting={this.state.speciality} options={Specialities} name='speciality' handleChange={this.handleChange} />
+                    <CustomDropDown type='array' value={this.state.sampleRate} disabled={this.state.isDisabled} selectedSetting={this.state.sampleRate} options={SampleRates} name='sampleRate' handleChange={this.handleChange} />
                   <div className="toggleDiv">
                   <p>Recording Beep Sound</p>
                   <ToggleButton
