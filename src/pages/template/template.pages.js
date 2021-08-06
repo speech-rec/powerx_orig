@@ -112,17 +112,13 @@ playSound = (type) => {
             isProcessing: true,
           }, () => {
             setTimeout(() => {
-              stopRecording();
-              setTimeout(() => {
-                console.log("....*", $("#resultBox").val());
+              stopRecording(() => {
                 this.setState({
-                  isProcessing: false,
-                  recordingText: $("#resultBox").val()
+                  isProcessing: false
                 }, () => {
-                  console.log(this.state.recordingText);
+                  console.log(this.state.templateText);
                 });
-                
-              }, 1000);
+              });
             }, 5000);
           });
          
@@ -138,7 +134,7 @@ playSound = (type) => {
           // });
         } else {
           this.playSound("stop");
-          startRecording($("#resultBox").val(), sampleRate, speciality, language.split("\n")[0], streamType);
+          startRecording(this.state.templateText, sampleRate, speciality, language.split("\n")[0], streamType, this.updateTextState);
           toast("Recording Audio", {
             position: "top-right",
             autoClose: 2000,
@@ -184,53 +180,67 @@ playSound = (type) => {
     if(this.state.toggleRecording){
       this.playSound("start");
     }
-    this.setState({ isRecording: false, templateText: '', toggleRecording: false });
+    
    
-    stopRecording();
+    stopRecording(() => {
+      this.setState({ isRecording: false, templateText: '', toggleRecording: false, isProcessing: false, templateName: '' });
+    });
   }
-
+  updateTextState = (text, recTime) => {
+    this.setState({
+      templateText: this.state.templateText + text
+    });
+  }
   saveRecording = event => {
     if(this.state.toggleRecording){
       this.playSound("start");
     }
-    stopRecording();
     this.setState({
-        templateText: $("#resultBox").val(),
-        toggleRecording: false,
-
-      }, () => {
-        const {templateText, templateName} = this.state;
-       
-        if(!(!!templateText)){
-          
-       
-          toast("Kindly record some text before saving it.", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              type: "error",
-            });
-            return;
-        }
-        if(!(!!templateName)){
-            toast("Kindly Provide templateName.", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                type: "error",
-              });
-              return;
-        }
-        this.SaveTemplate(event);
-      });
+      isProcessing: true
+    }, () => {
+      setTimeout(() => {
+        stopRecording(() => {
+          this.setState({
+            toggleRecording: false,
+    
+          }, () => {
+            const {templateText, templateName} = this.state;
+           
+            if(!(!!templateText)){
+              
+           
+              toast("Kindly record some text before saving it.", {
+                  position: "top-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: false,
+                  progress: undefined,
+                  type: "error",
+                });
+                return;
+            }
+            if(!(!!templateName)){
+                toast("Kindly Provide templateName.", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    type: "error",
+                  });
+                  return;
+            }
+            this.SaveTemplate(event);
+          });
+        });
+      }, 5000);
+    });
+    
+   
       
       
     
@@ -487,7 +497,7 @@ playSound = (type) => {
           </div>
           <div className="flex-column-100">
           <ResultBox
-              value={this.state.recordingText}
+              value={this.state.templateText}
               handleChange={this.handleChange}
               name="templateText"
               id="resultBox"

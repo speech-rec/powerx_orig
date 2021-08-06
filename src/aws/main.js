@@ -30,6 +30,9 @@ var prevTranscript = "";
 var streamType = "";
 var audioChunks = [];
 var recTime = 0.0;
+var callBackFunction = () => {
+
+};
 // check to see if the browser allows mic access
 if (!window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
     // Use our helper method to show an error on the page
@@ -48,7 +51,7 @@ if (!window.navigator && window.navigator.mediaDevices && window.navigator.media
     
 }
 
-export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType) => {
+export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, callBack) => {
     console.log("started");
 
     transcription = lastValue;
@@ -63,6 +66,7 @@ inputSampleRate = sampleRate;
 specialty = inputSpecialty;
 languageCode = language;
 streamType = transcribeType;
+callBackFunction = callBack;
 // first we get the microphone input from the browser (as a promise)...
 try{
     window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia({
@@ -104,7 +108,7 @@ try{
 }
 }
 
-export const createAudio = (recordingName, recordingText, userId, successCallback) => {
+export const createAudio = (recordingName, recordingText, userId, recordingTime, successCallback) => {
     if(rec.state == "inactive"){
         let blob = new Blob(audioChunks, {type: 'audio/mpeg-3'});
         // var recordedAudio = document.getElementById("recordedAudio");
@@ -118,7 +122,7 @@ export const createAudio = (recordingName, recordingText, userId, successCallbac
         formData.append("userId", userId);
         formData.append("recordingText", encodeURI(recordingText));
         formData.append("recordingName", recordingName);
-        formData.append("recTime", recTime);
+        formData.append("recTime", recordingTime);
   $.ajax({
     // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
     url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
@@ -136,7 +140,7 @@ export const createAudio = (recordingName, recordingText, userId, successCallbac
     }
 }
 
-export const stopRecording = () => {
+export const stopRecording = (callBack) => {
     
             // console.log("mic closed");
             // const audioContext = new AudioContext();
@@ -148,18 +152,23 @@ export const stopRecording = () => {
         {
             rec.stop();
         }
-    // socket.close();
         if (socket && socket.readyState ===  socket.OPEN) {
             
             micStream.stop();
+            console.log('micStream');
             socket.close();
+            callBack();
             console.log("closing method");
             // Send an empty frame so that Transcribe initiates a closure of the WebSocket after submitting all transcripts
             // let emptyMessage = getAudioEventMessage(Buffer.from(new Buffer.from([])));
             // let emptyBuffer = eventStreamMarshaller.marshall(emptyMessage);
             
             // socket.send(emptyBuffer);
+        }else{
+            callBack();
+            console.log('called back');
         }
+       
     }catch(e){
         toast(e.message, {
             position: "top-right",
@@ -219,7 +228,7 @@ let streamAudioToWebSocket =  (userMediaStream) => {
     )};
 
     // handle messages, errors, and close events
-    wireSocketEvents();
+    wireSocketEvents(callBackFunction);
     }catch(e){
         toast(e.message, {
             position: "bottom-right",
@@ -245,7 +254,7 @@ function setRegion() {
     region = "us-east-1";
 }
 
-function wireSocketEvents() {
+function wireSocketEvents(callBack) {
     // handle inbound messages from Amazon Transcribe
     try{
         socket.onmessage = function (message) {
@@ -253,7 +262,7 @@ function wireSocketEvents() {
             let messageWrapper = eventStreamMarshaller.unmarshall(Buffer(message.data));
             let messageBody = JSON.parse(String.fromCharCode.apply(String, messageWrapper.body));
             if (messageWrapper.headers[":message-type"].value === "event") {
-                handleEventStreamMessage(messageBody);
+                handleEventStreamMessage(messageBody, callBack);
             }
             else {
                 transcribeException = true;
@@ -319,7 +328,7 @@ function wireSocketEvents() {
     }
 }
 
-let handleEventStreamMessage = function (messageJson) {
+let handleEventStreamMessage = function (messageJson, callBack) {
     try{
         let results = messageJson.Transcript.Results;
 
@@ -356,8 +365,9 @@ let handleEventStreamMessage = function (messageJson) {
                     //scroll the textarea down
                     recTime += results[0].EndTime - results[0].StartTime;
                     console.log("recTime: ", recTime);
-                    $('#resultBox').val($('#resultBox').val() + transcript + " ");
+                    //$('#resultBox').val($('#resultBox').val() + transcript + " ");
                     $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
+                    callBack(transcript, results[0].EndTime - results[0].StartTime);
                    
                     // transcription += transcript + "\n";
                 }
