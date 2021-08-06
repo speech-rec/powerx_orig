@@ -25,6 +25,36 @@ class SignIn extends React.Component{
     
     handleSubmit = async e =>{
         e.preventDefault();
+        const {email, password} = this.state;
+        if(!(!!email)){
+            toast('Kindly Provide Email', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                type: 'error'
+                
+                });
+                return;
+        }
+        if(!(!!password)){
+            toast('Kindly Provide Password', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                type: 'error'
+                
+                });
+                return;
+        }
+        
         toast('Signing In', {
             position: "bottom-center",
             autoClose: 5000,
@@ -36,7 +66,7 @@ class SignIn extends React.Component{
             type: 'info'
             
             });
-        const {email, password} = this.state;
+        
         try{
             console.log(email, password);
             fetch(`/login/${email}/${password}`).then(res => res.json()).then((result) => {
