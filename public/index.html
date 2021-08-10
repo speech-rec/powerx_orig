@@ -100,19 +100,56 @@
       if(window?.navigator?.onLine){
         document.getElementById('loader').hidden = false;
         document.getElementById('offline').hidden = true;
-        if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('worker.js').then(function(registration) {
-            console.log('Worker registration successful', registration.scope);
-          }, function(err) {
-            console.log('Worker registration failed', err);
-          }).catch(function(err) {
-            console.log(err);
-          });
-        });
-      } else {
-        console.log('Service Worker is not supported by browser.');
-      }
+      //   if ('serviceWorker' in navigator) {
+      //   window.addEventListener('load', function() {
+      //     navigator.serviceWorker.register('worker.js').then(function(registration) {
+      //       console.log('Worker registration successful', registration.scope);
+
+     
+      //     }, function(err) {
+      //       console.log('Worker registration failed', err);
+      //     }).catch(function(err) {
+      //       console.log(err);
+      //     });
+      //   });
+      // } else {
+      //   console.log('Service Worker is not supported by browser.');
+      //}
+      if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('worker.js')
+      .then((reg) => {
+        console.log('Worker registration successful', reg.scope);
+        if (reg.waiting) {
+          // a new version is already waiting to take control
+          this.newWorker = reg.waiting;
+
+          /*
+            code omitted: displays a snackbar to the user to manually trigger
+            activation of the new SW. This will be done by calling skipWaiting()
+            then reloading the page
+          */
+        }
+
+        // handler for updates occuring while the app is running, either actively or in the background
+        reg.onupdatefound = () => {
+          this.newWorker = reg.installing;
+
+          this.newWorker.onstatechange = () => {
+            if (this.newWorker.state === 'installed') {
+              if (reg.active) {
+                // a version of the SW already has control over the app
+                console.log('New Updated worker installed');
+                /*
+                  same code omitted
+                */
+              } else {
+                // very first service worker registration, do nothing
+              }
+            }
+          };
+        };
+      });
+  }
       }else{
         document.getElementById('loader').hidden = true;
         document.getElementById('offline').hidden = false;
