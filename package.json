@@ -1,7 +1,6 @@
 {
   "name": "alpha-notes",
   "version": "0.1.0",
-  "homepage": "https://alphanotes.herokuapp.com/",
   "engines": {
     "node": "15.x"
   },
