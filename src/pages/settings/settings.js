@@ -9,6 +9,7 @@ import {selectCurrentSetting} from '../../redux/aws/aws.selectors';
 import {selectCurrentUser} from '../../redux/user/user.selectors';
 import { createStructuredSelector } from 'reselect';
 import {withRouter} from 'react-router-dom';
+import {log} from '../../aws/main';
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "react-toastify/dist/ReactToastify.css";
@@ -43,10 +44,10 @@ class SettingPage extends React.Component{
             },
             isDisabled: streamType == 'stream-transcription-websocket' ? false : true
         });
-        console.log(language);
+        log(language);
     }
     handleChange = event => {
-        // console.log('handle change');
+        // log('handle change');
         const {value, name} = event.target;
         this.setState({[name]: value});
         if(name == "streamType"){
@@ -67,7 +68,7 @@ class SettingPage extends React.Component{
             });
           }
         }
-        console.log(value);
+        log(value);
        
     };
     handleClick = event => {
@@ -76,7 +77,7 @@ class SettingPage extends React.Component{
         const { id } = this.props.currentUser;
         try{
             fetch(`/updateSetting/${id}/${language}/${speciality}/${sampleRate}/${isSoundActive}/${streamType}`).then(res => res.json()).then((result) => {
-                console.log(result);
+                log(result);
                 
                 const {setSetting} = this.props;
                 
@@ -99,7 +100,7 @@ class SettingPage extends React.Component{
                     type: 'error'
                     
                     });
-                console.log(e.message);
+                log(e.message);
             });
 
         }catch(error){
@@ -114,7 +115,7 @@ class SettingPage extends React.Component{
                 type: 'error'
                 
                 });
-            console.log('error while signup: ', error.message);
+            log('error while signup: ', error.message);
         }
         setSetting({
             sampleRate: sampleRate,

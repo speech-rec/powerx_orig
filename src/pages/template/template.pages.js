@@ -9,7 +9,7 @@ import { setSelectedTemplate } from "../../redux/template/template.action";
 import {setTemplates} from '../../redux/template/template.action';
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
-
+import {log} from '../../aws/main';
 import ResultBox from "../../components/transcribeResult/resultBox.transcribeResult";
 import CustomButton from "../../components/custom-button/custom-button.component";
 import {Languages} from '../../aws/constants';
@@ -47,7 +47,7 @@ class Template extends React.Component {
   }
 
 //   static getDerivedStateFromProps (nextProps, prevState) {
-//       console.log('should go here' ,nextProps);
+//       log('should go here' ,nextProps);
 //       return {templateText: nextProps.templateText};
 //     }
 componentDidMount (){
@@ -56,7 +56,7 @@ componentDidMount (){
   this.setState({
       isSoundActive: isSoundActive
   }, () => {
-    console.log("is sound active: ",this.state.isSoundActive);
+    log("is sound active: ",this.state.isSoundActive);
     
   });
   
@@ -80,10 +80,10 @@ playSound = (type) => {
    handleClick = (event) => {
     event.preventDefault();
     if(!this.state.isProcessing){
-      console.log(this.props.awsSetting);
+      log(this.props.awsSetting);
       const { sampleRate, speciality, streamType } = this.props.awsSetting;
       const language = this.props.awsSetting.language;
-      console.log(language);
+      log(language);
       try {
         
         this.setState({ toggleRecording: !this.state.toggleRecording,
@@ -91,7 +91,7 @@ playSound = (type) => {
         if(!this.state.isRecording)
           this.setState({isRecording: true});
         if (this.state.toggleRecording) {
-          console.log($("#resultBox").val());
+          log($("#resultBox").val());
           this.playSound("start");
           toast("Processing", {
             position: "top-right",
@@ -116,7 +116,7 @@ playSound = (type) => {
                 this.setState({
                   isProcessing: false
                 }, () => {
-                  console.log(this.state.templateText);
+                  log(this.state.templateText);
                 });
               });
             }, 5000);
@@ -157,7 +157,7 @@ playSound = (type) => {
           progress: undefined,
           type: "error",
         });
-        console.log(e.message);
+        log(e.message);
       }
     }else{
       toast("Processing...", {
@@ -176,7 +176,7 @@ playSound = (type) => {
 
   cancelRecording = event => {
     event.preventDefault();
-    console.log(this.state.toggleRecording);
+    log(this.state.toggleRecording);
     if(this.state.toggleRecording){
       this.playSound("start");
     }
@@ -247,7 +247,7 @@ playSound = (type) => {
     
   }
   handleChange = (event) => {
-    console.log('handle change');
+    log('handle change');
     event.preventDefault();
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -300,9 +300,9 @@ playSound = (type) => {
               });
             } else {
               try{
-                  console.log('yes');
+                  log('yes');
                   fetch(`/GetTemplatesByUserId/${id}`).then(res => res.json()).then((result) => {
-                    console.log(result);
+                    log(result);
                         const {setTemplates} = this.props;
                         setTemplates(result);
                         toast(result.text, {
@@ -356,7 +356,7 @@ playSound = (type) => {
             this.setState({
               isProcessing: false
             });
-            console.log(error);
+            log(error);
             toast(error.message, {
               position: "top-right",
               autoClose: 2000,
@@ -406,7 +406,7 @@ playSound = (type) => {
           //     });
           //   })
           //   .catch((error) => {
-          //     console.log(error);
+          //     log(error);
           //     toast(error.message, {
           //       position: "top-right",
           //       autoClose: 2000,
@@ -425,7 +425,7 @@ playSound = (type) => {
           // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${this.props.currentUser.id}&name=${templateName}&text=${templateText}&email=${this.props.currentUser.email}`, headers).then(res => res.json()).then((result) => {
           //     alert(result.text);
           // }).catch((error) => {
-          //     console.log(error);
+          //     log(error);
           // });
         });
         
@@ -452,7 +452,7 @@ playSound = (type) => {
         progress: undefined,
         type: "error",
       });
-      console.log(e.message);
+      log(e.message);
     }
   };
 

@@ -8,7 +8,7 @@ import {setTemplates, setSelectedTemplate} from '../../redux/template/template.a
 import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
 import {setSetting} from '../../redux/aws/aws.action';
 import { connect } from 'react-redux';
-
+import {log} from '../../aws/main';
 import {Link} from 'react-router-dom';
 
 import {ToastContainer, toast} from 'react-toastify';
@@ -68,7 +68,7 @@ class SignIn extends React.Component{
             });
         
         try{
-            console.log(email, password);
+            log(email, password);
             fetch(`/login/${email}/${password}`).then(res => res.json()).then((result) => {
                
                 if(result.IsError == true){
@@ -87,13 +87,13 @@ class SignIn extends React.Component{
                     const {setTemplates, setCurrentuser, setSetting} = this.props;
                     if(result.id != 0 && result.id != undefined){
                         fetch(`/GetTemplatesByUserId/${result.id}`).then(res => res.json()).then((templates) => {
-                            console.log(templates);
+                            log(templates);
                                 
                                 setTemplates(templates);
                                 
                             }).catch((e) => {
                                 
-                                console.log(e);
+                                log(e);
                             });;
                             
                         setCurrentuser(
@@ -144,7 +144,7 @@ class SignIn extends React.Component{
                         type: 'error'
                         
                         });
-                    console.log(e);
+                    log(e);
                 });;
             // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=login&email=${email}&password=${password}`, headers
             // ).then(res => res.json()).then((result) => {
@@ -173,7 +173,7 @@ class SignIn extends React.Component{
                 type: 'error'
                 
                 });
-            console.log(error.message);
+            log(error.message);
         }
         
     }

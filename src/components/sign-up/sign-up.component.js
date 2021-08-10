@@ -5,7 +5,7 @@ import {setCurrentuser} from '../../redux/user/user.action';
 import {setSetting} from '../../redux/aws/aws.action';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import {log} from '../../aws/main';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import {ToastContainer, toast} from 'react-toastify';
@@ -132,7 +132,7 @@ class SignUp extends React.Component{
                         type: 'error'
                         
                         });
-                    console.log(e.message);
+                    log(e.message);
                 });
                 // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=signup&email=${email}&password=${password}&name=${displayName}&class=${studentClass}`)
                 // .then(res => res.json()).then((result) => {
@@ -163,7 +163,7 @@ class SignUp extends React.Component{
                     type: 'error'
                     
                     });
-                console.log('error while signup: ', error.message);
+                log('error while signup: ', error.message);
             }
         }
         

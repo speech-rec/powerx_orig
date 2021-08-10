@@ -15,7 +15,7 @@ import { startRecording, stopRecording, createAudio } from "../../aws/main";
 import startFile from '../../sounds/start.wav';
 import stopFile from '../../sounds/stop.wav';
 import Popup from "reactjs-popup";
-
+import {log} from '../../aws/main';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -55,7 +55,7 @@ class Recorder extends React.Component {
   }
 
 //   static getDerivedStateFromProps (nextProps, prevState) {
-//       console.log('should go here' ,nextProps);
+//       log('should go here' ,nextProps);
 //       return {recordingText: nextProps.recordingText};
 //     }
 
@@ -65,7 +65,7 @@ componentDidMount (){
   this.setState({
       isSoundActive: isSoundActive
   }, () => {
-    console.log("is sound active: ",this.state.isSoundActive);
+    log("is sound active: ",this.state.isSoundActive);
     
   });
   
@@ -92,10 +92,10 @@ if(this.state.isSoundActive){
   handleClick = (event) => {
     event.preventDefault();
     if(!this.state.isProcessing){
-      console.log(this.props.awsSetting);
+      log(this.props.awsSetting);
       const { sampleRate, speciality, streamType } = this.props.awsSetting;
       const language = this.props.awsSetting.language;
-      console.log(language);
+      log(language);
       try {
         
         this.setState({ toggleRecording: !this.state.toggleRecording,
@@ -103,7 +103,7 @@ if(this.state.isSoundActive){
         if(!this.state.isRecording)
           this.setState({isRecording: true});
         if (this.state.toggleRecording) {
-          console.log("stopping recording", $("#resultBox").val());
+          log("stopping recording", $("#resultBox").val());
           this.playSound("start");
           toast("Processing", {
             position: "top-right",
@@ -126,11 +126,11 @@ if(this.state.isSoundActive){
             setTimeout(() => {
               
               stopRecording(() => {
-                console.log(this.state.recordingText);
+                log(this.state.recordingText);
                 this.setState({
                   isProcessing: false
                 }, () => {
-                  //console.log(this.state.recordingText);
+                  //log(this.state.recordingText);
                 });
               });
             }, 5000);
@@ -172,7 +172,7 @@ if(this.state.isSoundActive){
           progress: undefined,
           type: "error",
         });
-        console.log(e.message);
+        log(e.message);
       }
     }else{
       toast("Processing...", {
@@ -191,7 +191,7 @@ if(this.state.isSoundActive){
 
   cancelRecording = event => {
     event.preventDefault();
-    console.log(event.target.value);
+    log(event.target.value);
     if(this.state.toggleRecording){
       this.playSound("start");
     }
@@ -209,7 +209,7 @@ if(this.state.isSoundActive){
       recordingText: this.state.recordingText + text,
       recTime: this.state.recTime + recTime
     });
-    console.log(this.state.recTime);
+    log(this.state.recTime);
   }
 
   stopProcesssing = () => {
@@ -282,7 +282,7 @@ if(this.state.isSoundActive){
     
   }
   handleChange = (event) => {
-    // console.log('handle change');
+    // log('handle change');
     event.preventDefault();
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -303,14 +303,14 @@ if(this.state.isSoundActive){
   addPunctuation = (event) => {
     event.preventDefault();
     const { value, name, innerHTML } = event.target;
-    console.log(innerHTML);
+    log(innerHTML);
     var element = document.getElementById("resultBox");
     var startPos = element.selectionStart;
     var endPos = element.selectionEnd;
     element.value = element.value.substring(0, startPos)
     + innerHTML
     + element.value.substring(endPos, element.value.length);
-    console.log($("#resultBox").val());
+    log($("#resultBox").val());
     this.setState({
       recordingText: $("#resultBox").val(),
     }, () => {
@@ -322,7 +322,7 @@ if(this.state.isSoundActive){
   }
   toggleKeyboard = () => {
     var element = document.getElementById("resultBox");
-    console.log(element.selectionStart);
+    log(element.selectionStart);
     element.focus();
     element.s = element.selectionStart;
     
@@ -341,7 +341,7 @@ if(this.state.isSoundActive){
     // this.setState({
     //   showKeyboard: !this.state.showKeyboard
     // }, () => {
-    //   console.log("key borad is allowed");
+    //   log("key borad is allowed");
      
     //   element.focus();
     // });
@@ -368,7 +368,7 @@ if(this.state.isSoundActive){
         const { id } = this.props.currentUser;
         createAudio(recordingName, recordingText, id, recTime, (response) => {
           var result = response;
-          //console.log(result);
+          //log(result);
         if (result.type == "error") {
           
             toast(result.text, {
@@ -382,7 +382,7 @@ if(this.state.isSoundActive){
               type: "error",
             });
           } else {
-            //console.log(result.text);
+            //log(result.text);
             toast(result.text, {
               position: "top-right",
               autoClose: 3000,
@@ -438,7 +438,7 @@ if(this.state.isSoundActive){
             showPopUp: false
           });
         }).catch((error) => {
-          console.log(error);
+          log(error);
           toast(error.message, {
             position: "top-right",
             autoClose: 2000,
@@ -488,7 +488,7 @@ if(this.state.isSoundActive){
         //     });
         //   })
         //   .catch((error) => {
-        //     console.log(error);
+        //     log(error);
         //     toast(error.message, {
         //       position: "top-right",
         //       autoClose: 2000,
@@ -507,7 +507,7 @@ if(this.state.isSoundActive){
         // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${this.props.currentUser.id}&name=${recordingName}&text=${recordingText}&email=${this.props.currentUser.email}`, headers).then(res => res.json()).then((result) => {
         //     alert(result.text);
         // }).catch((error) => {
-        //     console.log(error);
+        //     log(error);
         // });
       } else {
         toast("kindly provide name or record some audio", {
@@ -532,7 +532,7 @@ if(this.state.isSoundActive){
         progress: undefined,
         type: "error",
       });
-      console.log(e.message);
+      log(e.message);
     }
   };
 

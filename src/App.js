@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
+import {log} from './aws/main';
 // import {startRecording, stopRecording} from './aws/main';
 // import SignInPage from './pages/signin/signin.pages';
 // import SignUpPage from './pages/signup/signup.pages';
@@ -26,20 +27,20 @@ class App extends React.Component {
   componentDidMount(){
     const {currentUser, templates} = this.props;
 
-    console.log(currentUser);
-    console.log(templates == null);
-    console.log(currentUser == null);
+    log(currentUser);
+    log(templates == null);
+    log(currentUser == null);
     if(templates != null && currentUser != null){
       try{
-        console.log('yes');
+        log('yes');
         fetch(`/GetTemplatesByUserId/${currentUser.id}`).then(res => res.json()).then((result) => {
-          console.log(result);
+         
               const {setTemplates} = this.props;
               setTemplates(result);
               
           }).catch((e) => {
               
-              console.log(e);
+              log(e);
           });;
       }
       catch(e){

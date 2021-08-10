@@ -30,9 +30,16 @@ var prevTranscript = "";
 var streamType = "";
 var audioChunks = [];
 var recTime = 0.0;
+var debug = false;
 var callBackFunction = () => {
 
 };
+
+export function log(inputText){
+    if(debug){
+        console.log(inputText);
+    }
+}
 // check to see if the browser allows mic access
 if (!window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
     // Use our helper method to show an error on the page
@@ -52,7 +59,7 @@ if (!window.navigator && window.navigator.mediaDevices && window.navigator.media
 }
 
 export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, callBack) => {
-    console.log("started");
+    log("started");
 
     transcription = lastValue;
 // $('#error').hide(); // hide any existing errors
@@ -87,7 +94,7 @@ try{
             type: 'error'
             
             });
-        console.log(error);
+        log(error);
         showError('There was an error streaming your audio to Amazon Transcribe. Please try again.');
         // toggleStartStop(false);
     });
@@ -104,7 +111,7 @@ try{
         type: 'error'
         
         });
-    console.log(e.message);
+    log(e.message);
 }
 }
 
@@ -116,7 +123,7 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
         // recordedAudio.controls = true;
         // recordedAudio.autoplay = true;
         // recordedAudio.hidden = false;
-        //console.log(blob);
+        //log(blob);
         var formData = new FormData()
         formData.append('file', blob);
         formData.append("userId", userId);
@@ -131,7 +138,7 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
     processData: false,
     contentType: false,
     success: function(data) {
-            //console.log("response: ", JSON.parse(data));
+            //log("response: ", JSON.parse(data));
             audioChunks = [];
             successCallback(JSON.parse(data));
     }
@@ -142,12 +149,12 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
 
 export const stopRecording = (callBack) => {
     
-            // console.log("mic closed");
+            // log("mic closed");
             // const audioContext = new AudioContext();
             // audioContext.close();
         
     try{
-        console.log("stoping");
+        log("stoping");
         if(rec.state != "inactive")
         {
             rec.stop();
@@ -155,10 +162,10 @@ export const stopRecording = (callBack) => {
         if (socket && socket.readyState ===  socket.OPEN) {
             
             micStream.stop();
-            console.log('micStream');
+            log('micStream');
             socket.close();
             callBack();
-            console.log("closing method");
+            log("closing method");
             // Send an empty frame so that Transcribe initiates a closure of the WebSocket after submitting all transcripts
             // let emptyMessage = getAudioEventMessage(Buffer.from(new Buffer.from([])));
             // let emptyBuffer = eventStreamMarshaller.marshall(emptyMessage);
@@ -166,7 +173,7 @@ export const stopRecording = (callBack) => {
             // socket.send(emptyBuffer);
         }else{
             callBack();
-            console.log('called back');
+            log('called back');
         }
        
     }catch(e){
@@ -181,7 +188,7 @@ export const stopRecording = (callBack) => {
             type: 'error'
             
             });
-        console.log(e.message);
+        log(e.message);
     }
     // toggleStartStop(false);
 }
@@ -204,8 +211,8 @@ let streamAudioToWebSocket =  (userMediaStream) => {
     // Pre-signed URLs are a way to authenticate a request (or WebSocket connection, in this case)
     // via Query Parameters. Learn more: https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html
     let url = createPresignedUrl();
-    console.log(url);
-    // console.log(createPresignedUrl());
+    log(url);
+    // log(createPresignedUrl());
     //open up our WebSocket connection
     socket = new WebSocket(url);
     socket.binaryType = "arraybuffer";
@@ -241,7 +248,7 @@ let streamAudioToWebSocket =  (userMediaStream) => {
             type: 'error'
             
             });
-        console.log(e.message);
+        log(e.message);
     }
 }
 
@@ -277,7 +284,7 @@ function wireSocketEvents(callBack) {
                     type: 'error'
                     
                     });
-                console.log(messageBody.Message);
+                log(messageBody.Message);
                 
                 // toggleStartStop();
             }
@@ -302,7 +309,7 @@ function wireSocketEvents(callBack) {
         
         socket.onclose = function (closeEvent) {
             micStream.stop();
-            console.log("mic closed");
+            log("mic closed");
             
             // the close event immediately follows the error event; only handle one.
             if (!socketError && !transcribeException) {
@@ -324,7 +331,7 @@ function wireSocketEvents(callBack) {
             type: 'error'
             
             });
-        console.log(e.message);
+        log(e.message);
     }
 }
 
@@ -346,25 +353,25 @@ let handleEventStreamMessage = function (messageJson, callBack) {
                 //$('#resultBox').val(transcription + transcript + "\n");
                 
                 //$('#resultBox').trigger("change");
-                console.log('transcript: ', transcript);
-                // console.log("previousTranscript:", prevTranscript);
+                log('transcript: ', transcript);
+                // log("previousTranscript:", prevTranscript);
                 // if(transcript != prevTranscript){
-                //     console.log(false);
+                //     log(false);
                 //     $('#resultBox').val($('#resultBox').val() + transcript.replace(prevTranscript, "") + " ");
                 // }else{
-                //     console.log(true);
+                //     log(true);
                 // }
                 
                 // prevTranscript = transcript;
                 
                 // if this transcript segment is final, add it to the overall transcription
                 //return;
-                //console.log(results[0]);
-                //console.log(results[0].Alternatives[0]);
+                //log(results[0]);
+                //log(results[0].Alternatives[0]);
                 if (!results[0].IsPartial) {
                     //scroll the textarea down
                     recTime += results[0].EndTime - results[0].StartTime;
-                    console.log("recTime: ", recTime);
+                    log("recTime: ", recTime);
                     //$('#resultBox').val($('#resultBox').val() + transcript + " ");
                     $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
                     callBack(transcript, results[0].EndTime - results[0].StartTime);
@@ -390,7 +397,7 @@ let handleEventStreamMessage = function (messageJson, callBack) {
         type: 'error'
         
         });
-    console.log(e.message);
+    log(e.message);
 }
 }
 
@@ -453,7 +460,7 @@ export function convertAudioToBinaryMessage(audioChunk) {
             type: 'error'
             
             });
-        console.log(e.message);
+        log(e.message);
     }
 }
 
@@ -477,7 +484,7 @@ function getAudioEventMessage(buffer) {
 function createPresignedUrl() {
     let endpoint =  "transcribestreaming." + "us-east-1" + ".amazonaws.com:8443";
     // fetch('/getCredentials').then(res => res.json()).then(result => {
-    //    console.log(result);
+    //    log(result);
     // });
     // get a preauthenticated URL that we can use to establish our WebSocket
     return v4.createPresignedURL(

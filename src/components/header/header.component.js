@@ -5,7 +5,7 @@ import {selectPreviousPath} from '../../redux/naviagtor/navigator.selectors';
 import {setTemplates, setSelectedTemplate} from '../../redux/template/template.action';
 import {setCurrentuser} from '../../redux/user/user.action';
 import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
-
+import {log} from '../../aws/main';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
@@ -23,7 +23,7 @@ const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate
             setSelectedTemplate(0);
 
          } catch (error) {
-             console.log('error', error.response, error)                        
+             log('error', error.response, error)                        
          }
     };
     return (
