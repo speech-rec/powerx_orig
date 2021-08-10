@@ -54,6 +54,16 @@ export function register(config) {
   }
 }
 
+export function forceSWupdate() {
+  if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(registration => {
+          registration.update().then(() => {
+
+          });
+      });
+  }
+} 
+
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
