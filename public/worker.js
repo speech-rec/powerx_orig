@@ -3,8 +3,7 @@ const OFFLINE_URL = 'offline.html';
 var urlsToCache = [
   '/',
   './offline.html',
-  './voice-search.ico',
-  './static/media/login.a0d35425.png',
+  './voice-search.ico'
   
 ];
 
