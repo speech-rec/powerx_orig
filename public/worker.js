@@ -1,7 +1,6 @@
 var CACHE_NAME = 'isay';
 const OFFLINE_URL = 'offline.html';
 var urlsToCache = [
-  '/',
   './offline.html',
   './voice-search.ico'
   
