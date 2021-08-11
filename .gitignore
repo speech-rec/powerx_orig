@@ -23,3 +23,5 @@ yarn-error.log*
 
 #files
 #src/aws/main.js
+# Local Netlify folder
+.netlify
