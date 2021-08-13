@@ -55,7 +55,7 @@ class Recorder extends React.Component {
   }
 
 //   static getDerivedStateFromProps (nextProps, prevState) {
-//      console.log('should go here' ,nextProps);
+//      log('should go here' ,nextProps);
 //       return {recordingText: nextProps.recordingText};
 //     }
 
@@ -65,7 +65,7 @@ componentDidMount (){
   this.setState({
       isSoundActive: isSoundActive
   }, () => {
-   console.log("is sound active: ",this.state.isSoundActive);
+   log("is sound active: ",this.state.isSoundActive);
     
   });
   
@@ -92,10 +92,10 @@ if(this.state.isSoundActive){
   handleClick = (event) => {
     event.preventDefault();
     if(!this.state.isProcessing){
-     console.log(this.props.awsSetting);
+     log(this.props.awsSetting);
       const { sampleRate, speciality, streamType } = this.props.awsSetting;
       const language = this.props.awsSetting.language;
-     console.log(language);
+     log(language);
       try {
         
         this.setState({ toggleRecording: !this.state.toggleRecording,
@@ -103,7 +103,7 @@ if(this.state.isSoundActive){
         if(!this.state.isRecording)
           this.setState({isRecording: true});
         if (this.state.toggleRecording) {
-         console.log("stopping recording", $("#resultBox").val());
+         log("stopping recording", $("#resultBox").val());
           this.playSound("start");
           toast("Processing", {
             position: "top-right",
@@ -126,7 +126,7 @@ if(this.state.isSoundActive){
             setTimeout(() => {
               
               stopRecording(() => {
-               console.log(this.state.recordingText);
+               log(this.state.recordingText);
                 this.setState({
                   isProcessing: false
                 }, () => {
@@ -172,7 +172,7 @@ if(this.state.isSoundActive){
           progress: undefined,
           type: "error",
         });
-       console.log(e.message);
+       log(e.message);
       }
     }else{
       toast("Processing...", {
@@ -191,7 +191,7 @@ if(this.state.isSoundActive){
 
   cancelRecording = event => {
     event.preventDefault();
-   console.log(event.target.value);
+   log(event.target.value);
     if(this.state.toggleRecording){
       this.playSound("start");
     }
@@ -209,7 +209,7 @@ if(this.state.isSoundActive){
       recordingText: this.state.recordingText + text,
       recTime: this.state.recTime + recTime
     });
-   console.log(this.state.recTime);
+   log(this.state.recTime);
   }
 
   stopProcesssing = () => {
@@ -219,58 +219,73 @@ if(this.state.isSoundActive){
   }
 
   saveRecording = event => {
-    if(this.state.toggleRecording){
-      this.playSound("start");
-    }
-    toast("Processing...", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      type: "info",
-    });
-    
-    this.setState({
-      isProcessing: true
-    }, () => {
-      setTimeout(() => {
-        
-        stopRecording(() => {
-          this.setState({
-            toggleRecording: false,
-            isRecording: false,
-            isProcessing: false
-          }, () => {
-            const {recordingText} = this.state;
-           
-            if(!!recordingText){
-              this.setState({ showPopUp: true, isProcessing: false});
-                return;
-            }else{
-              toast("Kindly record some text before saving it.", {
-                  position: "top-right",
-                  autoClose: 2000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: false,
-                  draggable: false,
-                  progress: undefined,
-                  type: "error",
-                });
-                
-            }
+    if(!this.state.isProcessing){
+      if(this.state.toggleRecording){
+        this.playSound("start");
+      }
+      toast("Processing...", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        type: "info",
+      });
+      
+      this.setState({
+        isProcessing: true
+      }, () => {
+        setTimeout(() => {
+          
+          stopRecording(() => {
+            this.setState({
+              toggleRecording: false,
+              isRecording: false,
+              isProcessing: false
+            }, () => {
+              const {recordingText} = this.state;
+             
+              if(!!recordingText){
+                this.setState({ showPopUp: true, isProcessing: false});
+                  return;
+              }else{
+                toast("Kindly record some text before saving it.", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    type: "error",
+                  });
+                  
+              }
+            });
           });
-        });
-         
-      }, 5000);
-      
-    });
-    // setTimeout(() => {
-      
-    // }, 5000);
+           
+        }, 5000);
+        
+      });
+      // setTimeout(() => {
+        
+      // }, 5000);
+    }
+    else{
+      toast("Processing...", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        type: "info",
+      });
+    }
+   
     
       
     
@@ -282,7 +297,7 @@ if(this.state.isSoundActive){
     
   }
   handleChange = (event) => {
-    //console.log('handle change');
+    //log('handle change');
     event.preventDefault();
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -303,14 +318,14 @@ if(this.state.isSoundActive){
   addPunctuation = (event) => {
     event.preventDefault();
     const { value, name, innerHTML } = event.target;
-   console.log(innerHTML);
+   log(innerHTML);
     var element = document.getElementById("resultBox");
     var startPos = element.selectionStart;
     var endPos = element.selectionEnd;
     element.value = element.value.substring(0, startPos)
     + innerHTML
     + element.value.substring(endPos, element.value.length);
-   console.log($("#resultBox").val());
+   log($("#resultBox").val());
     this.setState({
       recordingText: $("#resultBox").val(),
     }, () => {
@@ -322,7 +337,7 @@ if(this.state.isSoundActive){
   }
   toggleKeyboard = () => {
     var element = document.getElementById("resultBox");
-   console.log(element.selectionStart);
+   log(element.selectionStart);
     element.focus();
     element.s = element.selectionStart;
     
@@ -341,7 +356,7 @@ if(this.state.isSoundActive){
     // this.setState({
     //   showKeyboard: !this.state.showKeyboard
     // }, () => {
-    //  console.log("key borad is allowed");
+    //  log("key borad is allowed");
      
     //   element.focus();
     // });
@@ -350,7 +365,7 @@ if(this.state.isSoundActive){
  
   sendMail = (event) => {
     event.preventDefault();
-    const url = process.env.REACT_APP_BASE_URL;
+    //const url = process.env.REACT_APP_BASE_URL;
     try {
       const { recordingText, recordingName, recTime } = this.state;
 
@@ -374,11 +389,11 @@ if(this.state.isSoundActive){
           formData.append("recordingName", recordingName);
           formData.append("recTime", recTime);
           const url = process.env.REACT_APP_BASE_URL;
-          axios.post(`${url}/sendmail/11/11/11/11`, formData)
+          axios.post(`http://alphanotes.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${id}&name=${recordingName}&text=${recordingText}&recTime=${recTime}`, formData)
     .then((res) => {
       var result = res.data;
           // log(result);
-          console.log("file saved");
+          log("file saved");
         if (result.type == "error") {
           
             toast(result.text, {
@@ -448,7 +463,7 @@ if(this.state.isSoundActive){
         //     showPopUp: false
         //   });
         // }).catch((error) => {
-        //  console.log(error);
+        //  log(error);
         //   toast(error.message, {
         //     position: "top-right",
         //     autoClose: 2000,
@@ -513,7 +528,7 @@ if(this.state.isSoundActive){
         //     });
         //   })
         //   .catch((error) => {
-        //    console.log(error);
+        //    log(error);
         //     toast(error.message, {
         //       position: "top-right",
         //       autoClose: 2000,
@@ -532,7 +547,7 @@ if(this.state.isSoundActive){
         // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${this.props.currentUser.id}&name=${recordingName}&text=${recordingText}&email=${this.props.currentUser.email}`, headers).then(res => res.json()).then((result) => {
         //     alert(result.text);
         // }).catch((error) => {
-        //    console.log(error);
+        //    log(error);
         // });
       } else {
         toast("kindly provide name or record some audio", {
@@ -557,7 +572,7 @@ if(this.state.isSoundActive){
         progress: undefined,
         type: "error",
       });
-     console.log(e.message);
+     log(e.message);
     }
   };
 
@@ -671,7 +686,7 @@ if(this.state.isSoundActive){
                 className="fa-lg" style={{color: "#4C5470"}}/>
               </div>
             </div>
-            <div className="button1" hidden={this.state.isRecording ? false : true} onClick={this.saveRecording}>
+            <div className="button1" hidden={this.state.isRecording ? false : true} onClick={this.saveRecording} style={this.state.isProcessing ? {background: "grey", cursor: "no-drop"} : {background: "#fff", cursor: "pointer"}}>
               <div className="customIcon">
                 {/* <FontAwesomeIcon icon={faCheck} /> */}
                 <p style={{fontWeight:"bold", color: "#4C5470"}}>Save</p>

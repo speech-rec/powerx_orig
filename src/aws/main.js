@@ -30,7 +30,7 @@ var prevTranscript = "";
 var streamType = "";
 var audioChunks = [];
 var recTime = 0.0;
-var debug = true;
+var debug = false;
 var callBackFunction = () => {
 
 };
