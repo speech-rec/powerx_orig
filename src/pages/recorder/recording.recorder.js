@@ -369,6 +369,7 @@ if(this.state.isSoundActive){
         createAudio(recordingName, recordingText, id, recTime, (response) => {
           var result = response;
           //log(result);
+          console.log("file saved");
         if (result.type == "error") {
           
             toast(result.text, {

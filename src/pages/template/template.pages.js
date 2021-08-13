@@ -305,7 +305,7 @@ playSound = (type) => {
                     log(result);
                         const {setTemplates} = this.props;
                         setTemplates(result);
-                        toast(result.text, {
+                        toast("template saved", {
                           position: "top-right",
                           autoClose: 3000,
                           hideProgressBar: false,

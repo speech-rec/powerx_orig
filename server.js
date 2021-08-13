@@ -162,6 +162,7 @@ app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive
 });
 
 app.post('/sendmail/:recordingName/:recordingText/:userId/:recTime', upload.any(), (req, res) => {
+  console.log("request received");
   const {recordingName, recordingText, userId, recTime} = req.body;
 var url = `${baseURL}/api/api.ashx?methodname=sendmail&userId=${userId}&name=${recordingName}&text=${recordingText}&recTime=${recTime}`
 let formData = req.body;
