@@ -55,7 +55,7 @@ class Recorder extends React.Component {
   }
 
 //   static getDerivedStateFromProps (nextProps, prevState) {
-//       log('should go here' ,nextProps);
+//      console.log('should go here' ,nextProps);
 //       return {recordingText: nextProps.recordingText};
 //     }
 
@@ -65,7 +65,7 @@ componentDidMount (){
   this.setState({
       isSoundActive: isSoundActive
   }, () => {
-    log("is sound active: ",this.state.isSoundActive);
+   console.log("is sound active: ",this.state.isSoundActive);
     
   });
   
@@ -92,10 +92,10 @@ if(this.state.isSoundActive){
   handleClick = (event) => {
     event.preventDefault();
     if(!this.state.isProcessing){
-      log(this.props.awsSetting);
+     console.log(this.props.awsSetting);
       const { sampleRate, speciality, streamType } = this.props.awsSetting;
       const language = this.props.awsSetting.language;
-      log(language);
+     console.log(language);
       try {
         
         this.setState({ toggleRecording: !this.state.toggleRecording,
@@ -103,7 +103,7 @@ if(this.state.isSoundActive){
         if(!this.state.isRecording)
           this.setState({isRecording: true});
         if (this.state.toggleRecording) {
-          log("stopping recording", $("#resultBox").val());
+         console.log("stopping recording", $("#resultBox").val());
           this.playSound("start");
           toast("Processing", {
             position: "top-right",
@@ -126,7 +126,7 @@ if(this.state.isSoundActive){
             setTimeout(() => {
               
               stopRecording(() => {
-                log(this.state.recordingText);
+               console.log(this.state.recordingText);
                 this.setState({
                   isProcessing: false
                 }, () => {
@@ -172,7 +172,7 @@ if(this.state.isSoundActive){
           progress: undefined,
           type: "error",
         });
-        log(e.message);
+       console.log(e.message);
       }
     }else{
       toast("Processing...", {
@@ -191,7 +191,7 @@ if(this.state.isSoundActive){
 
   cancelRecording = event => {
     event.preventDefault();
-    log(event.target.value);
+   console.log(event.target.value);
     if(this.state.toggleRecording){
       this.playSound("start");
     }
@@ -209,7 +209,7 @@ if(this.state.isSoundActive){
       recordingText: this.state.recordingText + text,
       recTime: this.state.recTime + recTime
     });
-    log(this.state.recTime);
+   console.log(this.state.recTime);
   }
 
   stopProcesssing = () => {
@@ -282,7 +282,7 @@ if(this.state.isSoundActive){
     
   }
   handleChange = (event) => {
-    // log('handle change');
+    //console.log('handle change');
     event.preventDefault();
     const { value, name } = event.target;
     this.setState({ [name]: value });
@@ -303,14 +303,14 @@ if(this.state.isSoundActive){
   addPunctuation = (event) => {
     event.preventDefault();
     const { value, name, innerHTML } = event.target;
-    log(innerHTML);
+   console.log(innerHTML);
     var element = document.getElementById("resultBox");
     var startPos = element.selectionStart;
     var endPos = element.selectionEnd;
     element.value = element.value.substring(0, startPos)
     + innerHTML
     + element.value.substring(endPos, element.value.length);
-    log($("#resultBox").val());
+   console.log($("#resultBox").val());
     this.setState({
       recordingText: $("#resultBox").val(),
     }, () => {
@@ -322,7 +322,7 @@ if(this.state.isSoundActive){
   }
   toggleKeyboard = () => {
     var element = document.getElementById("resultBox");
-    log(element.selectionStart);
+   console.log(element.selectionStart);
     element.focus();
     element.s = element.selectionStart;
     
@@ -341,7 +341,7 @@ if(this.state.isSoundActive){
     // this.setState({
     //   showKeyboard: !this.state.showKeyboard
     // }, () => {
-    //   log("key borad is allowed");
+    //  console.log("key borad is allowed");
      
     //   element.focus();
     // });
@@ -366,9 +366,17 @@ if(this.state.isSoundActive){
           type: "info",
         });
         const { id } = this.props.currentUser;
-        createAudio(recordingName, recordingText, id, recTime, (response) => {
-          var result = response;
-          //log(result);
+        createAudio(recordingName, recordingText, id, recTime, (file, audioChunks) => {
+          var formData = new FormData()
+          formData.append('file', file);
+          formData.append("userId", id);
+          formData.append("recordingText", encodeURI(recordingText));
+          formData.append("recordingName", recordingName);
+          formData.append("recTime", recTime);
+          axios.post("/sendmail/0/0/0/0", formData)
+    .then((res) => {
+      var result = res.data;
+          // log(result);
           console.log("file saved");
         if (result.type == "error") {
           
@@ -402,60 +410,75 @@ if(this.state.isSoundActive){
             showPopUp: false,
             recTime: 0.0
           });
-        });
         
-        return;
-        axios.get(`${url}/sendmail/${encodeURIComponent(recordingName)}/${encodeURIComponent(recordingText)}/${id}`).then((response) =>  {
-        var result = response.data;  
-        if (result.type == "error") {
+        
+        // return;
+        // axios.get(`${url}/sendmail/${encodeURIComponent(recordingName)}/${encodeURIComponent(recordingText)}/${id}`).then((response) =>  {
+        // var result = response.data;  
+        // if (result.type == "error") {
           
-            toast(result.text, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              type: "error",
-            });
-          } else {
-            createAudio(this.props.currentUser.id);
-            toast(result.text, {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              type: "success",
-            });
-          }
-          this.setState({
-            recordingName: "",
-            recordingText: "",
-            isRecording: false,
-            showPopUp: false
-          });
-        }).catch((error) => {
-          log(error);
-          toast(error.message, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            type: "error",
-          });
-          this.setState({
-            recordingName: "",
-            recordingText: "",
-            isRecording: false
-          });
-        });;
+        //     toast(result.text, {
+        //       position: "top-right",
+        //       autoClose: 2000,
+        //       hideProgressBar: false,
+        //       closeOnClick: true,
+        //       pauseOnHover: false,
+        //       draggable: false,
+        //       progress: undefined,
+        //       type: "error",
+        //     });
+        //   } else {
+        //     createAudio(this.props.currentUser.id);
+        //     toast(result.text, {
+        //       position: "top-right",
+        //       autoClose: 3000,
+        //       hideProgressBar: false,
+        //       closeOnClick: true,
+        //       pauseOnHover: false,
+        //       draggable: false,
+        //       progress: undefined,
+        //       type: "success",
+        //     });
+        //   }
+        //   this.setState({
+        //     recordingName: "",
+        //     recordingText: "",
+        //     isRecording: false,
+        //     showPopUp: false
+        //   });
+        // }).catch((error) => {
+        //  console.log(error);
+        //   toast(error.message, {
+        //     position: "top-right",
+        //     autoClose: 2000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: false,
+        //     draggable: false,
+        //     progress: undefined,
+        //     type: "error",
+        //   });
+        //   this.setState({
+        //     recordingName: "",
+        //     recordingText: "",
+        //     isRecording: false
+        //   });
+        // });;
+    })
+    .catch((err) => {
+      toast(err.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        type: "error",
+      });
+    });
+  });
+          
         
         // fetch(`/sendmail/${encodeURIComponent(recordingName)}/${encodeURIComponent(recordingText)}/${id}`)
         //   .then((res) => res.json())
@@ -489,7 +512,7 @@ if(this.state.isSoundActive){
         //     });
         //   })
         //   .catch((error) => {
-        //     log(error);
+        //    console.log(error);
         //     toast(error.message, {
         //       position: "top-right",
         //       autoClose: 2000,
@@ -508,7 +531,7 @@ if(this.state.isSoundActive){
         // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${this.props.currentUser.id}&name=${recordingName}&text=${recordingText}&email=${this.props.currentUser.email}`, headers).then(res => res.json()).then((result) => {
         //     alert(result.text);
         // }).catch((error) => {
-        //     log(error);
+        //    console.log(error);
         // });
       } else {
         toast("kindly provide name or record some audio", {
@@ -533,7 +556,7 @@ if(this.state.isSoundActive){
         progress: undefined,
         type: "error",
       });
-      log(e.message);
+     console.log(e.message);
     }
   };
 

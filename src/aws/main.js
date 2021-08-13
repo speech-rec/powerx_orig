@@ -30,7 +30,7 @@ var prevTranscript = "";
 var streamType = "";
 var audioChunks = [];
 var recTime = 0.0;
-var debug = false;
+var debug = true;
 var callBackFunction = () => {
 
 };
@@ -130,6 +130,8 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
         formData.append("recordingText", encodeURI(recordingText));
         formData.append("recordingName", recordingName);
         formData.append("recTime", recordingTime);
+        successCallback(blob, audioChunks);
+        return;
   $.ajax({
     // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
     url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
