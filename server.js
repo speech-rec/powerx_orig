@@ -162,7 +162,6 @@ app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive
 });
 
 app.post('/sendmail/:recordingName/:recordingText/:userId/:recTime', upload.any(), (req, res) => {
-  console.log("request received");
   const {recordingName, recordingText, userId, recTime} = req.body;
 var url = `${baseURL}/api/api.ashx?methodname=sendmail&userId=${userId}&name=${recordingName}&text=${recordingText}&recTime=${recTime}`
 let formData = req.body;
@@ -368,7 +367,6 @@ var url = `${baseURL}/api/api.ashx?methodname=GetTemplatesByUserId&userId=${user
   );
   
 });
-
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'build')));
@@ -378,4 +376,5 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
 }
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

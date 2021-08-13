@@ -54,21 +54,11 @@ export function register(config) {
   }
 }
 
-export function forceSWupdate() {
-  if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then(registration => {
-          registration.update().then(() => {
-
-          });
-      });
-  }
-} 
-
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
-      console.log('registered');
+      console.log('registering');
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {

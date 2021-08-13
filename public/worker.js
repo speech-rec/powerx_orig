@@ -3,7 +3,6 @@ const OFFLINE_URL = 'offline.html';
 var urlsToCache = [
   './offline.html',
   './voice-search.ico'
-  
 ];
 
 // Install a service worker
