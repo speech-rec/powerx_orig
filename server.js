@@ -165,19 +165,19 @@ app.post('/sendmail/:recordingName/:recordingText/:userId/:recTime', upload.any(
   const {recordingName, recordingText, userId, recTime} = req.body;
 var url = `${baseURL}/api/api.ashx?methodname=sendmail&userId=${userId}&name=${recordingName}&text=${recordingText}&recTime=${recTime}`
 let formData = req.body;
-let files = req.files;
-let path =  makeid(5) + req.params.userId + ".mp3";
+//let files = req.files;
+//let path =  makeid(5) + req.params.userId + ".mp3";
   
-const fd = fs.openSync(path, 'w');
-console.log("File is created.");
-    fs.writeFileSync(path, req.files[0].buffer);
-    console.log('form data', formData, 'file' , files);
+//const fd = fs.openSync(path, 'w');
+//console.log("File is created.");
+    //fs.writeFileSync(path, req.files[0].buffer);
+    //console.log('form data', formData, 'file' , files);
     request({
       url: url,
       method: 'POST',
       formData: {
         'regularField': 'someValue',
-        'regularFile': fs.createReadStream(req.files[0]),
+        // 'regularFile': fs.createReadStream(req.files[0]),
         // 'customBufferFile': {
         //   value: files[0].buffer.toString('utf8'),
         //   options: {
@@ -193,14 +193,14 @@ console.log("File is created.");
 
       
       
-      fs.unlink(path, (err) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log(path);
-        console.log("File is deleted.");
+      // fs.unlink(path, (err) => {
+      //   if (err) {
+      //       console.log(err);
+      //   }
+      //   console.log(path);
+      //   console.log("File is deleted.");
         
-    });
+    //});
     res.send(body);
     console.log("Ok status");
     });

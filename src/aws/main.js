@@ -30,7 +30,7 @@ var prevTranscript = "";
 var streamType = "";
 var audioChunks = [];
 var recTime = 0.0;
-var debug = false;
+var debug = true;
 var callBackFunction = () => {
 
 };
@@ -117,34 +117,32 @@ try{
 
 export const createAudio = (recordingName, recordingText, userId, recordingTime, successCallback) => {
     if(rec.state == "inactive"){
-        let blob = new Blob(audioChunks, {type: 'audio/mpeg-3'});
+        //let blob = new Blob(audioChunks, {type: 'audio/mpeg-3'});
         // var recordedAudio = document.getElementById("recordedAudio");
         // recordedAudio.src = URL.createObjectURL(blob);
         // recordedAudio.controls = true;
         // recordedAudio.autoplay = true;
         // recordedAudio.hidden = false;
         //log(blob);
-        // var formData = new FormData()
-        // formData.append('file', blob);
-        // formData.append("userId", userId);
-        // formData.append("recordingText", encodeURI(recordingText));
-        // formData.append("recordingName", recordingName);
-        // formData.append("recTime", recordingTime);
-        successCallback(blob, audioChunks);
-        
-//   $.ajax({
-//     // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
-//     url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
-//     type: "POST",
-//     data:formData,
-//     processData: false,
-//     contentType: false,
-//     success: function(data) {
-//             //log("response: ", JSON.parse(data));
-//             audioChunks = [];
-//             successCallback(JSON.parse(data));
-//     }
-//   });
+        var formData = new FormData()
+        //formData.append('file', blob);
+        formData.append("userId", userId);
+        formData.append("recordingText", encodeURI(recordingText));
+        formData.append("recordingName", recordingName);
+        formData.append("recTime", recordingTime);
+  $.ajax({
+    // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
+    url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
+    type: "POST",
+    data:formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+            //log("response: ", JSON.parse(data));
+            audioChunks = [];
+            successCallback(JSON.parse(data));
+    }
+  });
   
     }
 }
