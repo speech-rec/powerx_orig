@@ -124,27 +124,27 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
         // recordedAudio.autoplay = true;
         // recordedAudio.hidden = false;
         //log(blob);
-        var formData = new FormData()
-        formData.append('file', blob);
-        formData.append("userId", userId);
-        formData.append("recordingText", encodeURI(recordingText));
-        formData.append("recordingName", recordingName);
-        formData.append("recTime", recordingTime);
+        // var formData = new FormData()
+        // formData.append('file', blob);
+        // formData.append("userId", userId);
+        // formData.append("recordingText", encodeURI(recordingText));
+        // formData.append("recordingName", recordingName);
+        // formData.append("recTime", recordingTime);
         successCallback(blob, audioChunks);
-        return;
-  $.ajax({
-    // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
-    url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
-    type: "POST",
-    data:formData,
-    processData: false,
-    contentType: false,
-    success: function(data) {
-            //log("response: ", JSON.parse(data));
-            audioChunks = [];
-            successCallback(JSON.parse(data));
-    }
-  });
+        
+//   $.ajax({
+//     // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
+//     url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
+//     type: "POST",
+//     data:formData,
+//     processData: false,
+//     contentType: false,
+//     success: function(data) {
+//             //log("response: ", JSON.parse(data));
+//             audioChunks = [];
+//             successCallback(JSON.parse(data));
+//     }
+//   });
   
     }
 }

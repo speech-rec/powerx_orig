@@ -373,7 +373,8 @@ if(this.state.isSoundActive){
           formData.append("recordingText", encodeURI(recordingText));
           formData.append("recordingName", recordingName);
           formData.append("recTime", recTime);
-          axios.post("/sendmail/0/0/0/0", formData)
+          const url = process.env.REACT_APP_BASE_URL;
+          axios.post(`${url}/sendmail/11/11/11/11`, formData)
     .then((res) => {
       var result = res.data;
           // log(result);
