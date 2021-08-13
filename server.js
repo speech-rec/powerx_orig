@@ -367,6 +367,7 @@ var url = `${baseURL}/api/api.ashx?methodname=GetTemplatesByUserId&userId=${user
   );
   
 });
+
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'build')));
@@ -376,5 +377,4 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
 }
-
 app.listen(port, () => console.log(`Listening on port ${port}`));
