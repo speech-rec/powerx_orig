@@ -5,6 +5,7 @@ import {
   selectSelectedTemplate,
 } from "../../redux/template/template.selectors";
 import { selectCurrentSetting } from "../../redux/aws/aws.selectors";
+import { selectAllKeyWords } from '../../redux/customDictionary/dictionary.selectors';
 import { setSelectedTemplate } from "../../redux/template/template.action";
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
@@ -50,7 +51,8 @@ class Recorder extends React.Component {
       showKeyboard: false,
       isSoundActive: false,
       isProcessing: false,
-      recTime: 0.0
+      recTime: 0.0,
+      keyWords: []
     };
   }
 
@@ -61,11 +63,13 @@ class Recorder extends React.Component {
 
 componentDidMount (){
   const { sampleRate, language, speciality, isSoundActive } = this.props.awsSetting;
-
+  const  keywords  = this.props.allKeyWords;
+  log(keywords);
   this.setState({
-      isSoundActive: isSoundActive
+      isSoundActive: isSoundActive,
+      keyWords: keywords
   }, () => {
-    log("is sound active: ",this.state.isSoundActive);
+    log("is sound active: " + this.state.isSoundActive);
     
   });
   
@@ -149,7 +153,8 @@ if(this.state.isSoundActive){
           // });
         } else {
           this.playSound("stop");
-          startRecording(this.state.recordingText, sampleRate, speciality, language.split("\n")[0], streamType, this.updateTextState);
+          log(this.state.keyWords);
+          startRecording(this.state.recordingText, sampleRate, speciality, language.split("\n")[0], streamType, this.state.keyWords, this.updateTextState);
           toast("Recording Audio", {
             position: "top-right",
             autoClose: 2000,
@@ -700,6 +705,7 @@ const mapStateToProps = createStructuredSelector({
   allTemplates: selectAllTemplates,
   selectedTemplate: selectSelectedTemplate,
   awsSetting: selectCurrentSetting,
+  allKeyWords: selectAllKeyWords
 });
 
 const mapDispatchToProps = (dispatch) => ({

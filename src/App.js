@@ -9,6 +9,7 @@ import {log} from './aws/main';
 import {selectCurrentUser} from './redux/user/user.selectors';
 import {selectAllTemplates} from './redux/template/template.selectors';
 import {setTemplates} from './redux/template/template.action';
+import {setDictionary} from './redux/customDictionary/dictionary.action';
 import {createStructuredSelector} from 'reselect';
 import {connect} from 'react-redux';
 import Recorder from './pages/recorder/recording.recorder';
@@ -33,15 +34,25 @@ class App extends React.Component {
     if(templates != null && currentUser != null){
       try{
         log('yes');
+        const {setTemplates, setDictionary} = this.props;
         fetch(`/GetTemplatesByUserId/${currentUser.id}`).then(res => res.json()).then((result) => {
          
-              const {setTemplates} = this.props;
+              log(result);
               setTemplates(result);
               
           }).catch((e) => {
               
               log(e);
           });;
+          fetch('/GetCustomDictionary').then(res => res.json()).then((result) => {
+         
+              
+            setDictionary(result);
+            
+        }).catch((e) => {
+            
+            log(e);
+        });;
       }
       catch(e){
         console.error(e.message);
@@ -81,6 +92,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setTemplates: templates => dispatch(setTemplates(templates))
+  setTemplates: templates => dispatch(setTemplates(templates)),
+  setDictionary: dictionary => dispatch(setDictionary(dictionary))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

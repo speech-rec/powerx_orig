@@ -1,0 +1,5 @@
+const ACTIONTYPE = {
+    SET_DICTIONARY: 'SET_DICTIONARY'
+};
+
+export default ACTIONTYPE;

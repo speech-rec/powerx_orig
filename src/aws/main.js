@@ -30,7 +30,8 @@ var prevTranscript = "";
 var streamType = "";
 var audioChunks = [];
 var recTime = 0.0;
-var debug = false;
+var debug = true;
+var cutomDictionary = [];
 var callBackFunction = () => {
 
 };
@@ -58,7 +59,7 @@ if (!window.navigator && window.navigator.mediaDevices && window.navigator.media
     
 }
 
-export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, callBack) => {
+export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, keyWords, callBack) => {
     log("started");
 
     transcription = lastValue;
@@ -73,6 +74,7 @@ inputSampleRate = sampleRate;
 specialty = inputSpecialty;
 languageCode = language;
 streamType = transcribeType;
+cutomDictionary = keyWords;
 callBackFunction = callBack;
 // first we get the microphone input from the browser (as a promise)...
 try{
@@ -98,6 +100,7 @@ try{
         showError('There was an error streaming your audio to Amazon Transcribe. Please try again.');
         // toggleStartStop(false);
     });
+    
 
 }catch(e){
     toast(e.message, {
@@ -345,15 +348,16 @@ let handleEventStreamMessage = function (messageJson, callBack) {
 
             // fix encoding for accented characters
             transcript = decodeURIComponent(escape(transcript));
+            log('transcript: ' + transcript);
             //if(NoiseKW[transcript] != null)
-            const kw = NoiseKW.find((word) => {
-                return word == transcript;
-            });
-             if(kw == undefined || kw == null){
-                //$('#resultBox').val(transcription + transcript + "\n");
+            // const kw = cutomDictionary.find((word) => {
+            //     return word.keyName == transcript;
+            // });
+            // log(kw);
+             //$('#resultBox').val(transcription + transcript + "\n");
                 
                 //$('#resultBox').trigger("change");
-                log('transcript: ', transcript);
+                
                 // log("previousTranscript:", prevTranscript);
                 // if(transcript != prevTranscript){
                 //     log(false);
@@ -368,18 +372,27 @@ let handleEventStreamMessage = function (messageJson, callBack) {
                 //return;
                 //log(results[0]);
                 //log(results[0].Alternatives[0]);
-                if (!results[0].IsPartial) {
-                    //scroll the textarea down
-                    recTime += results[0].EndTime - results[0].StartTime;
-                    log("recTime: ", recTime);
-                    //$('#resultBox').val($('#resultBox').val() + transcript + " ");
-                    $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
-                    callBack(transcript, results[0].EndTime - results[0].StartTime);
+                // const nkw = NoiseKW.find((word) => {
+                //     return word == transcript;
+                // });
+                // log("kw: " + nkw);
+                //  if(nkw == undefined || nkw == null){
                    
-                    // transcription += transcript + "\n";
-                }
-               
-             }
+                // }
+                 if (!results[0].IsPartial) {
+                        cutomDictionary.forEach(kw => {
+                            transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
+                        });
+                        //scroll the textarea down
+                        recTime += results[0].EndTime - results[0].StartTime;
+                        log("recTime: ", recTime);
+                        //$('#resultBox').val($('#resultBox').val() + transcript + " ");
+                        $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
+                        callBack(transcript, results[0].EndTime - results[0].StartTime);
+                       
+                        // transcription += transcript + "\n";
+                    }
+                
             // update the textarea with the latest result
             
            
