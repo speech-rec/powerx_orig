@@ -307,14 +307,24 @@ if(this.state.isSoundActive){
 
   addPunctuation = (event) => {
     event.preventDefault();
+    log(event.target.attributes.getNamedItem("data-value").value);
+    var data_value = event.target.attributes.getNamedItem("data-value").value;
     const { value, name, innerHTML } = event.target;
     log(innerHTML);
     var element = document.getElementById("resultBox");
     var startPos = element.selectionStart;
     var endPos = element.selectionEnd;
-    element.value = element.value.substring(0, startPos)
-    + innerHTML
+    
+    if(data_value == "newLine")
+    {
+      element.value = element.value.substring(0, startPos)
+      + "\n"
+      + element.value.substring(endPos, element.value.length);
+    }else{
+      element.value = element.value.substring(0, startPos)
+    + `${data_value}`
     + element.value.substring(endPos, element.value.length);
+    }
     log($("#resultBox").val());
     this.setState({
       recordingText: $("#resultBox").val(),
@@ -590,43 +600,48 @@ if(this.state.isSoundActive){
             
               <div className="result-box-wrapper flex-column-100" style={{display: "flex", flexDirection: "column", justifyContent: "flex-end", height: "10%"}}>
               <div style={{display: "flex", flexDirection: "row", marginTop: "1%"}}>
-              <div className="punctuation" name="fullStop" value="." onClick={this.addPunctuation}>
+              <div className="punctuation" name="fullStop" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon="fa fa-comma" textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>.</p>
+                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=".">.</p>
               </div>
             </div>
-            <div className="punctuation" name="comma" value="," onClick={this.addPunctuation}>
+            <div className="punctuation" name="comma" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>,</p>
+                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=",">,</p>
               </div>
             </div>
-            <div className="punctuation" name="semiCollon" value=";" onClick={this.addPunctuation}>
+            <div className="punctuation" name="semiCollon" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>;</p>
+                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=";">;</p>
               </div>
             </div>
-            <div className="punctuation" name="collon" value=":" onClick={this.addPunctuation}>
+            <div className="punctuation" name="collon" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>:</p>
+                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=":">:</p>
               </div>
             </div>
-            <div className="punctuation" name="atTheRate" value="@" onClick={this.addPunctuation}>
+            <div className="punctuation" name="atTheRate" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>@</p>
+                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value="@">@</p>
               </div>
             </div>
-            <div className="punctuation" name="exclamationSign" value="!" onClick={this.addPunctuation}>
+            <div className="punctuation" name="exclamationSign" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>!</p>
+                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value="!">!</p>
               </div>
             </div>
-              
+            <div className="punctuation" name="lineBreak" onClick={this.addPunctuation}>
+              <div className="punctuationIcon">
+                {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
+                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value="newLine">\n</p>
+              </div>
+            </div>
               </div>
              
               </div>
