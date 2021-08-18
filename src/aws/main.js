@@ -345,10 +345,12 @@ let handleEventStreamMessage = function (messageJson, callBack) {
         if (results.length > 0) {
         if (results[0].Alternatives.length > 0) {
             let transcript = results[0].Alternatives[0].Transcript;
-
+            let latestTranscribe = results[0].Alternatives[0].Items[results[0].Alternatives[0].Items.length - 1];
+            log(latestTranscribe);
             // fix encoding for accented characters
             transcript = decodeURIComponent(escape(transcript));
             log('transcript: ' + transcript);
+            $('#resultBox').val($('#resultBox').val() + latestTranscribe.Content + " ");
             //if(NoiseKW[transcript] != null)
             // const kw = cutomDictionary.find((word) => {
             //     return word.keyName == transcript;
@@ -381,7 +383,12 @@ let handleEventStreamMessage = function (messageJson, callBack) {
                 // }
                  if (!results[0].IsPartial) {
                         cutomDictionary.forEach(kw => {
-                            transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
+                            if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
+                                transcript = transcript.replaceAll(kw.KeyName, "\n");
+                            }else{
+                                transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
+                            }
+                            
                         });
                         //scroll the textarea down
                         recTime += results[0].EndTime - results[0].StartTime;

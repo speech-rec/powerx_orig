@@ -36,7 +36,7 @@ class App extends React.Component {
         log('yes');
         const {setTemplates, setDictionary} = this.props;
         fetch(`/GetTemplatesByUserId/${currentUser.id}`).then(res => res.json()).then((result) => {
-         
+              
               log(result);
               setTemplates(result);
               
