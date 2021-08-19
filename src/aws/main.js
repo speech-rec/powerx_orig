@@ -383,22 +383,41 @@ let handleEventStreamMessage = function (messageJson, callBack) {
                 // }
                  if (!results[0].IsPartial) {
                         cutomDictionary.forEach(kw => {
-                            if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
-                                transcript = transcript.replaceAll(kw.KeyName, "\n");
-                            }else{
+                            
+                            if(kw.KeyValue.includes('\\n')){
+                                log(kw.KeyValue.split());
+                                kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
+                                transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
+                                //return;
+                                // var total_lineBreaks = kw.KeyValue.split('');
+                                // var lineBreaks = '';
+                                // for(var i = 1; i <= total_lineBreaks; i++)
+                                // {
+                                //     lineBreaks += "\n";
+                                // }
+                                
+                            }
+                            else{
+                                //log(kw.KeyValue);
                                 transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
                             }
+                            // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
+                               
+                                
+                                
+                            // }
                             
                         });
                         //scroll the textarea down
                         recTime += results[0].EndTime - results[0].StartTime;
                         log("recTime: ", recTime);
                         //$('#resultBox').val($('#resultBox').val() + transcript + " ");
-                        $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
+                        
                         callBack(transcript, results[0].EndTime - results[0].StartTime);
                        
                         // transcription += transcript + "\n";
                     }
+                    $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
                 
             // update the textarea with the latest result
             
