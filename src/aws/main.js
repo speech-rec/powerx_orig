@@ -429,6 +429,9 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                         log('templateName: ', templateName);
                         var templateText = getTemplateCallBack(templateName);
                         log('templateText: ', templateText);
+                        if(templateText == null || templateText == '' || templateText == ' '){
+                            break;
+                        }
                         transcript = transcript.toLowerCase().replace('dictaphone ' + templateName, templateText); 
                     }  
                         //scroll the textarea down
