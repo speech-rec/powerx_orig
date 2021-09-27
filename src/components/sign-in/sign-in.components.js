@@ -113,7 +113,8 @@ class SignIn extends React.Component{
                             speciality: result.oSettings.Speciality,
                             sampleRate: result.oSettings.SampleRate,
                             isSoundActive: result.oSettings.IsSoundActive,
-                            streamType: result.oSettings.StreamType 
+                            streamType: result.oSettings.StreamType,
+                            IsCustomDicionaryActive: result.oSettings.IsCustomDicionaryActive
                         });
                         // setNavigationPath('/signin');
                     }else{

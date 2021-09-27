@@ -26,11 +26,12 @@ class SettingPage extends React.Component{
             streamType: 'stream-transcription-websocket',
             isSoundActive: false,
             isDisabled: false,
-            languages: []
+            languages: [],
+            IsCustomDicionaryActive: false
         }
     }
     componentDidMount(){
-        const { sampleRate, language, speciality, isSoundActive, streamType } = this.props.awsSetting;
+        const { sampleRate, language, speciality, isSoundActive, streamType, IsCustomDicionaryActive } = this.props.awsSetting;
 
         this.setState({
             sampleRate: streamType == 'stream-transcription-websocket' ? sampleRate : 16000,
@@ -42,7 +43,8 @@ class SettingPage extends React.Component{
               'US English': 'en-US',
               'British English': 'en-GB'
             },
-            isDisabled: streamType == 'stream-transcription-websocket' ? false : true
+            isDisabled: streamType == 'stream-transcription-websocket' ? false : true,
+            IsCustomDicionaryActive: IsCustomDicionaryActive
         });
         log(language);
     }
@@ -73,10 +75,10 @@ class SettingPage extends React.Component{
     };
     handleClick = event => {
         const {setSetting, history} = this.props;
-        const {sampleRate, language, speciality, isSoundActive, streamType} = this.state;
+        const {sampleRate, language, speciality, isSoundActive, streamType, IsCustomDicionaryActive} = this.state;
         const { id } = this.props.currentUser;
         try{
-            fetch(`/updateSetting/${id}/${language}/${speciality}/${sampleRate}/${isSoundActive}/${streamType}`).then(res => res.json()).then((result) => {
+            fetch(`/updateSetting/${id}/${language}/${speciality}/${sampleRate}/${isSoundActive}/${streamType}/${IsCustomDicionaryActive}`).then(res => res.json()).then((result) => {
                 log(result);
                 
                 const {setSetting} = this.props;
@@ -86,7 +88,8 @@ class SettingPage extends React.Component{
                             speciality: speciality,
                             sampleRate: sampleRate ,
                             isSoundActive: isSoundActive,
-                            streamType: streamType
+                            streamType: streamType,
+                            IsCustomDicionaryActive: IsCustomDicionaryActive
                         });
             }).catch((e) => {
                 toast('Oops! something went wrong.', {
@@ -122,7 +125,8 @@ class SettingPage extends React.Component{
             language: language,
             speciality: speciality,
             isSoundActive: isSoundActive,
-            streamType: streamType
+            streamType: streamType,
+            IsCustomDicionaryActive: IsCustomDicionaryActive
         });
         history.push('/dashboard');
 
@@ -179,6 +183,39 @@ class SettingPage extends React.Component{
     });
   }} />
                   </div>
+                  <div className="toggleDiv">
+                  <p>Enable Custom Dictionary</p>
+                  <ToggleButton
+  inactiveLabel={''}
+  activeLabel={''}
+  colors={{
+    activeThumb: {
+      base: 'rgb(250,250,250)',
+    },
+    inactiveThumb: {
+      base: 'rgb(62,130,247)',
+    },
+    active: {
+      base: 'rgb(207,221,245)',
+      hover: 'rgb(177, 191, 215)',
+    },
+    inactive: {
+      base: 'rgb(65,66,68)',
+      hover: 'rgb(95,96,98)',
+    }
+  }}
+//   trackStyle={styles.trackStyle}
+//   thumbStyle={styles.thumbStyle}
+ 
+   
+  value={this.state.IsCustomDicionaryActive}
+  onToggle={(value) => {
+    this.setState({
+      IsCustomDicionaryActive: !value,
+    });
+  }} />
+                  </div>
+                    
                     <CustomButton  type='button' onClick={this.handleClick} className='button'>
                     SAVE
                 </CustomButton>

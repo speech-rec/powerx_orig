@@ -52,7 +52,8 @@ class Recorder extends React.Component {
       isSoundActive: false,
       isProcessing: false,
       recTime: 0.0,
-      keyWords: []
+      keyWords: [],
+      IsCustomDicionaryActive: false
     };
   }
 
@@ -62,15 +63,16 @@ class Recorder extends React.Component {
 //     }
 
 componentDidMount (){
-  const { sampleRate, language, speciality, isSoundActive } = this.props.awsSetting;
+  const { sampleRate, language, speciality, isSoundActive, IsCustomDicionaryActive } = this.props.awsSetting;
   const  keywords  = this.props.allKeyWords;
   log(keywords);
   this.setState({
       isSoundActive: isSoundActive,
-      keyWords: keywords
+      keyWords: keywords,
+      IsCustomDicionaryActive: IsCustomDicionaryActive
   }, () => {
     log("is sound active: " + this.state.isSoundActive);
-    
+    log("is custom dictionary active: " + this.state.IsCustomDicionaryActive);
   });
   
 }
@@ -154,7 +156,7 @@ if(this.state.isSoundActive){
         } else {
           this.playSound("stop");
           log(this.state.keyWords);
-          startRecording(this.state.recordingText, sampleRate, speciality, language.split("\n")[0], streamType, this.state.keyWords, this.updateTextState);
+          startRecording(this.state.recordingText, sampleRate, speciality, language.split("\n")[0], streamType, this.state.keyWords, this.updateTextState, this.getTemplateText, this.state.IsCustomDicionaryActive);
           toast("Recording Audio", {
             position: "top-right",
             autoClose: 2000,
@@ -215,6 +217,16 @@ if(this.state.isSoundActive){
       recTime: this.state.recTime + recTime
     });
     log(this.state.recTime);
+  }
+
+  getTemplateText = (templateName) => {
+    const { allTemplates } = this.props;
+      const selectedTemplate = allTemplates.find(
+        (template) => template.TemplateName == templateName
+      );
+      
+      return selectedTemplate != null ? selectedTemplate.TemplateText : '';
+    
   }
 
   stopProcesssing = () => {
@@ -331,7 +343,7 @@ if(this.state.isSoundActive){
     }, () => {
       
     });
-    element.focus();
+    //element.focus();
     element.selectionStart = endPos+1;
     element.selectionEnd = endPos+1;
   }

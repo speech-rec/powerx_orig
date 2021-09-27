@@ -20,7 +20,7 @@
 .toggleDiv{
   border-radius: 20px;
   padding: 18px;
-  margin: 10px 35px;
+  margin: 0px 35px 0px 35px;
   width: 80%;
   display: flex;
   flex-direction: row;

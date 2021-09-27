@@ -10,7 +10,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faSignOutAlt, faCogs } from '@fortawesome/free-solid-svg-icons';
 
 import './header.style.css';
 
@@ -33,11 +33,14 @@ const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate
             </h2>
             <div className='options'>
                 
-                {/* <div className='title' style={location.pathname.toLowerCase().includes('signup') ? {width: '100%', height: '100%'} : {width: 0, height: 0}}>
-                    {location.pathname.toLowerCase().includes('signup') ? <Link to='/signin'>
-                    <FontAwesomeIcon icon={faArrowLeft} style={{marginRight: '3px'}}/>BACK
+                <div className='title' style={location.pathname.toLowerCase().includes('recorder') || 
+                location.pathname.toLowerCase().includes('template') ? {width: '50%', height: '100%'} : {width: 0, height: 0}}>
+                    {location.pathname.toLowerCase().includes('recorder') ||
+                    location.pathname.toLowerCase().includes('template') ? <Link to='/settingscreen'>
+                    SETTINGS <br/>
+                     <FontAwesomeIcon icon={faCogs} style={{marginRight: '3px'}}/>
                     </Link>: <div></div>}
-                </div> */}
+                </div>
                 {currentUser ? 
                 <div className='option' onClick={signOut}>
                     SIGN OUT<br />

@@ -5,6 +5,7 @@ import {
   selectSelectedTemplate,
 } from "../../redux/template/template.selectors";
 import { selectCurrentSetting } from "../../redux/aws/aws.selectors";
+import { selectAllKeyWords } from '../../redux/customDictionary/dictionary.selectors';
 import { setSelectedTemplate } from "../../redux/template/template.action";
 import {setTemplates} from '../../redux/template/template.action';
 import { createStructuredSelector } from "reselect";
@@ -42,7 +43,10 @@ class Template extends React.Component {
       isSaved: false,
       toggleRecording: false,
       isSoundActive: false,
-      isProcessing: false
+      isProcessing: false,
+      recTime: 0.0,
+      keyWords: [],
+      IsCustomDicionaryActive: false
     };
   }
 
@@ -51,12 +55,15 @@ class Template extends React.Component {
 //       return {templateText: nextProps.templateText};
 //     }
 componentDidMount (){
-  const { sampleRate, language, speciality, isSoundActive } = this.props.awsSetting;
-
+  const { sampleRate, language, speciality, isSoundActive, IsCustomDicionaryActive } = this.props.awsSetting;
+  const  keywords  = this.props.allKeyWords;
   this.setState({
-      isSoundActive: isSoundActive
+      isSoundActive: isSoundActive,
+      keyWords: keywords,
+      IsCustomDicionaryActive: IsCustomDicionaryActive
   }, () => {
     log("is sound active: ",this.state.isSoundActive);
+    log("is custom dictionary active: ",this.state.IsCustomDicionaryActive);
     
   });
   
@@ -134,7 +141,8 @@ playSound = (type) => {
           // });
         } else {
           this.playSound("stop");
-          startRecording(this.state.templateText, sampleRate, speciality, language.split("\n")[0], streamType, this.updateTextState);
+          // startRecording(this.state.templateText, sampleRate, speciality, language.split("\n")[0], streamType, this.updateTextState, this.getTemplateText);
+          startRecording(this.state.templateText, sampleRate, speciality, language.split("\n")[0], streamType, this.state.keyWords, this.updateTextState, this.getTemplateText, this.state.IsCustomDicionaryActive);
           toast("Recording Audio", {
             position: "top-right",
             autoClose: 2000,
@@ -190,6 +198,15 @@ playSound = (type) => {
     this.setState({
       templateText: this.state.templateText + text
     });
+  }
+  getTemplateText = (templateName) => {
+    const { allTemplates } = this.props;
+      const selectedTemplate = allTemplates.find(
+        (template) => template.TemplateName == templateName
+      );
+      
+      return selectedTemplate != null ? selectedTemplate.TemplateText : '';
+    
   }
   saveRecording = event => {
     if(this.state.toggleRecording){
@@ -571,6 +588,7 @@ const mapStateToProps = createStructuredSelector({
   allTemplates: selectAllTemplates,
   selectedTemplate: selectSelectedTemplate,
   awsSetting: selectCurrentSetting,
+  allKeyWords: selectAllKeyWords
 });
 
 const mapDispatchToProps = (dispatch) => ({

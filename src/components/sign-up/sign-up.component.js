@@ -115,7 +115,8 @@ class SignUp extends React.Component{
                                     language: result.oSettings.Language,
                                     speciality: result.oSettings.Speciality,
                                     sampleRate: result.oSettings.SampleRate,
-                                    isSoundActive: result.oSettings.IsSoundActive 
+                                    isSoundActive: result.oSettings.IsSoundActive,
+                                    IsCustomDicionaryActive: result.oSettings.IsCustomDicionaryActive
                                 });
                                 setNavigationPath(null);
                     }

@@ -32,9 +32,15 @@ var audioChunks = [];
 var recTime = 0.0;
 var debug = true;
 var cutomDictionary = [];
+var isCustomDictionaryEnabled = false;
+
 var callBackFunction = () => {
 
 };
+
+var getTemplate = (templateName) => {
+
+}
 
 export function log(inputText){
     if(debug){
@@ -59,7 +65,7 @@ if (!window.navigator && window.navigator.mediaDevices && window.navigator.media
     
 }
 
-export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, keyWords, callBack) => {
+export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, keyWords, callBack, getTemplateCallBack, IsCustomDicionaryActive) => {
     log("started");
 
     transcription = lastValue;
@@ -75,7 +81,9 @@ specialty = inputSpecialty;
 languageCode = language;
 streamType = transcribeType;
 cutomDictionary = keyWords;
+isCustomDictionaryEnabled = IsCustomDicionaryActive;
 callBackFunction = callBack;
+getTemplate = getTemplateCallBack;
 // first we get the microphone input from the browser (as a promise)...
 try{
     window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia({
@@ -238,7 +246,7 @@ let streamAudioToWebSocket =  (userMediaStream) => {
     )};
 
     // handle messages, errors, and close events
-    wireSocketEvents(callBackFunction);
+    wireSocketEvents(callBackFunction, getTemplate);
     }catch(e){
         toast(e.message, {
             position: "bottom-right",
@@ -264,7 +272,7 @@ function setRegion() {
     region = "us-east-1";
 }
 
-function wireSocketEvents(callBack) {
+function wireSocketEvents(callBack, getTemplateCallback) {
     // handle inbound messages from Amazon Transcribe
     try{
         socket.onmessage = function (message) {
@@ -272,7 +280,7 @@ function wireSocketEvents(callBack) {
             let messageWrapper = eventStreamMarshaller.unmarshall(Buffer(message.data));
             let messageBody = JSON.parse(String.fromCharCode.apply(String, messageWrapper.body));
             if (messageWrapper.headers[":message-type"].value === "event") {
-                handleEventStreamMessage(messageBody, callBack);
+                handleEventStreamMessage(messageBody, callBack, getTemplateCallback);
             }
             else {
                 transcribeException = true;
@@ -338,7 +346,7 @@ function wireSocketEvents(callBack) {
     }
 }
 
-let handleEventStreamMessage = function (messageJson, callBack) {
+let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallBack) {
     try{
         let results = messageJson.Transcript.Results;
 
@@ -350,6 +358,7 @@ let handleEventStreamMessage = function (messageJson, callBack) {
             // fix encoding for accented characters
             transcript = decodeURIComponent(escape(transcript));
             log('transcript: ' + transcript);
+            log('dictaphone index: ', transcript.index)
             $('#resultBox').val($('#resultBox').val() + latestTranscribe.Content + " ");
             //if(NoiseKW[transcript] != null)
             // const kw = cutomDictionary.find((word) => {
@@ -382,6 +391,9 @@ let handleEventStreamMessage = function (messageJson, callBack) {
                    
                 // }
                  if (!results[0].IsPartial) {
+                    
+                     if(isCustomDictionaryEnabled){
+                        
                         cutomDictionary.forEach(kw => {
                             
                             if(kw.KeyValue.includes('\\n')){
@@ -408,6 +420,17 @@ let handleEventStreamMessage = function (messageJson, callBack) {
                             // }
                             
                         });
+                     }
+                     while(transcript.toLowerCase().includes('dictaphone')){
+                        var templateName = transcript.toLowerCase().match(new RegExp('dictaphone' + '\\s(\\w+)'));
+                        if(templateName != '' && templateName != null){
+                            templateName = templateName[1];
+                        }
+                        log('templateName: ', templateName);
+                        var templateText = getTemplateCallBack(templateName);
+                        log('templateText: ', templateText);
+                        transcript = transcript.toLowerCase().replace('dictaphone ' + templateName, templateText); 
+                    }  
                         //scroll the textarea down
                         recTime += results[0].EndTime - results[0].StartTime;
                         log("recTime: ", recTime);
@@ -417,6 +440,7 @@ let handleEventStreamMessage = function (messageJson, callBack) {
                        
                         // transcription += transcript + "\n";
                     }
+                    
                     $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
                 
             // update the textarea with the latest result

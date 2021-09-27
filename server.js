@@ -140,11 +140,12 @@ app.get('/register/:name/:email/:password', (req, res) => {
   
 });
 
-app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive/:streamType', (req, res) => {
+app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive/:streamType/:IsCustomDicionaryActive', (req, res) => {
  
-  const {userId, language, speciality, sampleRate, isSoundActive, streamType} = req.params;
+  const {userId, language, speciality, sampleRate, isSoundActive, streamType, IsCustomDicionaryActive} = req.params;
   var url = `${baseURL}/api/api.ashx?methodname=UpdateUserRecordingSettings&userId=${userId}&language=${language}
-  &speciality=${speciality}&sampleRate=${sampleRate}&isSoundActive=${isSoundActive}&streamType=${streamType}`;
+  &speciality=${speciality}&sampleRate=${sampleRate}&isSoundActive=${isSoundActive}&streamType=${streamType}
+  &IsCustomDicionaryActive=${IsCustomDicionaryActive}`;
   //console.log(url);
   request(
     { url: url },
