@@ -1,6 +1,7 @@
 import ACTIONTYPE from './dictionary.type';
 const initialState = {
-    allKeyWords: []
+    allKeyWords: [],
+    punctuationKeywords: []
 };
 
 const dictionaryReducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ const dictionaryReducer = (state = initialState, action) => {
                 ...state,
                 allKeyWords: action.payload
             }
+            case ACTIONTYPE.SET_PUNCTUATION_KEYWORDS:
+                return{
+                    ...state,
+                    punctuationKeywords: action.payload
+                }
         default:
             return state;
 

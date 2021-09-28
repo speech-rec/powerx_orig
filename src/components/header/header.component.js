@@ -39,7 +39,9 @@ const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate
                     location.pathname.toLowerCase().includes('template') ? <Link to='/settingscreen'>
                     SETTINGS <br/>
                      <FontAwesomeIcon icon={faCogs} style={{marginRight: '3px'}}/>
-                    </Link>: <div></div>}
+                    </Link>: 
+                    
+                    <div></div>}
                 </div>
                 {currentUser ? 
                 <div className='option' onClick={signOut}>

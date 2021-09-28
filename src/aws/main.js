@@ -32,7 +32,10 @@ var audioChunks = [];
 var recTime = 0.0;
 var debug = true;
 var cutomDictionary = [];
+var punctionKeyWords = [];
 var isCustomDictionaryEnabled = false;
+var IsAutoPunctuationActive = false;
+var IsDictaPhoneActive = false;
 
 var callBackFunction = () => {
 
@@ -65,7 +68,7 @@ if (!window.navigator && window.navigator.mediaDevices && window.navigator.media
     
 }
 
-export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, keyWords, callBack, getTemplateCallBack, IsCustomDicionaryActive) => {
+export const startRecording = (lastValue, sampleRate, inputSpecialty, language, transcribeType, keyWords, callBack, getTemplateCallBack, IsCustomDicionaryActive, IsAutoPunctuationEnabled, IsDictaPhoneEnabled, PunctionKeyWords) => {
     log("started");
 
     transcription = lastValue;
@@ -81,7 +84,10 @@ specialty = inputSpecialty;
 languageCode = language;
 streamType = transcribeType;
 cutomDictionary = keyWords;
+punctionKeyWords = PunctionKeyWords;
 isCustomDictionaryEnabled = IsCustomDicionaryActive;
+IsAutoPunctuationActive = IsAutoPunctuationEnabled;
+IsDictaPhoneActive = IsDictaPhoneEnabled;
 callBackFunction = callBack;
 getTemplate = getTemplateCallBack;
 // first we get the microphone input from the browser (as a promise)...
@@ -421,19 +427,51 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                             
                         });
                      }
-                     while(transcript.toLowerCase().includes('dictaphone')){
-                        var templateName = transcript.toLowerCase().match(new RegExp('dictaphone' + '\\s(\\w+)'));
-                        if(templateName != '' && templateName != null){
-                            templateName = templateName[1];
-                        }
-                        log('templateName: ', templateName);
-                        var templateText = getTemplateCallBack(templateName);
-                        log('templateText: ', templateText);
-                        if(templateText == null || templateText == '' || templateText == ' '){
-                            break;
-                        }
-                        transcript = transcript.toLowerCase().replace('dictaphone ' + templateName, templateText); 
-                    }  
+                     if(IsAutoPunctuationActive){
+                        
+                        punctionKeyWords.forEach(kw => {
+                            
+                            if(kw.includes('\\n')){
+                                
+                                kw = kw.replaceAll("\\n", "");
+                                transcript = transcript.replaceAll(kw, ' ');
+                                //return;
+                                // var total_lineBreaks = kw.KeyValue.split('');
+                                // var lineBreaks = '';
+                                // for(var i = 1; i <= total_lineBreaks; i++)
+                                // {
+                                //     lineBreaks += "\n";
+                                // }
+                                
+                            }
+                            else{
+                                //log(kw.KeyValue);
+                                transcript = transcript.replaceAll(kw, ' ');
+                            }
+                            // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
+                               
+                                
+                                
+                            // }
+                            
+                        });
+                     }
+                     if(IsDictaPhoneActive){
+                        while(transcript.toLowerCase().includes('dictaphone')){
+                            var templateName = transcript.toLowerCase().match(new RegExp('dictaphone' + '\\s(\\w+)'));
+                            if(templateName != '' && templateName != null){
+                                templateName = templateName[1];
+                            }
+                            log('templateName: ', templateName);
+                            var templateText = getTemplateCallBack(templateName);
+                            log('templateText: ', templateText);
+                            if(templateText == null || templateText == '' || templateText == ' '){
+                                break;
+                            }
+                            transcript = transcript.toLowerCase().replace('dictaphone ' + templateName, templateText); 
+                        } 
+                     }
+                      
                         //scroll the textarea down
                         recTime += results[0].EndTime - results[0].StartTime;
                         log("recTime: ", recTime);

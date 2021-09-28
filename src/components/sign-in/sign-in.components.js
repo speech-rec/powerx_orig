@@ -7,6 +7,7 @@ import {setCurrentuser} from '../../redux/user/user.action';
 import {setTemplates, setSelectedTemplate} from '../../redux/template/template.action';
 import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
 import {setSetting} from '../../redux/aws/aws.action';
+import {setPunctuationKeyWords} from '../../redux/customDictionary/dictionary.action';
 import { connect } from 'react-redux';
 import {log} from '../../aws/main';
 import {Link} from 'react-router-dom';
@@ -84,7 +85,7 @@ class SignIn extends React.Component{
                         
                         });
                 }else{
-                    const {setTemplates, setCurrentuser, setSetting} = this.props;
+                    const {setTemplates, setCurrentuser, setSetting, setPunctuationKeyWords} = this.props;
                     if(result.id != 0 && result.id != undefined){
                         fetch(`/GetTemplatesByUserId/${result.id}`).then(res => res.json()).then((templates) => {
                             log(templates);
@@ -108,14 +109,18 @@ class SignIn extends React.Component{
                            
                         
                         );
+
                         setSetting({
                             language: result.oSettings.Language,
                             speciality: result.oSettings.Speciality,
                             sampleRate: result.oSettings.SampleRate,
                             isSoundActive: result.oSettings.IsSoundActive,
                             streamType: result.oSettings.StreamType,
-                            IsCustomDicionaryActive: result.oSettings.IsCustomDicionaryActive
+                            IsCustomDicionaryActive: result.oSettings.IsCustomDicionaryActive,
+                            IsAutoPunctuationActive: result.oSettings.IsAutoPunctuationActive,
+                            IsDictaPhoneActive: result.oSettings.IsDictaPhoneActive
                         });
+                        setPunctuationKeyWords(result.oPunctuationKeyWords);
                         // setNavigationPath('/signin');
                     }else{
                         toast('Invalid login credentials', {
@@ -230,7 +235,8 @@ const mapDispatchToProps = dispatch => ({
     setTemplates: templates => dispatch(setTemplates(templates)),
     setSelectedTemplate: templateId => dispatch(setSelectedTemplate(templateId)),
     setNavigationPath: path => dispatch(setNavigationPath(path)),
-    setSetting: settings => dispatch(setSetting(settings))
+    setSetting: settings => dispatch(setSetting(settings)),
+    setPunctuationKeyWords: keywords => dispatch(setPunctuationKeyWords(keywords))
   });
 
 export default connect(null, mapDispatchToProps)(SignIn);

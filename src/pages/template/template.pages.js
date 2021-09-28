@@ -5,7 +5,7 @@ import {
   selectSelectedTemplate,
 } from "../../redux/template/template.selectors";
 import { selectCurrentSetting } from "../../redux/aws/aws.selectors";
-import { selectAllKeyWords } from '../../redux/customDictionary/dictionary.selectors';
+import { selectAllKeyWords, selectPunctuationKeywords } from '../../redux/customDictionary/dictionary.selectors';
 import { setSelectedTemplate } from "../../redux/template/template.action";
 import {setTemplates} from '../../redux/template/template.action';
 import { createStructuredSelector } from "reselect";
@@ -46,7 +46,10 @@ class Template extends React.Component {
       isProcessing: false,
       recTime: 0.0,
       keyWords: [],
-      IsCustomDicionaryActive: false
+      IsCustomDicionaryActive: false,
+      IsAutoPunctuationActive: false,
+      IsDictaPhoneActive: false,
+      PunctuationKeyWords: []
     };
   }
 
@@ -55,16 +58,22 @@ class Template extends React.Component {
 //       return {templateText: nextProps.templateText};
 //     }
 componentDidMount (){
-  const { sampleRate, language, speciality, isSoundActive, IsCustomDicionaryActive } = this.props.awsSetting;
+  const { sampleRate, language, speciality, isSoundActive, IsCustomDicionaryActive, IsAutoPunctuationActive, IsDictaPhoneActive } = this.props.awsSetting;
   const  keywords  = this.props.allKeyWords;
+  const punctuationKeyWords = this.props.punctuationKeywords;
+  log(keywords);
+  log(punctuationKeyWords);
   this.setState({
       isSoundActive: isSoundActive,
       keyWords: keywords,
-      IsCustomDicionaryActive: IsCustomDicionaryActive
+      IsCustomDicionaryActive: IsCustomDicionaryActive,
+      IsDictaPhoneActive: IsDictaPhoneActive,
+      PunctuationKeyWords: punctuationKeyWords
   }, () => {
     log("is sound active: ",this.state.isSoundActive);
     log("is custom dictionary active: ",this.state.IsCustomDicionaryActive);
-    
+    log("is auto punctuation active: " + this.state.IsAutoPunctuationActive);
+    log("is dicta phone active: " + this.state.IsDictaPhoneActive);
   });
   
 }
@@ -142,7 +151,7 @@ playSound = (type) => {
         } else {
           this.playSound("stop");
           // startRecording(this.state.templateText, sampleRate, speciality, language.split("\n")[0], streamType, this.updateTextState, this.getTemplateText);
-          startRecording(this.state.templateText, sampleRate, speciality, language.split("\n")[0], streamType, this.state.keyWords, this.updateTextState, this.getTemplateText, this.state.IsCustomDicionaryActive);
+          startRecording(this.state.templateText, sampleRate, speciality, language.split("\n")[0], streamType, this.state.keyWords, this.updateTextState, this.getTemplateText, this.state.IsCustomDicionaryActive, this.state.IsAutoPunctuationActive, this.state.IsDictaPhoneActive, this.state.PunctuationKeyWords);
           toast("Recording Audio", {
             position: "top-right",
             autoClose: 2000,
@@ -202,7 +211,7 @@ playSound = (type) => {
   getTemplateText = (templateName) => {
     const { allTemplates } = this.props;
       const selectedTemplate = allTemplates.find(
-        (template) => template.TemplateName == templateName
+        (template) => template.TemplateName.toLowerCase() == templateName.toLowerCase()
       );
       
       return selectedTemplate != null ? selectedTemplate.TemplateText : '';
@@ -588,7 +597,8 @@ const mapStateToProps = createStructuredSelector({
   allTemplates: selectAllTemplates,
   selectedTemplate: selectSelectedTemplate,
   awsSetting: selectCurrentSetting,
-  allKeyWords: selectAllKeyWords
+  allKeyWords: selectAllKeyWords,
+  punctuationKeywords: selectPunctuationKeywords
 });
 
 const mapDispatchToProps = (dispatch) => ({
