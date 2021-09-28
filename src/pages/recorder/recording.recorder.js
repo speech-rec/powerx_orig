@@ -65,6 +65,12 @@ class Recorder extends React.Component {
 //       return {recordingText: nextProps.recordingText};
 //     }
 
+componentWillUnmount (){
+  stopRecording(() => {
+
+  });
+}
+
 componentDidMount (){
   const { sampleRate, language, speciality, isSoundActive, IsCustomDicionaryActive, IsAutoPunctuationActive, IsDictaPhoneActive } = this.props.awsSetting;
   const  keywords  = this.props.allKeyWords;
@@ -274,7 +280,9 @@ if(this.state.isSoundActive){
             const {recordingText} = this.state;
            
             if(!!recordingText){
-              this.setState({ showPopUp: true, isProcessing: false});
+              this.setState({ showPopUp: true, isProcessing: false},  () => {
+                document.getElementById("recordingName").focus();
+              });
                 return;
             }else{
               toast("Kindly record some text before saving it.", {
@@ -723,6 +731,7 @@ if(this.state.isSoundActive){
                   onChange={this.handleChange}
                   placeholder="enter recording name"
                   className="in-box"
+                  id='recordingName'
                 />
 
                 <button onClick={this.sendMail} className="button">

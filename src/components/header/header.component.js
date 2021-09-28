@@ -34,12 +34,18 @@ const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate
             <div className='options'>
                 
                 <div className='title' style={location.pathname.toLowerCase().includes('recorder') || 
-                location.pathname.toLowerCase().includes('template') ? {width: '50%', height: '100%'} : {width: 0, height: 0}}>
+                location.pathname.toLowerCase().includes('template')
+                || location.pathname.toLowerCase().includes('settingscreen')
+                || location.pathname.toLowerCase().includes('helpscreen') ? {width: '50%', height: '100%'} : {width: 0, height: 0}}>
                     {location.pathname.toLowerCase().includes('recorder') ||
                     location.pathname.toLowerCase().includes('template') ? <Link to='/settingscreen'>
                     SETTINGS <br/>
                      <FontAwesomeIcon icon={faCogs} style={{marginRight: '3px'}}/>
-                    </Link>: 
+                    </Link> : location.pathname.toLowerCase().includes('helpscreen') ||
+                    location.pathname.toLowerCase().includes('settingscreen') ? <Link to='/dashboard'>
+                    BACK <br/>
+                     <FontAwesomeIcon icon={faArrowLeft} style={{marginRight: '3px'}}/>
+                    </Link> : 
                     
                     <div></div>}
                 </div>

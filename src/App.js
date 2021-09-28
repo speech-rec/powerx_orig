@@ -70,7 +70,7 @@ class App extends React.Component {
           <Route exact path='/signup' render={() => !!this.props.currentUser ? (<Redirect to='/dashboard' />): (<SignUpPage />)} />
           <Route exact path='/dashboard' render={() => !!this.props.currentUser ? (<DashBoard />): (<Redirect to='/signin' />)} />
           <Route exact path='/signin' render={() => !!this.props.currentUser ? (<Redirect to='/dashboard' />): (<SignInPage />)} />
-          <Route exact path='/helpscreen' render={() => !!this.props.currentUser ? (<HelpScreen imagePath={HelpImage} userName={this.props.currentUser.displayName} text='Welcome to POWERX. This app is for medical purpose dictation.' />) : (<Redirect to='/signin' />)} />
+          <Route exact path='/helpscreen' render={() => !!this.props.currentUser ? (<HelpScreen imagePath={HelpImage} userName={this.props.currentUser.displayName} text='Welcome to Alpha Notes app. This app is for medical purpose dictation.' />) : (<Redirect to='/signin' />)} />
           <Route exact path='/aboutus' render={() => !!this.props.currentUser ? (<AboutUs imagePath={AboutImage} text='Wanna know more about us? Have a meeting. Visit our website or contact us fo any query.'/>) : (<Redirect to='/signin' />)} />
           {/* <Route exact path='/profile' render={() => !!this.props.currentUser ? (<ProfilePage />) : (<Redirect to='/signin' />)} /> */}
           <Route exact path = '/settingscreen' render={() => !!this.props.currentUser ? (<SettingsPage />) : (<Redirect to='/signin' />)}/>

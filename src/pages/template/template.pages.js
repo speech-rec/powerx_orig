@@ -57,6 +57,13 @@ class Template extends React.Component {
 //       log('should go here' ,nextProps);
 //       return {templateText: nextProps.templateText};
 //     }
+
+componentWillUnmount (){
+  stopRecording(() => {
+
+  });
+}
+
 componentDidMount (){
   const { sampleRate, language, speciality, isSoundActive, IsCustomDicionaryActive, IsAutoPunctuationActive, IsDictaPhoneActive } = this.props.awsSetting;
   const  keywords  = this.props.allKeyWords;
