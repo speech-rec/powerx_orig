@@ -461,14 +461,18 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                             var templateName = transcript.toLowerCase().match(new RegExp('dictaphone' + '\\s(\\w+)'));
                             if(templateName != '' && templateName != null){
                                 templateName = templateName[1];
-                            }
-                            log('templateName: ', templateName);
+                                log('templateName: '+ templateName);
+                            
                             var templateText = getTemplateCallBack(templateName);
-                            log('templateText: ', templateText);
+                            log('templateText: '+ templateText);
                             if(templateText == null || templateText == '' || templateText == ' '){
                                 break;
                             }
-                            transcript = transcript.toLowerCase().replace('dictaphone ' + templateName, templateText); 
+                            transcript = transcript.toLowerCase().replace('dictaphone ' + templateName, templateText);
+                            }else{
+                                break;
+                            }
+                             
                         } 
                      }
                       
