@@ -540,20 +540,20 @@ playSound = (type) => {
             <div className="button1" hidden={this.state.isRecording ? false : true} onClick={this.cancelRecording}>
               <div className="customIcon">
                 {/* <FontAwesomeIcon icon={faTimes} textAnchor="Cancel"/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>Cancel</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}}>Cancel</p>
               </div>
             </div>
             <div className="button2" onClick={this.handleClick} style={this.state.isProcessing ? {background: "grey", cursor: "no-drop"} : {background: "#fff", cursor: "pointer"}}>
               <div className="icon2">
                 <FontAwesomeIcon
                   icon={this.state.toggleRecording ? faMicrophoneSlash : faMicrophone}
-                className="fa-lg" style={{color: "#4C5470"}}/>
+                className="fa-lg" style={{color: "rgb(0,120,212)"}}/>
               </div>
             </div>
             <div className="button1" hidden={this.state.isRecording ? false : true} onClick={this.saveRecording}>
               <div className="customIcon">
                 {/* <FontAwesomeIcon icon={faCheck} /> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>Save</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}}>Save</p>
               </div>
             </div>
           </div>

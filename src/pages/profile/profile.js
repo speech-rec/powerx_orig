@@ -10,7 +10,7 @@ const Profile = ({currentUser}) => {
         
         <div className="subContainer"> 
         {/* <img className="img"src={profileURL} alt="img"/> */}
-        <h1 style={{color: '#4C5470'}}>{displayName}</h1>
+        <h1 style={{color: 'rgb(0,120,212)'}}>{displayName}</h1>
         <p>Email: {email}</p>
         {/* <p>Password: {password}</p> */}
         

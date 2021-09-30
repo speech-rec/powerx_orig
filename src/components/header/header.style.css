@@ -5,7 +5,7 @@
     margin-bottom: 25px;
     align-items: center;
     background-color: #fff;
-    color: #4C5470;
+    color: rgb(0,120,212);
     text-align: center;
     padding: 10px 0px;
    
@@ -17,7 +17,7 @@
   }
   a{
     text-decoration: none;
-    color: #4C5470;
+    color: rgb(0,120,212);
   }
   .titleText{
     /* //align-items: center; */
@@ -30,7 +30,7 @@
     display: flex;
     align-items: left;
     justify-content: flex-start;
-    color: #4C5470;
+    color: rgb(0,120,212);
     padding-bottom: 10px;
     padding-left: 15px;
     cursor: pointer;
@@ -42,12 +42,12 @@
     flex-direction: row;
     justify-content: space-between;
     position: absolute;
-    color: #4C5470;
+    color: rgb(0,120,212);
     
   }
   .option {
     padding-bottom: 10px;
     padding-right: 15px;
     cursor: pointer;
-    color:#4C5470;
+    color:rgb(0,120,212);
   }

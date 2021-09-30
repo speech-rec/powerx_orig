@@ -633,43 +633,43 @@ if(this.state.isSoundActive){
               <div className="punctuation" name="fullStop" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon="fa fa-comma" textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=".">.</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}} data-value=".">.</p>
               </div>
             </div>
             <div className="punctuation" name="comma" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=",">,</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}} data-value=",">,</p>
               </div>
             </div>
             <div className="punctuation" name="semiCollon" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=";">;</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}} data-value=";">;</p>
               </div>
             </div>
             <div className="punctuation" name="collon" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value=":">:</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}} data-value=":">:</p>
               </div>
             </div>
             <div className="punctuation" name="atTheRate" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value="@">@</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}} data-value="@">@</p>
               </div>
             </div>
             <div className="punctuation" name="exclamationSign" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value="!">!</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}} data-value="!">!</p>
               </div>
             </div>
             <div className="punctuation" name="lineBreak" onClick={this.addPunctuation}>
               <div className="punctuationIcon">
                 {/* <FontAwesomeIcon icon={faCircle} textAnchor="."/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}} data-value="newLine">\n</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}} data-value="newLine">\n</p>
               </div>
             </div>
               </div>
@@ -686,20 +686,20 @@ if(this.state.isSoundActive){
             <div className="button1" hidden={this.state.isRecording ? false : true} onClick={this.cancelRecording}>
               <div className="customIcon">
                 {/* <FontAwesomeIcon icon={faTimes} textAnchor="Cancel"/> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>Cancel</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}}>Cancel</p>
               </div>
             </div>
             <div className="button2" onClick={this.handleClick} style={this.state.isProcessing ? {background: "grey", cursor: "no-drop"} : {background: "#fff", cursor: "pointer"}}>
               <div className="icon2">
                 <FontAwesomeIcon
                   icon={this.state.toggleRecording ? faMicrophoneSlash : faMicrophone}
-                className="fa-lg" style={{color: "#4C5470"}}/>
+                className="fa-lg" style={{color: "rgb(0,120,212)"}}/>
               </div>
             </div>
             <div className="button1" hidden={this.state.isRecording ? false : true} onClick={this.saveRecording}>
               <div className="customIcon">
                 {/* <FontAwesomeIcon icon={faCheck} /> */}
-                <p style={{fontWeight:"bold", color: "#4C5470"}}>Save</p>
+                <p style={{fontWeight:"bold", color: "rgb(0,120,212)"}}>Save</p>
               </div>
             </div>
           </div>
