@@ -37,7 +37,7 @@ class SettingPage extends React.Component{
 
         this.setState({
             sampleRate: streamType == 'stream-transcription-websocket' ? sampleRate : 16000,
-            language: streamType == 'stream-transcription-websocket' ? language.split("\n")[0] : 'en-US',
+            language: streamType == 'stream-transcription-websocket' ? language : 'en-US',
             speciality: speciality,
             isSoundActive: isSoundActive,
             streamType: streamType,
@@ -61,9 +61,10 @@ class SettingPage extends React.Component{
             this.setState({
               isDisabled: true,
               sampleRate: 16000,
+              language: 'en-US',
               languages: {
                 'US English': 'en-US',
-                'British English': 'en-GB'
+                // 'British English': 'en-GB'
               }
             });
           }else{
@@ -156,29 +157,36 @@ class SettingPage extends React.Component{
         />
         <div className="Signin-form"> 
         <CustomDropDown type='json' value={this.state.streamType} disabled={false} selectedSetting={this.state.streamType} options={StreamTypes} name='streamType' handleChange={this.handleChange} />
-        <CustomDropDown type='json' value={this.state.language} disabled={false} selectedSetting={this.state.language} options={this.state.languages} name='language' handleChange={this.handleChange} />
+        <CustomDropDown type='json' value={this.state.language} disabled={this.state.isDisabled} selectedSetting={this.state.language} options={this.state.languages} name='language' handleChange={this.handleChange} />
                     <CustomDropDown  type='array' value={this.state.speciality} disabled={false} selectedSetting={this.state.speciality} options={Specialities} name='speciality' handleChange={this.handleChange} />
                     <CustomDropDown type='array' value={this.state.sampleRate} disabled={this.state.isDisabled} selectedSetting={this.state.sampleRate} options={SampleRates} name='sampleRate' handleChange={this.handleChange} />
                   <div className="toggleDiv">
                   <p>Recording Beep Sound</p>
                   <ToggleButton
-  inactiveLabel={''}
-  activeLabel={''}
+  inactiveLabel={'InActive'}
+  activeLabel={'Active'}
+  trackStyle={{width:'70px'}}
+  thumbAnimateRange={[1, 51]}
+  activeLabelStyle={{ width:'40px', color: "rgb(207,221,245)", marginLeft: "2%" }} 
+  inactiveLabelStyle={{ width:'40px', color: "rgb(65,66,68)" }}
   colors={{
     activeThumb: {
-      base: 'rgb(250,250,250)',
-    },
-    inactiveThumb: {
       base: 'rgb(62,130,247)',
     },
+    inactiveThumb: {
+      base: 'rgb(250,250,250)',
+    },
     active: {
+      base: 'rgb(65,66,68)',
+      hover: 'rgb(95,96,98)',
+      
+    },
+    inactive: {
       base: 'rgb(207,221,245)',
       hover: 'rgb(177, 191, 215)',
     },
-    inactive: {
-      base: 'rgb(65,66,68)',
-      hover: 'rgb(95,96,98)',
-    }
+   
+    
   }}
 //   trackStyle={styles.trackStyle}
 //   thumbStyle={styles.thumbStyle}
@@ -194,24 +202,31 @@ class SettingPage extends React.Component{
                   <div className="toggleDiv">
                   <p>Enable Custom Dictionary</p>
                   <ToggleButton
-  inactiveLabel={''}
-  activeLabel={''}
-  colors={{
-    activeThumb: {
-      base: 'rgb(250,250,250)',
-    },
-    inactiveThumb: {
-      base: 'rgb(62,130,247)',
-    },
-    active: {
-      base: 'rgb(207,221,245)',
-      hover: 'rgb(177, 191, 215)',
-    },
-    inactive: {
-      base: 'rgb(65,66,68)',
-      hover: 'rgb(95,96,98)',
-    }
-  }}
+ inactiveLabel={'InActive'}
+ activeLabel={'Active'}
+ trackStyle={{width:'70px'}}
+ thumbAnimateRange={[1, 51]}
+ activeLabelStyle={{ width:'40px', color: "rgb(207,221,245)", marginLeft: "2%" }} 
+ inactiveLabelStyle={{ width:'40px', color: "rgb(65,66,68)" }}
+ colors={{
+   activeThumb: {
+     base: 'rgb(62,130,247)',
+   },
+   inactiveThumb: {
+     base: 'rgb(250,250,250)',
+   },
+   active: {
+     base: 'rgb(65,66,68)',
+     hover: 'rgb(95,96,98)',
+     
+   },
+   inactive: {
+     base: 'rgb(207,221,245)',
+     hover: 'rgb(177, 191, 215)',
+   },
+  
+   
+ }}
 //   trackStyle={styles.trackStyle}
 //   thumbStyle={styles.thumbStyle}
  
@@ -226,23 +241,30 @@ class SettingPage extends React.Component{
                   <div className="toggleDiv">
                   <p>Enable Auto Punctuation</p>
                   <ToggleButton
-  inactiveLabel={''}
-  activeLabel={''}
+  inactiveLabel={'InActive'}
+  activeLabel={'Active'}
+  trackStyle={{width:'70px'}}
+  thumbAnimateRange={[1, 51]}
+  activeLabelStyle={{ width:'40px', color: "rgb(207,221,245)", marginLeft: "2%" }} 
+  inactiveLabelStyle={{ width:'40px', color: "rgb(65,66,68)" }}
   colors={{
     activeThumb: {
-      base: 'rgb(250,250,250)',
-    },
-    inactiveThumb: {
       base: 'rgb(62,130,247)',
     },
+    inactiveThumb: {
+      base: 'rgb(250,250,250)',
+    },
     active: {
+      base: 'rgb(65,66,68)',
+      hover: 'rgb(95,96,98)',
+      
+    },
+    inactive: {
       base: 'rgb(207,221,245)',
       hover: 'rgb(177, 191, 215)',
     },
-    inactive: {
-      base: 'rgb(65,66,68)',
-      hover: 'rgb(95,96,98)',
-    }
+   
+    
   }}
 //   trackStyle={styles.trackStyle}
 //   thumbStyle={styles.thumbStyle}
@@ -258,23 +280,30 @@ class SettingPage extends React.Component{
                   <div className="toggleDiv">
                   <p>Enable Dictaphone</p>
                   <ToggleButton
-  inactiveLabel={''}
-  activeLabel={''}
+  inactiveLabel={'InActive'}
+  activeLabel={'Active'}
+  trackStyle={{width:'70px'}}
+  thumbAnimateRange={[1, 51]}
+  activeLabelStyle={{ width:'40px', color: "rgb(207,221,245)", marginLeft: "2%" }} 
+  inactiveLabelStyle={{ width:'40px', color: "rgb(65,66,68)" }}
   colors={{
     activeThumb: {
-      base: 'rgb(250,250,250)',
-    },
-    inactiveThumb: {
       base: 'rgb(62,130,247)',
     },
+    inactiveThumb: {
+      base: 'rgb(250,250,250)',
+    },
     active: {
+      base: 'rgb(65,66,68)',
+      hover: 'rgb(95,96,98)',
+      
+    },
+    inactive: {
       base: 'rgb(207,221,245)',
       hover: 'rgb(177, 191, 215)',
     },
-    inactive: {
-      base: 'rgb(65,66,68)',
-      hover: 'rgb(95,96,98)',
-    }
+   
+    
   }}
 //   trackStyle={styles.trackStyle}
 //   thumbStyle={styles.thumbStyle}

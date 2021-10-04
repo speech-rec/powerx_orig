@@ -397,65 +397,69 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                    
                 // }
                  if (!results[0].IsPartial) {
-                    
+                    if(IsAutoPunctuationActive == false){
+                        if(punctionKeyWords.length >= 1){
+                            punctionKeyWords.forEach(kw => {
+                            
+                                if(kw.includes('\\n')){
+                                    
+                                    kw = kw.replaceAll("\\n", "");
+                                    transcript = transcript.replaceAll(kw, '');
+                                    //return;
+                                    // var total_lineBreaks = kw.KeyValue.split('');
+                                    // var lineBreaks = '';
+                                    // for(var i = 1; i <= total_lineBreaks; i++)
+                                    // {
+                                    //     lineBreaks += "\n";
+                                    // }
+                                    
+                                }
+                                else{
+                                    //log(kw.KeyValue);
+                                    transcript = transcript.replaceAll(kw, '');
+                                }
+                                // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
+                                   
+                                    
+                                    
+                                // }
+                                
+                            });
+                        }
+                        
+                     }
                      if(isCustomDictionaryEnabled){
-                        
-                        cutomDictionary.forEach(kw => {
+                        if(cutomDictionary.length >=1){
+                            cutomDictionary.forEach(kw => {
                             
-                            if(kw.KeyValue.includes('\\n')){
-                                log(kw.KeyValue.split());
-                                kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
-                                transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
-                                //return;
-                                // var total_lineBreaks = kw.KeyValue.split('');
-                                // var lineBreaks = '';
-                                // for(var i = 1; i <= total_lineBreaks; i++)
-                                // {
-                                //     lineBreaks += "\n";
+                                if(kw.KeyValue.includes('\\n')){
+                                    log(kw.KeyValue.split());
+                                    kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
+                                    transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
+                                    //return;
+                                    // var total_lineBreaks = kw.KeyValue.split('');
+                                    // var lineBreaks = '';
+                                    // for(var i = 1; i <= total_lineBreaks; i++)
+                                    // {
+                                    //     lineBreaks += "\n";
+                                    // }
+                                    
+                                }
+                                else{
+                                    //log(kw.KeyValue);
+                                    transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
+                                }
+                                // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
+                                   
+                                    
+                                    
                                 // }
                                 
-                            }
-                            else{
-                                //log(kw.KeyValue);
-                                transcript = transcript.replaceAll(kw.KeyName, kw.KeyValue);
-                            }
-                            // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
-                               
-                                
-                                
-                            // }
-                            
-                        });
-                     }
-                     if(IsAutoPunctuationActive){
+                            });
+                        }
                         
-                        punctionKeyWords.forEach(kw => {
-                            
-                            if(kw.includes('\\n')){
-                                
-                                kw = kw.replaceAll("\\n", "");
-                                transcript = transcript.replaceAll(kw, ' ');
-                                //return;
-                                // var total_lineBreaks = kw.KeyValue.split('');
-                                // var lineBreaks = '';
-                                // for(var i = 1; i <= total_lineBreaks; i++)
-                                // {
-                                //     lineBreaks += "\n";
-                                // }
-                                
-                            }
-                            else{
-                                //log(kw.KeyValue);
-                                transcript = transcript.replaceAll(kw, ' ');
-                            }
-                            // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
-                               
-                                
-                                
-                            // }
-                            
-                        });
                      }
+                     
                      if(IsDictaPhoneActive){
                         while(transcript.toLowerCase().includes('dictaphone')){
                             var templateName = transcript.toLowerCase().match(new RegExp('dictaphone' + '\\s(\\w+)'));
