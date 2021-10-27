@@ -140,6 +140,24 @@ app.get('/register/:name/:email/:password', (req, res) => {
   
 });
 
+app.get('/recordRecording/:userId/:recordingTime', (req, res) => {
+  var url = `${baseURL}/api/api.ashx?methodname=AddRecordingRecord&userId=${req.params.userId}&recordingTime=${req.params.recordingTime}`;
+  
+  request(
+    { url: url },
+    (error, response, body) => {
+      if (error || response.statusCode !== 200) {
+        return res.status(500).json({ type: 'error', message: error ? error.message: "" });
+      }
+
+      res.send(body);
+    }
+  );
+  
+  
+});
+
+
 app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive/:streamType/:IsCustomDicionaryActive/:IsAutoPunctuationActive/:IsDictaPhoneActive', (req, res) => {
  
   const {userId, language, speciality, sampleRate, isSoundActive, streamType, IsCustomDicionaryActive, IsAutoPunctuationActive, IsDictaPhoneActive} = req.params;

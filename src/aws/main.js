@@ -99,7 +99,7 @@ try{
     // ...then we convert the mic stream to binary event stream messages when the promise resolves 
     .then(streamAudioToWebSocket) 
     .catch(function (error) {
-        toast('Oops! something went wrong.', {
+        toast(error.message, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -397,6 +397,7 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                    
                 // }
                  if (!results[0].IsPartial) {
+                     log("results");
                       log(results[0]);
                     if(IsAutoPunctuationActive == false){
                         if(punctionKeyWords.length >= 1){
@@ -442,6 +443,8 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                     transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                     regEx = new RegExp(' ' + kw.KeyName, "ig");
                                     transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    regEx = new RegExp(kw.KeyName, "ig");
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                     //return;
                                     // var total_lineBreaks = kw.KeyValue.split('');
                                     // var lineBreaks = '';
@@ -456,6 +459,8 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                     var regEx = new RegExp(' ' + kw.KeyName + '.', "ig");
                                     transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                     regEx = new RegExp(' ' + kw.KeyName, "ig");
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    regEx = new RegExp(kw.KeyName, "ig");
                                     transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                 }
                                 // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){

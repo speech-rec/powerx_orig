@@ -7,6 +7,8 @@ import {
 import { selectCurrentSetting } from "../../redux/aws/aws.selectors";
 import { selectAllKeyWords, selectPunctuationKeywords } from '../../redux/customDictionary/dictionary.selectors';
 import { setSelectedTemplate } from "../../redux/template/template.action";
+import { setUserLicenseData } from "../../redux/licensing/licensing.action";
+import { selectUserLicenseData } from "../../redux/licensing/licensing.selector";
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 import ResultBox from "../../components/transcribeResult/resultBox.transcribeResult";
@@ -56,7 +58,7 @@ class Recorder extends React.Component {
       IsCustomDicionaryActive: false,
       IsAutoPunctuationActive: false,
       IsDictaPhoneActive: false,
-      PunctuationKeyWords: []
+      PunctuationKeyWords: [],
     };
   }
 
@@ -113,6 +115,7 @@ if(this.state.isSoundActive){
   };
   handleClick = (event) => {
     event.preventDefault();
+    
     if(!this.state.isProcessing){
       log(this.props.awsSetting);
       const { sampleRate, speciality, streamType } = this.props.awsSetting;
@@ -170,7 +173,12 @@ if(this.state.isSoundActive){
           //   type: "info",
           // });
         } else {
-          this.playSound("stop");
+          const { licenseData } = this.props;
+          if(licenseData != null){
+            if(licenseData.IsPackageExpired == false){
+              if(licenseData.TotalRecordingTime < licenseData.AllowedRecordingTime){
+                if(licenseData.TotalNotes < licenseData.AllowedNotes){
+                  this.playSound("stop");
           log(this.state.keyWords);
           startRecording(this.state.recordingText, sampleRate, speciality, language.split("\n")[0], streamType, this.state.keyWords, this.updateTextState, this.getTemplateText, this.state.IsCustomDicionaryActive, this.state.IsAutoPunctuationActive, this.state.IsDictaPhoneActive, this.state.PunctuationKeyWords);
           toast("Recording Audio", {
@@ -183,6 +191,64 @@ if(this.state.isSoundActive){
             progress: undefined,
             type: "info",
           });
+                }else{
+                  toast("you have reached your maximum number of recording limit.", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    type: "info",
+                  });
+                  this.setState({ toggleRecording: false, isProcessing: false, isRecording: false
+                  });
+                }
+                
+              }else{
+                toast("you have reached your maximum recording time limit.", {
+                  position: "top-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: false,
+                  progress: undefined,
+                  type: "info",
+                });
+                this.setState({ toggleRecording: false, isProcessing: false, isRecording: false
+                });
+              }
+            }else{
+              toast("your assigned package has expired.", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                type: "info",
+              });
+              this.setState({ toggleRecording: false, isProcessing: false, isRecording: false
+              });
+            }
+          }else{
+            toast("you have no package assigned.", {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              type: "info",
+            });
+            this.setState({ toggleRecording: false, isProcessing: false, isRecording: false
+            });
+          }
+          
         }
       } catch (e) {
         toast("Oops! something went wrong.", {
@@ -218,9 +284,50 @@ if(this.state.isSoundActive){
     if(this.state.toggleRecording){
       this.playSound("start");
     }
-    stopRecording(() => {
-      this.setState({ isRecording: false, recordingText: '', toggleRecording: false, isProcessing: false, recordingName: '', recTime: 0.0 });
-    });
+    var recTime = this.state.recTime;
+    if(recTime > 0){
+      const { id } = this.props.currentUser;
+      const { recTime } = this.state;
+       fetch(`/recordRecording/${id}/${recTime}`)
+          .then((res) => res.json())
+          .then((result) => {
+            log(result);
+            if (result.IsError == true) {
+              toast(result.ErrorMessage, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                type: "error",
+              });
+            } else {
+              const { setUserLicenseData } = this.props;
+              setUserLicenseData(result);
+              stopRecording(() => {
+                this.setState({ isRecording: false, recordingText: '', toggleRecording: false, isProcessing: false, recordingName: '', recTime: 0.0 });
+              });
+            }
+            
+          })
+          .catch((error) => {
+            log(error);
+            toast(error.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              type: "error",
+            });
+            
+          });
+    }
+    
     
     
     
@@ -413,7 +520,7 @@ if(this.state.isSoundActive){
         const { id } = this.props.currentUser;
         createAudio(recordingName, recordingText, id, recTime, (response) => {
           var result = response;
-          //log(result);
+          log(result);
         if (result.type == "error") {
           
             toast(result.text, {
@@ -439,6 +546,8 @@ if(this.state.isSoundActive){
               type: "success",
             });
           }
+          const { setUserLicenseData } = this.props;
+          setUserLicenseData(result.oRecord);
           this.setState({
             recordingName: "",
             recordingText: "",
@@ -752,11 +861,13 @@ const mapStateToProps = createStructuredSelector({
   selectedTemplate: selectSelectedTemplate,
   awsSetting: selectCurrentSetting,
   allKeyWords: selectAllKeyWords,
-  punctuationKeywords: selectPunctuationKeywords
+  punctuationKeywords: selectPunctuationKeywords,
+  licenseData: selectUserLicenseData
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setSelectedTemplate: (id) => dispatch(setSelectedTemplate(id)),
+  setUserLicenseData: (licenseData) => dispatch(setUserLicenseData(licenseData)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Recorder);

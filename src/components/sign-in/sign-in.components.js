@@ -8,6 +8,7 @@ import {setTemplates, setSelectedTemplate} from '../../redux/template/template.a
 import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
 import {setSetting} from '../../redux/aws/aws.action';
 import {setPunctuationKeyWords, setDictionary} from '../../redux/customDictionary/dictionary.action';
+import {setPackages, setUserPackages, setUserLicenseData} from '../../redux/licensing/licensing.action';
 import { connect } from 'react-redux';
 import {log} from '../../aws/main';
 import {Link} from 'react-router-dom';
@@ -85,7 +86,7 @@ class SignIn extends React.Component{
                         
                         });
                 }else{
-                    const {setTemplates, setCurrentuser, setSetting, setPunctuationKeyWords, setDictionary} = this.props;
+                    const {setTemplates, setCurrentuser, setSetting, setPunctuationKeyWords, setDictionary, setPackages, setUserPackages, setUserLicenseData} = this.props;
                     if(result.id != 0 && result.id != undefined){
                         fetch(`/GetTemplatesByUserId/${result.id}`).then(res => res.json()).then((templates) => {
                             log(templates);
@@ -122,6 +123,11 @@ class SignIn extends React.Component{
                         });
                         setPunctuationKeyWords(result.oPunctuationKeyWords);
                         setDictionary(result.oDictionary);
+                        setPackages(result.oPackages);
+                        setUserPackages(result.oUserPackage);
+                        if(result.oUserPackage != null){
+                            setUserLicenseData(result.oUserPackage.oRecord);
+                        }
                         // setNavigationPath('/signin');
                     }else{
                         toast('Invalid login credentials', {
@@ -238,7 +244,10 @@ const mapDispatchToProps = dispatch => ({
     setNavigationPath: path => dispatch(setNavigationPath(path)),
     setSetting: settings => dispatch(setSetting(settings)),
     setPunctuationKeyWords: keywords => dispatch(setPunctuationKeyWords(keywords)),
-    setDictionary: dictionary => dispatch(setDictionary(dictionary))
+    setDictionary: dictionary => dispatch(setDictionary(dictionary)),
+    setPackages: packages => dispatch(setPackages(packages)),
+    setUserPackages: userPackages => dispatch(setUserPackages(userPackages)),
+    setUserLicenseData: licenseData => dispatch(setUserLicenseData(licenseData))
   });
 
 export default connect(null, mapDispatchToProps)(SignIn);
