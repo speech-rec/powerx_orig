@@ -3,7 +3,7 @@ import {useLocation, Link} from 'react-router-dom';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {selectPreviousPath} from '../../redux/naviagtor/navigator.selectors';
 import {setTemplates, setSelectedTemplate} from '../../redux/template/template.action';
-import {setCurrentuser} from '../../redux/user/user.action';
+import {setCurrentuser, logoutUser, setPreviousUserCredential} from '../../redux/user/user.action';
 import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
 import {log} from '../../aws/main';
 import { createStructuredSelector } from 'reselect';
@@ -14,14 +14,15 @@ import { faArrowLeft, faSignOutAlt, faCogs } from '@fortawesome/free-solid-svg-i
 
 import './header.style.css';
 
-const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate, title }) => {
+const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate, title, logoutUser, setPreviousUserCredential }) => {
     const location = useLocation();
     const signOut = () => {
         try {
-            setCurrentuser(null);
-            setTemplates(null);
-            setSelectedTemplate(0);
-
+            // setCurrentuser(null);
+            // setTemplates(null);
+            // setSelectedTemplate(0);
+    logoutUser(undefined);
+    setPreviousUserCredential({"email": currentUser.email, "password": currentUser.password});
          } catch (error) {
              log('error', error.response, error)                        
          }
@@ -73,7 +74,9 @@ const mapDispatchToProps = dispatch => ({
     setCurrentuser: user => dispatch(setCurrentuser(user)),
     setTemplates: templates => dispatch(setTemplates(templates)),
     setSelectedTemplate: id => dispatch(setSelectedTemplate(id)),
-    setNavigationPath: path => dispatch(setNavigationPath)
+    setNavigationPath: path => dispatch(setNavigationPath(path)),
+    logoutUser: data => dispatch(logoutUser(data)),
+    setPreviousUserCredential: credential => dispatch(setPreviousUserCredential(credential))
   });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

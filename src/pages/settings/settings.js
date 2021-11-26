@@ -155,7 +155,8 @@ class SettingPage extends React.Component{
           pauseOnHover
           type="info"
         />
-        <div className="Signin-form"> 
+       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%'}}>
+       <div className="settings-form"> 
         <CustomDropDown type='json' value={this.state.streamType} disabled={false} selectedSetting={this.state.streamType} options={StreamTypes} name='streamType' handleChange={this.handleChange} />
         <CustomDropDown type='json' value={this.state.language} disabled={this.state.isDisabled} selectedSetting={this.state.language} options={this.state.languages} name='language' handleChange={this.handleChange} />
                     <CustomDropDown  type='array' value={this.state.speciality} disabled={false} selectedSetting={this.state.speciality} options={Specialities} name='speciality' handleChange={this.handleChange} />
@@ -321,6 +322,7 @@ class SettingPage extends React.Component{
                     SAVE
                 </CustomButton>
         </div>
+       </div>
 </div>
         );
     }

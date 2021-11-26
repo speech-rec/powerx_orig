@@ -4,12 +4,14 @@ import './sign-in.style.css';
 
 
 import {setCurrentuser} from '../../redux/user/user.action';
+import {selectUserCredential} from '../../redux/user/user.selectors';
 import {setTemplates, setSelectedTemplate} from '../../redux/template/template.action';
 import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
 import {setSetting} from '../../redux/aws/aws.action';
 import {setPunctuationKeyWords, setDictionary} from '../../redux/customDictionary/dictionary.action';
 import {setPackages, setUserPackages, setUserLicenseData} from '../../redux/licensing/licensing.action';
 import { connect } from 'react-redux';
+import {createStructuredSelector} from 'reselect';
 import {log} from '../../aws/main';
 import {Link} from 'react-router-dom';
 
@@ -24,7 +26,16 @@ class SignIn extends React.Component{
             password: ''
         }
     };
-    
+    componentDidMount(){
+        var {previousUserCredential} = this.props;
+        console.log(previousUserCredential);
+        if(previousUserCredential != null){
+            this.setState({
+                email: previousUserCredential.email,
+                password: previousUserCredential.password
+            });
+        }
+    }
     handleSubmit = async e =>{
         e.preventDefault();
         const {email, password} = this.state;
@@ -220,7 +231,7 @@ type='info'
                 
                 <input type="email" value={this.state.email} name='email' onChange={this.handleChange} placeholder="Email" className="in-box"/>
                 <input type="password" value={this.state.password} name='password' onChange={this.handleChange} placeholder="Password" className="in-box"/>
-                <a href="http://alphanotes.kapreonline.com/ForgetPassword.aspx" style={{display: 'flex', justifyContent: 'flex-end', color: '#464646', width: '90%'}} >Forget Password?</a>
+                <a href="http://alphanotes.kapreonline.com/ForgetPassword.aspx" style={{display: 'flex', justifyContent: 'flex-end', color: '#464646', width: '90%'}} >Forgot Password?</a>
                
                 <button onClick={this.handleSubmit} className="button">Sign In</button>
             </form>
@@ -237,6 +248,10 @@ type='info'
     
 }}
 
+const mapStateToProps = createStructuredSelector({
+    previousUserCredential: selectUserCredential,
+});
+
 const mapDispatchToProps = dispatch => ({
     setCurrentuser: user => dispatch(setCurrentuser(user)),
     setTemplates: templates => dispatch(setTemplates(templates)),
@@ -250,4 +265,4 @@ const mapDispatchToProps = dispatch => ({
     setUserLicenseData: licenseData => dispatch(setUserLicenseData(licenseData))
   });
 
-export default connect(null, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

@@ -14,7 +14,7 @@ const persistConfig = {
     whitelist: ['user', 'templates', 'awsSetting', 'navigation', 'dictionary', 'license']
 }
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     user: userReducer,
     templates: templatesReducer,
     awsSetting: awsReducer,
@@ -22,4 +22,14 @@ const rootReducer = combineReducers({
     dictionary: dictionaryReducer,
     license: licenseReducer
 });
+
+const rootReducer = (state, action) => {
+    if (action.type === 'USER_LOGOUT') {
+        console.log("removing");
+        storage.removeItem('persist:root')
+      return appReducer(undefined, action)
+    }
+  
+    return appReducer(state, action)
+  }
 export default persistReducer(persistConfig, rootReducer);

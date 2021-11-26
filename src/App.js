@@ -7,6 +7,7 @@ import {log} from './aws/main';
 // import SignInPage from './pages/signin/signin.pages';
 // import SignUpPage from './pages/signup/signup.pages';
 import {selectCurrentUser} from './redux/user/user.selectors';
+import {logoutUser, setPreviousUserCredential} from './redux/user/user.action';
 import {selectAllTemplates} from './redux/template/template.selectors';
 import {setTemplates} from './redux/template/template.action';
 import {setDictionary} from './redux/customDictionary/dictionary.action';
@@ -59,6 +60,14 @@ class App extends React.Component {
       }
     }
   }
+  
+  componentWillUnmount(){
+    var {setPreviousUserCredential } = this.props;
+    var currentUser = this.props.currentUser;
+    this.props.logoutUser(undefined);
+    console.log(currentUser);
+    setPreviousUserCredential({"email": currentUser.email, "password": currentUser.password});
+  }
   render(){
     return (
       <div className="app-container">
@@ -93,6 +102,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   setTemplates: templates => dispatch(setTemplates(templates)),
-  setDictionary: dictionary => dispatch(setDictionary(dictionary))
+  setDictionary: dictionary => dispatch(setDictionary(dictionary)),
+  logoutUser: data => dispatch(logoutUser(data)),
+  setPreviousUserCredential: credential => dispatch(setPreviousUserCredential(credential))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

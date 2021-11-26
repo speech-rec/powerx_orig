@@ -1,5 +1,6 @@
 const initialState = {
-    currentUser: null
+    currentUser: null,
+    userCredential: null
 }
 
 const userReducer = (state = initialState, action) => {
@@ -8,6 +9,11 @@ const userReducer = (state = initialState, action) => {
             return{
                 ...state,
                 currentUser: action.payload
+            }
+            case 'setUserCredential':
+            return{
+                ...state,
+                userCredential: action.payload
             }
         default:
             return state;
