@@ -43,6 +43,8 @@ const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate
                     SETTINGS <br/>
                      <FontAwesomeIcon icon={faCogs} style={{marginRight: '3px'}}/>
                     </Link> : location.pathname.toLowerCase().includes('helpscreen') ||
+                    location.pathname.toLowerCase().includes('license') ||
+                    location.pathname.toLowerCase().includes('features') ||
                     location.pathname.toLowerCase().includes('settingscreen') ? <Link to='/dashboard'>
                     BACK <br/>
                      <FontAwesomeIcon icon={faArrowLeft} style={{marginRight: '3px'}}/>

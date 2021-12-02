@@ -365,37 +365,8 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
             transcript = decodeURIComponent(escape(transcript));
             log('transcript: ' + transcript);
             log('dictaphone index: ', transcript.index)
-            $('#resultBox').val($('#resultBox').val() + latestTranscribe.Content + " ");
-            //if(NoiseKW[transcript] != null)
-            // const kw = cutomDictionary.find((word) => {
-            //     return word.keyName == transcript;
-            // });
-            // log(kw);
-             //$('#resultBox').val(transcription + transcript + "\n");
-                
-                //$('#resultBox').trigger("change");
-                
-                // log("previousTranscript:", prevTranscript);
-                // if(transcript != prevTranscript){
-                //     log(false);
-                //     $('#resultBox').val($('#resultBox').val() + transcript.replace(prevTranscript, "") + " ");
-                // }else{
-                //     log(true);
-                // }
-                
-                // prevTranscript = transcript;
-                
-                // if this transcript segment is final, add it to the overall transcription
-                //return;
-                //log(results[0]);
-                //log(results[0].Alternatives[0]);
-                // const nkw = NoiseKW.find((word) => {
-                //     return word == transcript;
-                // });
-                // log("kw: " + nkw);
-                //  if(nkw == undefined || nkw == null){
-                   
-                // }
+            $('#resultBox').val($('#resultBox').val() + latestTranscribe.Content + ' ');
+            
                  if (!results[0].IsPartial) {
                      log("results");
                       log(results[0]);
@@ -407,24 +378,13 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                     
                                     kw = kw.replaceAll("\\n", "");
                                     transcript = transcript.replaceAll(kw, '');
-                                    //return;
-                                    // var total_lineBreaks = kw.KeyValue.split('');
-                                    // var lineBreaks = '';
-                                    // for(var i = 1; i <= total_lineBreaks; i++)
-                                    // {
-                                    //     lineBreaks += "\n";
-                                    // }
+                                    
                                     
                                 }
                                 else{
-                                    //log(kw.KeyValue);
                                     transcript = transcript.replaceAll(kw, '');
                                 }
-                                // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
-                                   
-                                    
-                                    
-                                // }
+                               
                                 
                             });
                         }
@@ -437,37 +397,38 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                             cutomDictionary.forEach(kw => {
                             
                                 if(kw.KeyValue.includes('\\n')){
-                                    //log(kw.KeyValue.split());
                                     kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
-                                    var regEx = new RegExp(' ' + kw.KeyName + '.', "ig");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
-                                    regEx = new RegExp(' ' + kw.KeyName, "ig");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
-                                    regEx = new RegExp(kw.KeyName, "ig");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
-                                    //return;
-                                    // var total_lineBreaks = kw.KeyValue.split('');
-                                    // var lineBreaks = '';
-                                    // for(var i = 1; i <= total_lineBreaks; i++)
-                                    // {
-                                    //     lineBreaks += "\n";
-                                    // }
+                                    //var regEx = new RegExp(' ' + kw.KeyName + '\.', "ig");
+                                    //console.log(transcript.trim().match(regEx), "c1");
+                                    //transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue);
+                                    // var regEx = new RegExp(kw.KeyName + '\.', "ig");
+                                    // console.log(transcript.trim().match(regEx), "c2");
+                                    // transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    
+                                    var regEx = new RegExp(kw.KeyName + ' ', "ig");
+                                    //console.log(transcript.trim().match(regEx), "c3");
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue + ' ');
+                                    regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                               // console.log(transcript.trim().match(regEx), "c4");
+                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
                                     
                                 }
                                 else{
-                                    //log(kw.KeyValue);
-                                    var regEx = new RegExp(' ' + kw.KeyName + '.', "ig");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
-                                    regEx = new RegExp(' ' + kw.KeyName, "ig");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
-                                    regEx = new RegExp(kw.KeyName, "ig");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    //var regEx = new RegExp(' ' + kw.KeyName + '\.', "ig");
+                                    //console.log(transcript.trim().match(regEx), "c1");
+                                    //transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue);
+                                    // var regEx = new RegExp(kw.KeyName + '\.', "ig");
+                                    // console.log(transcript.trim().match(regEx), "c2");
+                                    // transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    
+                                    var regEx = new RegExp(kw.KeyName + ' ', "ig");
+                                    //console.log(transcript.trim().match(regEx), "c3");
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue + ' ');
+                                    regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                                //console.log(transcript.trim().match(regEx), "c4");
+                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
                                 }
-                                // if(kw.KeyName == "New line" || kw.KeyName == "new line" || kw.KeyName == "Newline" || kw.KeyName == "newline" || kw.KeyName == "New Line"){
-                                   
-                                    
-                                    
-                                // }
+                              
                                 
                             });
                         }
@@ -494,19 +455,17 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                         } 
                      }
                       
-                        //scroll the textarea down
                         recTime += results[0].EndTime - results[0].StartTime;
                         log("recTime: ", recTime);
-                        //$('#resultBox').val($('#resultBox').val() + transcript + " ");
-                        
+                        if(transcript[transcript.length - 1] != ' '){
+                            transcript += ' ';
+                        }
                         callBack(transcript, results[0].EndTime - results[0].StartTime);
                        
-                        // transcription += transcript + "\n";
                     }
                     
                     $('#resultBox').scrollTop($('#resultBox')[0].scrollHeight);
                 
-            // update the textarea with the latest result
             
            
         }

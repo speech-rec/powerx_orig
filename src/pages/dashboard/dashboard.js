@@ -2,7 +2,7 @@ import React from 'react';
 // import {connect} from 'react-redux';
 // import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCogs, faEnvelopeOpenText,  faMicrophone, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faEnvelopeOpenText,  faFileContract,  faListAlt,  faMicrophone, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import {Link} from 'react-router-dom';
 import './dashboard.css';
 const DashBoard = () => {
@@ -10,12 +10,12 @@ const DashBoard = () => {
     return(
         
 
-<div className="box">
-    <div className="row1">
+<div className="dashboardbox">
+<div className="row1">
     
     <div className="box1">
-    <Link to='/helpscreen'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faQuestionCircle}/>
-    <b>NEED HELP?</b> </Link></div>
+    <Link to='/license'><FontAwesomeIcon className='icon' style={{width: '60%'}} icon={faFileContract}/>
+    <b>LICENSE INFORMATION</b> </Link></div>
    
     <div className="box1">
     <Link to='/settingscreen'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faCogs}/>
@@ -31,6 +31,18 @@ const DashBoard = () => {
     <b>RECORD</b> </Link></div>
 
 </div>
+    <div className="row1">
+    
+    <div className="box1">
+    <Link to='/helpscreen'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faQuestionCircle}/>
+    <b>NEED HELP?</b> </Link></div>
+   
+    <div className="box1">
+    <Link to='/features'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faListAlt}/>
+    <b>FEATURES</b> </Link>
+    </div>
+</div>
+
         
 
           

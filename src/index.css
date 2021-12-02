@@ -38,3 +38,15 @@ body, html, #root{
   margin-left: 10px;
   margin-right: 10px;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(0,120,212);
+  border-radius: 10px;
+}
+.headingColor{
+  color: rgb(0,120,212);
+}

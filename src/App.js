@@ -23,6 +23,8 @@ import Template from './pages/template/template.pages';
 import Header from './components/header/header.component';
 import HelpImage from './images/help.png';
 import SettingsPage from './pages/settings/settings';
+import LicensePage from './pages/licensing/license';
+import FeaturesPage from './pages/features/features';
 import ProfilePage from './pages/profile/profile';
 import AboutImage from './images/abut.png'
 class App extends React.Component {
@@ -79,11 +81,13 @@ class App extends React.Component {
           <Route exact path='/signup' render={() => !!this.props.currentUser ? (<Redirect to='/dashboard' />): (<SignUpPage />)} />
           <Route exact path='/dashboard' render={() => !!this.props.currentUser ? (<DashBoard />): (<Redirect to='/signin' />)} />
           <Route exact path='/signin' render={() => !!this.props.currentUser ? (<Redirect to='/dashboard' />): (<SignInPage />)} />
-          <Route exact path='/helpscreen' render={() => !!this.props.currentUser ? (<HelpScreen imagePath={HelpImage} userName={this.props.currentUser.displayName} text='Welcome to Alpha Notes app. This app is for medical purpose dictation.' />) : (<Redirect to='/signin' />)} />
+          <Route exact path='/helpscreen' render={() => !!this.props.currentUser ? (<HelpScreen imagePath={HelpImage} userName={this.props.currentUser.displayName} text='' />) : (<Redirect to='/signin' />)} />
           <Route exact path='/aboutus' render={() => !!this.props.currentUser ? (<AboutUs imagePath={AboutImage} text='Wanna know more about us? Have a meeting. Visit our website or contact us fo any query.'/>) : (<Redirect to='/signin' />)} />
           {/* <Route exact path='/profile' render={() => !!this.props.currentUser ? (<ProfilePage />) : (<Redirect to='/signin' />)} /> */}
           <Route exact path = '/settingscreen' render={() => !!this.props.currentUser ? (<SettingsPage />) : (<Redirect to='/signin' />)}/>
           <Route exact path = '/template' render={() => !!this.props.currentUser ? (<Template />) : (<Redirect to='/signin' />)}/>
+          <Route exact path = '/license' render={() => !!this.props.currentUser ? (<LicensePage />) : (<Redirect to='/signin' />)}/>
+          <Route exact path = '/features' render={() => !!this.props.currentUser ? (<FeaturesPage />) : (<Redirect to='/signin' />)}/>
           {/* <Route exact path='/signin' render={() => (<SignInPage />)}/>
           <Route exact path='/signup' render={() => (<SignUpPage />)}/>
           <Route exact path='/' render={() => (<Dashboard />)}/> */}
