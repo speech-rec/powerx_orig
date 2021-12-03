@@ -11,3 +11,8 @@ export const selectUserCredential = createSelector(
     [selectUser],
     user => user.userCredential
 );
+
+export const selectReceiverEmail = createSelector(
+    [selectUser],
+    user => user.receiverEmail
+);

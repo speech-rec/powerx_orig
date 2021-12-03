@@ -34,7 +34,7 @@ const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate
             </h2>
             <div className='options'>
                 
-                <div className='title' style={location.pathname.toLowerCase().includes('recorder') || 
+                <div className='title2' style={location.pathname.toLowerCase().includes('recorder') || 
                 location.pathname.toLowerCase().includes('template')
                 || location.pathname.toLowerCase().includes('settingscreen')
                 || location.pathname.toLowerCase().includes('helpscreen') ? {width: '50%', height: '100%'} : {width: 0, height: 0}}>

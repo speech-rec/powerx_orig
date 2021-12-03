@@ -132,7 +132,7 @@ try{
 }
 }
 
-export const createAudio = (recordingName, recordingText, userId, recordingTime, successCallback) => {
+export const createAudio = (recordingName, recordingText, userId, recordingTime, doSendEmail, email, successCallback) => {
     if(rec.state == "inactive"){
         //let blob = new Blob(audioChunks, {type: 'audio/mpeg-3'});
         // var recordedAudio = document.getElementById("recordedAudio");
@@ -147,6 +147,8 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
         formData.append("recordingText", encodeURI(recordingText));
         formData.append("recordingName", recordingName);
         formData.append("recTime", recordingTime);
+        formData.append("doSendEmail", doSendEmail);
+        formData.append("email", email);
   $.ajax({
     // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
     url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
@@ -398,14 +400,14 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                             
                                 if(kw.KeyValue.includes('\\n')){
                                     kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
-                                    //var regEx = new RegExp(' ' + kw.KeyName + '\.', "ig");
+                                    var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
                                     //console.log(transcript.trim().match(regEx), "c1");
-                                    //transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue);
-                                    // var regEx = new RegExp(kw.KeyName + '\.', "ig");
+                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + '.');
+                                    regEx = new RegExp(kw.KeyName + '\\.', "ig");
                                     // console.log(transcript.trim().match(regEx), "c2");
-                                    // transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                     
-                                    var regEx = new RegExp(kw.KeyName + ' ', "ig");
+                                    regEx = new RegExp(kw.KeyName + ' ', "ig");
                                     //console.log(transcript.trim().match(regEx), "c3");
                                     transcript = transcript.trim().replace(regEx, kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
@@ -414,12 +416,12 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                     
                                 }
                                 else{
-                                    //var regEx = new RegExp(' ' + kw.KeyName + '\.', "ig");
+                                    var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
                                     //console.log(transcript.trim().match(regEx), "c1");
-                                    //transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue);
-                                    // var regEx = new RegExp(kw.KeyName + '\.', "ig");
+                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue);
+                                    regEx = new RegExp(kw.KeyName + '\\.', "ig");
                                     // console.log(transcript.trim().match(regEx), "c2");
-                                    // transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                     
                                     var regEx = new RegExp(kw.KeyName + ' ', "ig");
                                     //console.log(transcript.trim().match(regEx), "c3");

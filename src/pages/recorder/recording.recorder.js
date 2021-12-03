@@ -1,5 +1,6 @@
 import React from "react";
-import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { selectCurrentUser, selectReceiverEmail } from "../../redux/user/user.selectors";
+import { setReceiverEmail } from "../../redux/user/user.action";
 import {
   selectAllTemplates,
   selectSelectedTemplate,
@@ -12,31 +13,20 @@ import { selectUserLicenseData } from "../../redux/licensing/licensing.selector"
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 import ResultBox from "../../components/transcribeResult/resultBox.transcribeResult";
-import CustomButton from "../../components/custom-button/custom-button.component";
-import {Languages} from '../../aws/constants';
 import { startRecording, stopRecording, createAudio } from "../../aws/main";
 import startFile from '../../sounds/start.wav';
 import stopFile from '../../sounds/stop.wav';
-import Popup from "reactjs-popup";
 import {log} from '../../aws/main';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCheck,
-  faCircle,
-  faDotCircle,
   faMicrophone,
   faMicrophoneSlash,
-  faPaperPlane,
-  faPlay,
-  faStop,
-  faTimes,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import $ from "jquery";
 import "./recording.recorder.css";
-import FormInput from "../../components/form-input/form-input.compoent";
 const axios = require('axios').default;
 class Recorder extends React.Component {
   
@@ -45,6 +35,7 @@ class Recorder extends React.Component {
     this.state = {
       recordingText: "",
       recordingName: "",
+      email: '',
       templates: [{Id: '0', TemplateText: ''}],
       isRecording: false,
       showPopUp: false,
@@ -59,6 +50,7 @@ class Recorder extends React.Component {
       IsAutoPunctuationActive: false,
       IsDictaPhoneActive: false,
       PunctuationKeyWords: [],
+      isDisabled: true
     };
   }
 
@@ -92,7 +84,12 @@ componentDidMount (){
     log("is auto punctuation active: " + this.state.IsAutoPunctuationActive);
     log("is dicta phone active: " + this.state.IsDictaPhoneActive);
   });
-  
+  const {receiverEmail} = this.props;
+  if(receiverEmail != null && receiverEmail != ''){
+    this.setState({
+      email: receiverEmail
+    })
+  }
 }
 
  playSound = (type) => {
@@ -504,10 +501,37 @@ if(this.state.isSoundActive){
     event.preventDefault();
     const url = process.env.REACT_APP_BASE_URL;
     try {
-      const { recordingText, recordingName, recTime } = this.state;
-
-      if (!!recordingName && !!recordingText) {
-        toast("Saving file…", {
+      const { recordingText, recordingName, recTime, isDisabled, email } = this.state;
+      if(!(!!recordingName) && isDisabled == true){
+        toast("Kindly provide either name or check the checkbox", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          type: "error",
+        });
+        return;
+      }
+      else if(isDisabled == false){
+        if(!(!!email)){
+          toast("Kindly provide receiver email", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            type: "error",
+          });
+          return;
+        }
+      }
+      if (!!recordingText && (!!recordingName || isDisabled == false)) {
+        toast("Submitting.....", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -518,7 +542,7 @@ if(this.state.isSoundActive){
           type: "info",
         });
         const { id } = this.props.currentUser;
-        createAudio(recordingName, recordingText, id, recTime, (response) => {
+        createAudio(recordingName, recordingText, id, recTime, !(!!isDisabled), email, (response) => {
           var result = response;
           log(result);
         if (result.type == "error") {
@@ -548,121 +572,17 @@ if(this.state.isSoundActive){
           }
           const { setUserLicenseData } = this.props;
           setUserLicenseData(result.oRecord);
+          setReceiverEmail(email);
           this.setState({
             recordingName: "",
             recordingText: "",
             isRecording: false,
             showPopUp: false,
-            recTime: 0.0
+            recTime: 0.0,
+            isDisabled: true
           });
         });
         
-        return;
-        axios.get(`${url}/sendmail/${encodeURIComponent(recordingName)}/${encodeURIComponent(recordingText)}/${id}`).then((response) =>  {
-        var result = response.data;  
-        if (result.type == "error") {
-          
-            toast(result.text, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              type: "error",
-            });
-          } else {
-            createAudio(this.props.currentUser.id);
-            toast(result.text, {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              type: "success",
-            });
-          }
-          this.setState({
-            recordingName: "",
-            recordingText: "",
-            isRecording: false,
-            showPopUp: false
-          });
-        }).catch((error) => {
-          log(error);
-          toast(error.message, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            type: "error",
-          });
-          this.setState({
-            recordingName: "",
-            recordingText: "",
-            isRecording: false
-          });
-        });;
-        
-        // fetch(`/sendmail/${encodeURIComponent(recordingName)}/${encodeURIComponent(recordingText)}/${id}`)
-        //   .then((res) => res.json())
-        //   .then((result) => {
-        //     if (result.type == "error") {
-        //       toast(result.text, {
-        //         position: "top-right",
-        //         autoClose: 2000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: false,
-        //         draggable: false,
-        //         progress: undefined,
-        //         type: "error",
-        //       });
-        //     } else {
-        //       toast(result.text, {
-        //         position: "top-right",
-        //         autoClose: 3000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: false,
-        //         draggable: false,
-        //         progress: undefined,
-        //         type: "success",
-        //       });
-        //     }
-        //     this.setState({
-        //       recordingName: "",
-        //       recordingText: "",
-        //     });
-        //   })
-        //   .catch((error) => {
-        //     log(error);
-        //     toast(error.message, {
-        //       position: "top-right",
-        //       autoClose: 2000,
-        //       hideProgressBar: false,
-        //       closeOnClick: true,
-        //       pauseOnHover: false,
-        //       draggable: false,
-        //       progress: undefined,
-        //       type: "error",
-        //     });
-        //     this.setState({
-        //       recordingName: "",
-        //       recordingText: "",
-        //     });
-        //   });
-        // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=sendmail&userId=${this.props.currentUser.id}&name=${recordingName}&text=${recordingText}&email=${this.props.currentUser.email}`, headers).then(res => res.json()).then((result) => {
-        //     alert(result.text);
-        // }).catch((error) => {
-        //     log(error);
-        // });
       } else {
         toast("kindly provide name or record some audio", {
           position: "top-right",
@@ -690,6 +610,12 @@ if(this.state.isSoundActive){
     }
   };
 
+  checkBoxClick = (event) => {
+    
+    this.setState({
+      isDisabled: !event.target.checked
+    })
+  }
   render() {
     return (
       <div className="recording-container flex-column-100">
@@ -842,9 +768,27 @@ if(this.state.isSoundActive){
                   className="in-box"
                   id='recordingName'
                 />
-
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <input type='checkbox' onChange={this.checkBoxClick}/>
+                <label>Send this file as email</label>
+                </div>
+                
+                <div>
+                  
+                  
+                  <input
+                  type="text"
+                  value={this.state.email}
+                  name="email"
+                  onChange={this.handleChange}
+                  placeholder="enter receiver email"
+                  className="in-box"
+                  id='email'
+                  disabled={this.state.isDisabled}
+                />
+                  </div>
                 <button onClick={this.sendMail} className="button">
-                  Save
+                  Submit
                 </button>
               </form>
             </div>
@@ -862,12 +806,14 @@ const mapStateToProps = createStructuredSelector({
   awsSetting: selectCurrentSetting,
   allKeyWords: selectAllKeyWords,
   punctuationKeywords: selectPunctuationKeywords,
-  licenseData: selectUserLicenseData
+  licenseData: selectUserLicenseData,
+  receiverEmail: selectReceiverEmail
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setSelectedTemplate: (id) => dispatch(setSelectedTemplate(id)),
   setUserLicenseData: (licenseData) => dispatch(setUserLicenseData(licenseData)),
+  setReceiverEmail: (email) => dispatch(setReceiverEmail(email)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Recorder);

@@ -11,9 +11,9 @@ if(process.env.NODE_ENV != 'production') require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 8000;
-// const baseURL = 'http://an.pixcile.com';
+ const baseURL = 'http://an.pixcile.com';
  
- const baseURL = 'http://localhost:50139';
+// const baseURL = 'http://localhost:50139';
 app.use(cors());
 app.get('/getCredentials', (req, res) => {
   console.log('got it');
@@ -182,8 +182,9 @@ app.get('/updateSetting/:userId/:language/:speciality/:sampleRate/:isSoundActive
 });
 
 app.post('/sendmail/:recordingName/:recordingText/:userId/:recTime', upload.any(), (req, res) => {
-  const {recordingName, recordingText, userId, recTime} = req.body;
-var url = `${baseURL}/api/api.ashx?methodname=sendmail&userId=${userId}&name=${recordingName}&text=${recordingText}&recTime=${recTime}`
+  const {recordingName, recordingText, userId, recTime, doSendEmail, email} = req.body;
+  console.log(doSendEmail);
+var url = `${baseURL}/api/api.ashx?methodname=sendmail&userId=${userId}&name=${recordingName}&text=${recordingText}&recTime=${recTime}&doSendEmail=${doSendEmail}&email=${email}`
 let formData = req.body;
 //let files = req.files;
 //let path =  makeid(5) + req.params.userId + ".mp3";

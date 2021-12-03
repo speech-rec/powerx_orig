@@ -1,4 +1,9 @@
 import React from "react";
+import { createStructuredSelector } from "reselect";
+import { connect } from "react-redux";
+import { selectAllPackages } from "../../redux/licensing/licensing.selector";
+import {Table} from 'react-bootstrap';
+
 import "./features.css";
 class FeatureScreen extends React.Component {
   constructor(props) {
@@ -8,7 +13,39 @@ class FeatureScreen extends React.Component {
     return (
       <div className="app-container">
         <div className="featuresSubContainer">
-          <h1 className="headingColor">Available anywhere, anytime</h1>
+          <h2 className="headingColor">Introduction</h2>
+          <p>
+            Alpha Notes is an AI based speech recognition app that helps you
+            simplify your note taking tasks. The system has advanced recognition
+            capabilities that understands the words in their context and
+            converts them accurately to text. You may then print them out later
+            when you are near your printer or copy them to your other documents.
+            Printing is also customizable where you can use your customized
+            header with your logo and have a customized footer for your specific
+            needs as well. It can recognize your speech in different languages
+            and type them out accurately. It understands Japanese, Korean,
+            German, Italian, French and a host of other languages. The system is
+            not just limited to simple language recognition. It also understands
+            medical terms in different clinical domains that include speech
+            recognition in specific clinical areas with their unique words and
+            terms. These domains include Radiology, Cardiology, Urology,
+            Oncology, or general Primary Care. The software in HIPAA compliant
+            and if clinical information is dictated, the user can access it to
+            print or copy only from the secure cloud portal. Clinical
+            confidentiality is preserved as information is not transmitted in an
+            unsecured manner. However, for users who do not have a data
+            confidentiality requirement, they can simply email their dictated
+            text right from the app interface. The system also has built-in
+            intelligence to insert relevant punctuation automatically while you
+            concentrate on dictating your content. If you want to have full
+            control over the punctuation, you can enable it with a single click
+            and you can then “speak out” the punctuation character which will
+            then appear within your text. The app also has the functionality to
+            save pre-defined “canned” texts that you frequently use and recall
+            them instantly from your library of templates to use within your
+            speech sessions.
+          </p>
+          <h2 className="headingColor">Available anywhere, anytime</h2>
 
           <p>
             The software gives you complete freedom to manage your own specific
@@ -19,7 +56,7 @@ class FeatureScreen extends React.Component {
             you can dictate at one location and your team member can view and
             print them from another location.
           </p>
-          <h1 className="headingColor">AI to Assist you where you work</h1>
+          <h2 className="headingColor">AI to Assist you where you work</h2>
 
           <p>
             The app assists you in whatever field you work in. Are you a lawyer
@@ -39,7 +76,7 @@ class FeatureScreen extends React.Component {
             and print out the reports while the radiologists concentrate on
             clinical images and dictate their reports.
           </p>
-          <h1 className="headingColor">How does it make things simple?</h1>
+          <h2 className="headingColor">How does it make things simple?</h2>
 
           <p>
             This app is not just a recognition engine turning speech to text. It
@@ -54,143 +91,68 @@ class FeatureScreen extends React.Component {
             text or download and listen to the audio that was earlier spoken or
             print the transcribed text.
           </p>
-          <h1 className="headingColor">Editing your file in the portal</h1>
+          <h2 className="headingColor">Licensing</h2>
 
           <p>
-            Once you have finished dictating your file, it will be stored in the
-            cloud portal. Login to your portal account, select the note from the
-            list and edit it in the online editor for any final changes.
+            Different licensing options are available based on your needs.
+            Depending on the number of notes you need to dictate in a month, you
+            can opt for the most appropriate licensing option. Various options
+            are listed below. Contact us for the quote.
+            
           </p>
-          <h1 className="headingColor">Printing</h1>
-          <p>
-            The system not only allows you to print your files at any time, it
-            gives to the flexibility to customize the format of the page on
-            which the text will be printed. You can upload your custom header
-            and footer, and these will be printed for any note that you select
-            and print. You can even create a separate account for someone on
-            your team to access your portal securely and print out the
-            transcribed documents while you concentrate on dictating your notes.
-            This workflow will help you quickly dictate separate notes while
-            another person exclusively reviews them and prints them out as they
-            get completed.
-          </p>
-          <h1 className="headingColor">Settings</h1>
-          <p>
-            <ul>
-              <li>
-                <h4 className="headingColor">Recognition Model:</h4>
-                <p>
-                  There are two recognition models available that you may select
-                  based on your specific need. Transcribe Streaming: Select this
-                  for normal dictation. Supports multiple languages Medical
-                  Transcribe Streaming: Select this for clinical specific
-                  dictation. If this option is selected, you can select the
-                  specific clinical dictionary based on your need. The various
-                  clinical dictionaries available are for Primary Care,
-                  Cardiology, Neurology, Oncology, Radiology and Urology.
-                </p>
-              </li>
-
-              <li>
-                <h4 className="headingColor">Language Selection:</h4>
-                <p>
-                  If you select normal language dictation model, you may be able
-                  to select an available language to dictation. For clinical
-                  transcription, only English is available as your language
-                  option.
-                </p>
-              </li>
-
-              <li>
-                <h4 className="headingColor">Recognition Model:</h4>
-                <p>
-                  There are two recognition models available that you may select
-                  based on your specific need. Transcribe Streaming: Select this
-                  for normal dictation. Supports multiple languages Medical
-                  Transcribe Streaming: Select this for clinical specific
-                  dictation. If this option is selected, you can select the
-                  specific clinical dictionary based on your need. The various
-                  clinical dictionaries available are for Primary Care,
-                  Cardiology, Neurology, Oncology, Radiology and Urology.
-                </p>
-              </li>
-
-              <li>
-                <h4 className="headingColor">Sampling Rate:</h4>
-                <p>
-                  This is only for handling some specialized scenarios for
-                  recognition. You may leave it at 16000 as your default
-                  setting.
-                </p>
-              </li>
-
-              <li>
-                <h4 className="headingColor">Recording Beep Sound:</h4>
-                <p>
-                  A sound will be played whenever a recording session is started
-                  or stopped.
-                </p>
-              </li>
-              <li>
-                <h4 className="headingColor">Enable Custom Dictionary:</h4>
-                <p>
-                  The software have a built-in word repository to fine tune the
-                  recognition. This facilitates user you use words like “New
-                  Paragraph”, “New Line”, and the punctuation marks during
-                  speech.
-                </p>
-              </li>
-              <li>
-                <h4 className="headingColor">Enable Auto Punctuation:</h4>
-                <p>
-                  When this feature is enabled, the system intelligently
-                  identifies where a comma or a period may come in based on the
-                  pauses that we use when speaking normally. When this feature
-                  is not enabled, the user needs to speak out the punctuation
-                  like comma and period to be typed out.
-                </p>
-              </li>
-              <li>
-                <h4 className="headingColor">Enable Dictaphone:</h4>
-                <p>
-                  When this is activated, the user can speak out the name of the
-                  predefined template that they want to use and the template
-                  text will appear in the editor. The user needs to say
-                  “Dictaphone” before the name of the template. For example, if
-                  the user has a predefined template with the name “Physics”,
-                  the text in that template will appear at the cursor in the
-                  editor when the user speaks out “Dictaphone Physics”.
-                </p>
-              </li>
-            </ul>
-          </p>
-
-          <h1 className="headingColor">Defining a custom template</h1>
-
-          <p>
-            The user can define their frequently used custom texts that can be
-            reused in the editor.
-            <ul>
-              <li>
-                <p>
-                  Simply go to the main menu and select “New Template” button.
-                </p>
-              </li>
-              <li>
-                <p>Type the name of the template in the top box.</p>
-              </li>
-              <li>
-                <p>Speak out the text into the editor.</p>
-              </li>
-              <li>
-                <p>Save.</p>
-              </li>
-            </ul>
-          </p>
+          <div>
+          <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Package name</th>
+                  <th>Mode (Transcribe / Med Transcribe)</th>
+                  <th>Dictation time / month: (sec)</th>
+                  <th>Number of Text files</th>
+                  <th>License period</th>
+                  <th>Text Retention</th>
+                  <th>Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  
+                  this.props.allPackages.map((item) => (
+                    <tr key={item.Id}>
+                      <td >
+                      {item.PackageName}
+                      </td>
+                      <td >
+                      {item.oDetail[0].KeyValue}
+                      </td>
+                      <td >
+                      {item.oDetail[1].KeyValue}
+                      </td>
+                      <td >
+                      {item.oDetail[2].KeyValue}
+                      </td>
+                      <td >
+                      {item.oDetail[3].KeyValue}
+                      </td>
+                      <td >
+                      {item.oDetail[4].KeyValue}
+                      </td>
+                      <td>
+                      {item.oDetail[5].KeyValue}
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </Table>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-export default FeatureScreen;
+const mapStateToProps = createStructuredSelector({
+  allPackages: selectAllPackages,
+});
+
+export default connect(mapStateToProps, null)(FeatureScreen);

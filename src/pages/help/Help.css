@@ -25,7 +25,7 @@
     left: 50%;
     overflow-y: scroll;
     height: 70vh;
-    
+    text-align: left;
     /* -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%); */
 
