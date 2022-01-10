@@ -13,7 +13,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 // const baseURL = 'http://an.pixcile.com';
  
- const baseURL = 'http://localhost:50139';
+ const baseURL = 'http://an.pixcile.com';
 app.use(cors());
 app.get('/getCredentials', (req, res) => {
   console.log('got it');

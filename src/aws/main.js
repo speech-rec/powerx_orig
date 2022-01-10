@@ -413,7 +413,9 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                     regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
                                // console.log(transcript.trim().match(regEx), "c4");
                                     transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
-                                    
+                                    regEx = new RegExp(' ' + kw.KeyName, "ig");
+                                    // console.log(transcript.trim().match(regEx), "c2");
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                 }
                                 else{
                                     var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
@@ -429,6 +431,9 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                     regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
                                 //console.log(transcript.trim().match(regEx), "c4");
                                     transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
+                                    regEx = new RegExp(' ' + kw.KeyName, "ig");
+                                    // console.log(transcript.trim().match(regEx), "c2");
+                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
                                 }
                               
                                 
