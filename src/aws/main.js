@@ -366,13 +366,15 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
             // fix encoding for accented characters
             transcript = decodeURIComponent(escape(transcript));
             log('transcript: ' + transcript);
-            log('dictaphone index: ', transcript.index)
+            //log('dictaphone index: ', transcript.index)
             $('#resultBox').val($('#resultBox').val() + latestTranscribe.Content + ' ');
             
                  if (!results[0].IsPartial) {
                      log("results");
                       log(results[0]);
                     if(IsAutoPunctuationActive == false){
+                        transcript = transcript.toLowerCase();
+                        log(punctionKeyWords);
                         if(punctionKeyWords.length >= 1){
                             punctionKeyWords.forEach(kw => {
                             
@@ -385,6 +387,7 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                 }
                                 else{
                                     transcript = transcript.replaceAll(kw, '');
+                                    
                                 }
                                
                                 
@@ -393,47 +396,51 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                         
                      }
                      if(isCustomDictionaryEnabled){
+                         console.log(transcript);
                         if(cutomDictionary.length >=1){
                             var filterTranscribe = "";
                            
                             cutomDictionary.forEach(kw => {
-                            
+                                // if(transcript.includes("new paragraph")){
+                                //     console.log(transcript.replace("new paragraph", "\n\n"))
+                                // }
                                 if(kw.KeyValue.includes('\\n')){
                                     kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
                                     var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+                                    
                                     //console.log(transcript.trim().match(regEx), "c1");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + '.');
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
                                     regEx = new RegExp(kw.KeyName + '\\.', "ig");
-                                    // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    // console.log(transcript.match(regEx), "c2");
+                                    transcript = transcript.replace(regEx, kw.KeyValue);
                                     
                                     regEx = new RegExp(kw.KeyName + ' ', "ig");
-                                    //console.log(transcript.trim().match(regEx), "c3");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue + ' ');
+                                    //console.log(transcript.match(regEx), "c3");
+                                    transcript = transcript.replace(regEx, kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
-                               // console.log(transcript.trim().match(regEx), "c4");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
+                               // console.log(transcript.match(regEx), "c4");
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName, "ig");
-                                    // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    // console.log(transcript.match(regEx), "c2");
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
                                 }
                                 else{
                                     var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
                                     //console.log(transcript.trim().match(regEx), "c1");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue);
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
                                     regEx = new RegExp(kw.KeyName + '\\.', "ig");
                                     // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    transcript = transcript.replace(regEx, kw.KeyValue);
                                     
                                     var regEx = new RegExp(kw.KeyName + ' ', "ig");
                                     //console.log(transcript.trim().match(regEx), "c3");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue + ' ');
+                                    transcript = transcript.replace(regEx, kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
                                 //console.log(transcript.trim().match(regEx), "c4");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName, "ig");
                                     // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
                                 }
                               
                                 
