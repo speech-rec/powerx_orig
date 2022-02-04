@@ -16,10 +16,10 @@ class LicenseScreen extends React.Component{
             <div className="licenseSubContainer"> 
             <h1>Your License Status</h1>
             <p>
-             Package name: {this.props.userPackage.PackageName} <br/>
+             Package: {this.props.userPackage.PackageName} <br/>
              Package type: {this.props.userPackage.PackageType} <br/>
-             Number or Text files:  {this.props.licenseData.TotalNotes} / {this.props.licenseData.AllowedNotes} <br/>
-             Dictation time (secs): {this.props.licenseData.TotalRecordingTime} / {this.props.licenseData.AllowedRecordingTime}<br/>
+             Number of text files:  {this.props.licenseData.TotalNotes} / {this.props.licenseData.AllowedNotes} <br/>
+             Dictation time (secs): {this.props.licenseData.TotalRecordingTime.toFixed(1)} / {this.props.licenseData.AllowedRecordingTime}<br/>
              License Status: {this.props.userPackage.IsExpired ? "Inactive" : "Active"}</p>
            
             

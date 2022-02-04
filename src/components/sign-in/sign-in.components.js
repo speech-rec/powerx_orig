@@ -32,7 +32,7 @@ class SignIn extends React.Component{
         if(previousUserCredential != null){
             this.setState({
                 email: previousUserCredential.email,
-                password: previousUserCredential.password
+                password: ''
             });
         }
     }

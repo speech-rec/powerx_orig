@@ -14,11 +14,25 @@ class HelpScreen extends React.Component {
             Go to your Note Recording screen and press the Recording button to
             start dictation. (The system will show activity as it processes your
             speech and will replace the estimated text with the actual dictated
-            text) Pressing the Cancel button will reset the editor for a new
+            text)
+            </p>
+              <br/>
+            <p>
+             Pressing the Cancel button will reset the editor for a new
             note. Pressing the Save button will prompt you for the name of the
-            note that will be stored in the cloud in your portal. The saving
+            note that will be stored in the cloud in your portal.
+            </p>
+            <br/>
+            <p>
+             The saving
             process will also prompt with a checkbox if you want to send the
-            dictated text via email. NOTE: Please note that this app by default
+            dictated text via email. 
+            </p>
+            <br/>
+            <p>
+            NOTE:
+            <br/>
+             Please note that this app by default
             is HIPAA compliant and saves the dictated text to the cloud in a
             secure manner. Use the email option only if you are not sharing any
             secure text or confidential information.
@@ -38,7 +52,11 @@ class HelpScreen extends React.Component {
             gives to the flexibility to customize the format of the page on
             which the text will be printed. You can upload your custom header
             and footer, and these will be printed for any note that you select
-            and print. You can even create a separate account for someone on
+            and print.
+            </p>
+            <br/>
+            <p>
+             You can even create a separate account for someone on
             your team to access your portal securely and print out the
             transcribed documents while you concentrate on dictating your notes.
             This workflow will help you quickly dictate separate notes while
@@ -74,8 +92,15 @@ class HelpScreen extends React.Component {
                 <h4 className="headingColor">Recognition Model:</h4>
                 <p>
                   There are two recognition models available that you may select
-                  based on your specific need. Transcribe Streaming: Select this
+                  based on your specific need.
+                  </p>
+                  <br/>
+                  <p>
+                   Transcribe Streaming: Select this
                   for normal dictation. Supports multiple languages Medical
+                  </p>
+                  <br/>
+                  <p>
                   Transcribe Streaming: Select this for clinical specific
                   dictation. If this option is selected, you can select the
                   specific clinical dictionary based on your need. The various
@@ -141,6 +166,17 @@ class HelpScreen extends React.Component {
                   pauses that we use when speaking normally. When this feature
                   is not enabled, the user needs to speak out the punctuation
                   like comma and period to be typed out.
+                </p>
+                <br/>
+                <p>
+                <strong style={{color: "black"}}>Enabling</strong> this option will let the system determine where to put in standard punctuations as you speak.
+                 When you lightly pause the system will place a ‘comma’ punctuation.
+                  When you pause for a bit longer during your speech, the system will place a ‘period’ there.
+                </p>
+                <br/>
+                <p>
+                If you <strong style={{color: "black"}}>disable</strong> it and keep the Custom Dictionary enabled,
+                 you can then speak out the punctuation and the system will put in that punctuation mark in the text.
                 </p>
               </li>
               <li>
