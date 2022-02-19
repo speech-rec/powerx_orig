@@ -409,51 +409,51 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                                     var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
 
                                     //console.log(transcript.trim().match(regEx), "c1");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + '.');
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
                                     transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
                                     regEx = new RegExp(kw.KeyName + '\\.', "ig");
-                                    // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    // console.log(transcript.match(regEx), "c2");
+                                    transcript = transcript.replace(regEx, kw.KeyValue);
                                     // console.log(transcript.match(regEx), "c2");
                                     transcript = transcript.replace(regEx, kw.KeyValue);
 
                                     regEx = new RegExp(kw.KeyName + ' ', "ig");
-                                    //console.log(transcript.trim().match(regEx), "c3");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue + ' ');
+                                    //console.log(transcript.match(regEx), "c3");
+                                    transcript = transcript.replace(regEx, kw.KeyValue + ' ');
                                     //console.log(transcript.match(regEx), "c3");
                                     transcript = transcript.replace(regEx, kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
-                               // console.log(transcript.trim().match(regEx), "c4");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
+                               // console.log(transcript.match(regEx), "c4");
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
                                // console.log(transcript.match(regEx), "c4");
                                     transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName, "ig");
-                                    // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    // console.log(transcript.match(regEx), "c2");
+                                    transcript = transcript.replace(regEx, kw.KeyValue);
                                     // console.log(transcript.match(regEx), "c2");
                                     transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
                                 }
                                 else{
                                     var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
-                                    //console.log(transcript.trim().match(regEx), "c1");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue);
+                                    //console.log(transcript.match(regEx), "c1");
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
                                     transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
                                     regEx = new RegExp(kw.KeyName + '\\.', "ig");
-                                    // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    // console.log(transcript.match(regEx), "c2");
+                                    transcript = transcript.replace(regEx, kw.KeyValue);
                                     transcript = transcript.replace(regEx, kw.KeyValue);
 
                                     var regEx = new RegExp(kw.KeyName + ' ', "ig");
-                                    //console.log(transcript.trim().match(regEx), "c3");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue + ' ');
+                                    //console.log(transcript.match(regEx), "c3");
+                                    transcript = transcript.replace(regEx, kw.KeyValue + ' ');
                                     transcript = transcript.replace(regEx, kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
-                                //console.log(transcript.trim().match(regEx), "c4");
-                                    transcript = transcript.trim().replace(regEx, ' ' + kw.KeyValue + ' ');
+                                //console.log(transcript.match(regEx), "c4");
+                                    transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
                                     transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
                                     regEx = new RegExp(' ' + kw.KeyName, "ig");
-                                    // console.log(transcript.trim().match(regEx), "c2");
-                                    transcript = transcript.trim().replace(regEx, kw.KeyValue);
+                                    // console.log(transcript.match(regEx), "c2");
+                                    transcript = transcript.replace(regEx, kw.KeyValue);
                                     transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
                                 }
                               
@@ -465,7 +465,7 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                      
                      if(IsDictaPhoneActive){
                         while(transcript.toLowerCase().includes('dictaphone')){
-                            var templateName = transcript.toLowerCase().match(new RegExp('dictaphone' + '\\s(\\w+)'));
+                            var templateName = transcript.match(new RegExp('dictaphone' + '\\s(\\w+)', "ig"));
                             if(templateName != '' && templateName != null){
                                 templateName = templateName[1];
                                 log('templateName: '+ templateName);
@@ -475,7 +475,8 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                             if(templateText == null || templateText == '' || templateText == ' '){
                                 break;
                             }
-                            transcript = transcript.toLowerCase().replace('dictaphone ' + templateName, templateText);
+                            var regEx = new RegExp('dictaphone ' + templateName, "ig");
+                            transcript = transcript.replace(regEx, templateText);
                             }else{
                                 break;
                             }

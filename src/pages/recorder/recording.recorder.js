@@ -149,8 +149,126 @@ if(this.state.isSoundActive){
               
               stopRecording(() => {
                 log(this.state.recordingText);
+                var transcript = this.state.recordingText;
+                var {IsAutoPunctuationActive, IsCustomDicionaryActive, IsDictaPhoneActive, keyWords, PunctuationKeyWords} = this.state;
+
+                if(IsAutoPunctuationActive == false){
+                  transcript = transcript.toLowerCase();
+                  
+                  if(PunctuationKeyWords.length >= 1){
+                    PunctuationKeyWords.forEach(kw => {
+                      
+                          if(kw.includes('\\n')){
+                              
+                              kw = kw.replaceAll("\\n", "");
+                              transcript = transcript.replaceAll(kw, '');
+                              
+                              
+                          }
+                          else{
+                              transcript = transcript.replaceAll(kw, '');
+                              
+                          }
+                         
+                          
+                      });
+                  }
+                  
+               }
+               if(IsCustomDicionaryActive){
+                   console.log(transcript);
+                  if(keyWords.length >=1){
+                      var filterTranscribe = "";
+                     
+                      keyWords.forEach(kw => {
+                          // if(transcript.includes("new paragraph")){
+                          //     console.log(transcript.replace("new paragraph", "\n\n"))
+                          // }
+                          if(kw.KeyValue.includes('\\n')){
+                              kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
+                              var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+
+                              //console.log(transcript.trim().match(regEx), "c1");
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                              regEx = new RegExp(kw.KeyName + '\\.', "ig");
+                              // console.log(transcript.match(regEx), "c2");
+                              transcript = transcript.replace(regEx, kw.KeyValue);
+                              // console.log(transcript.match(regEx), "c2");
+                              transcript = transcript.replace(regEx, kw.KeyValue);
+
+                              regEx = new RegExp(kw.KeyName + ' ', "ig");
+                              //console.log(transcript.match(regEx), "c3");
+                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              //console.log(transcript.match(regEx), "c3");
+                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                         // console.log(transcript.match(regEx), "c4");
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                         // console.log(transcript.match(regEx), "c4");
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                              regEx = new RegExp(' ' + kw.KeyName, "ig");
+                              // console.log(transcript.match(regEx), "c2");
+                              transcript = transcript.replace(regEx, kw.KeyValue);
+                              // console.log(transcript.match(regEx), "c2");
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                          }
+                          else{
+                              var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+                              //console.log(transcript.match(regEx), "c1");
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                              regEx = new RegExp(kw.KeyName + '\\.', "ig");
+                              // console.log(transcript.match(regEx), "c2");
+                              transcript = transcript.replace(regEx, kw.KeyValue);
+                              transcript = transcript.replace(regEx, kw.KeyValue);
+
+                              var regEx = new RegExp(kw.KeyName + ' ', "ig");
+                              //console.log(transcript.match(regEx), "c3");
+                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                          //console.log(transcript.match(regEx), "c4");
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                              regEx = new RegExp(' ' + kw.KeyName, "ig");
+                              // console.log(transcript.match(regEx), "c2");
+                              transcript = transcript.replace(regEx, kw.KeyValue);
+                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                          }
+                        
+                          
+                      });
+                  }
+                  
+               }
+               
+               if(IsDictaPhoneActive){
+                  while(transcript.toLowerCase().includes('dictaphone')){
+                      var templateName = transcript.match(new RegExp('dictaphone' + '\\s(\\w+)', "ig"));
+                      if(templateName != '' && templateName != null){
+                          templateName = templateName[1];
+                          log('templateName: '+ templateName);
+                      
+                      var templateText = this.getTemplateText(templateName);
+                      log('templateText: '+ templateText);
+                      if(templateText == null || templateText == '' || templateText == ' '){
+                          break;
+                      }
+                      var regEx = new RegExp('dictaphone ' + templateName, "ig");
+                      transcript = transcript.replace(regEx, templateText);
+                      
+                      }else{
+                          break;
+                      }
+                       
+                  } 
+               }
+
+
                 this.setState({
-                  isProcessing: false
+                  isProcessing: false,
+                  recordingText: transcript
                 }, () => {
                   //log(this.state.recordingText);
                 });
