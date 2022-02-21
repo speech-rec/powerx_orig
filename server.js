@@ -404,6 +404,23 @@ var url = `${baseURL}/api/api.ashx?methodname=GetCustomDictionary`
   );
   
 });
+app.get('/GetUserLicenseData/:userId', (req, res) => {
+  const {userId} = req.params;
+  var url = `${baseURL}/api/api.ashx?methodname=GetUserLicenseData&uID=${userId}`
+    
+  
+    request(
+      { url: url },
+      (error, response, body) => {
+        if (error || response.statusCode !== 200) {
+          return res.status(500).json({ IsError: 'true', message:  error ? error.Message: "Oops! something went wrong." });
+        }
+  
+        res.json(JSON.parse(body));
+      }
+    );
+    
+  });
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'build')));

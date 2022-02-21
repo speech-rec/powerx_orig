@@ -71,7 +71,8 @@ class SettingPage extends React.Component{
             this.setState({
               isDisabled: false,
               sampleRate: 16000,
-              languages: Languages
+              languages: Languages,
+              speciality: 'PRIMARYCARE'
             });
           }
         }
@@ -159,7 +160,7 @@ class SettingPage extends React.Component{
        <div className="settings-form"> 
         <CustomDropDown type='json' value={this.state.streamType} disabled={false} selectedSetting={this.state.streamType} options={StreamTypes} name='streamType' handleChange={this.handleChange} />
         <CustomDropDown type='json' value={this.state.language} disabled={this.state.isDisabled} selectedSetting={this.state.language} options={this.state.languages} name='language' handleChange={this.handleChange} />
-                    <CustomDropDown  type='array' value={this.state.speciality} disabled={false} selectedSetting={this.state.speciality} options={Specialities} name='speciality' handleChange={this.handleChange} />
+                    <CustomDropDown  type='array' value={this.state.speciality} disabled={!this.state.isDisabled} selectedSetting={this.state.speciality} options={Specialities} name='speciality' handleChange={this.handleChange} />
                     <CustomDropDown type='array' value={this.state.sampleRate} disabled={this.state.isDisabled} selectedSetting={this.state.sampleRate} options={SampleRates} name='sampleRate' handleChange={this.handleChange} />
                   <div className="toggleDiv">
                   <p>Recording Beep Sound</p>

@@ -372,22 +372,59 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                  if (!results[0].IsPartial) {
                      log("results");
                       log(results[0]);
+                    // if(IsAutoPunctuationActive == false){
+                    //     transcript = transcript.toLowerCase();
+                    //     log(punctionKeyWords);
+                    //     if(punctionKeyWords.length >= 1){
+                    //         punctionKeyWords.forEach(kw => {
+                            
+                    //             if(kw.includes('\\n')){
+                                    
+                    //                 kw = kw.replaceAll("\\n", "");
+                    //                 transcript = transcript.replaceAll(kw, '');
+                                    
+                                    
+                    //             }
+                    //             else{
+                    //                 transcript = transcript.replaceAll(kw, '');
+                                    
+                    //             }
+                               
+                                
+                    //         });
+                    //     }
+                        
+                    //  }
+
                     if(IsAutoPunctuationActive == false){
-                        transcript = transcript.toLowerCase();
+                        //transcript = transcript.toLowerCase();
                         log(punctionKeyWords);
                         if(punctionKeyWords.length >= 1){
                             punctionKeyWords.forEach(kw => {
-                            
+                                var regEx;
                                 if(kw.includes('\\n')){
                                     
                                     kw = kw.replaceAll("\\n", "");
-                                    transcript = transcript.replaceAll(kw, '');
+                                    if(kw == "."){
+                                        regEx = new RegExp("\\.", "ig");
+                                    }else{
+                                        regEx = new RegExp(kw, "ig");
+                                    }
                                     
+                                    console.log("before: ", transcript);
+                                    transcript = transcript.replace(regEx, '');
+                                    console.log("after: ", transcript);
                                     
                                 }
                                 else{
-                                    transcript = transcript.replaceAll(kw, '');
-                                    
+                                    if(kw == "."){
+                                        regEx = new RegExp("\\.", "ig");
+                                    }else{
+                                        regEx = new RegExp(kw, "ig");
+                                    }
+                                    console.log("before: ", transcript);
+                                    transcript = transcript.replace(regEx, '');
+                                    console.log("after: ", transcript);
                                 }
                                
                                 
@@ -395,6 +432,8 @@ let handleEventStreamMessage = function (messageJson, callBack, getTemplateCallB
                         }
                         
                      }
+
+
                      if(isCustomDictionaryEnabled){
                          console.log(transcript);
                         if(cutomDictionary.length >=1){

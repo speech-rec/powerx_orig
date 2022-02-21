@@ -19,7 +19,7 @@ class LicenseScreen extends React.Component{
              Package: {this.props.userPackage.PackageName} <br/>
              Package type: {this.props.userPackage.PackageType} <br/>
              Number of text files:  {this.props.licenseData.TotalNotes} / {this.props.licenseData.AllowedNotes} <br/>
-             Dictation time (secs): {this.props.licenseData.TotalRecordingTime.toFixed(1)} / {this.props.licenseData.AllowedRecordingTime}<br/>
+             Dictation time (mins): {(this.props.licenseData.TotalRecordingTime/60).toFixed(1)} / {(this.props.licenseData.AllowedRecordingTime/60).toFixed(1)}<br/>
              License Status: {this.props.userPackage.IsExpired ? "Inactive" : "Active"}</p>
            
             

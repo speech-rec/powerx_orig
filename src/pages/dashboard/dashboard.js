@@ -2,7 +2,7 @@ import React from 'react';
 // import {connect} from 'react-redux';
 // import {setNavigationPath} from '../../redux/naviagtor/navigator.action';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCogs, faEnvelopeOpenText,  faFileContract,  faListAlt,  faMicrophone, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faEnvelopeOpenText,  faFileContract,  faListAlt,  faMicrophone, faParagraph, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import {Link} from 'react-router-dom';
 import './dashboard.css';
 const DashBoard = () => {
@@ -13,34 +13,34 @@ const DashBoard = () => {
 <div className="dashboardbox">
 <div className="row1">
     
-    <div className="box1">
-    <Link to='/license'><FontAwesomeIcon className='icon' style={{width: '60%'}} icon={faFileContract}/>
-    <b>LICENSE INFORMATION</b> </Link></div>
+    
+    <Link className="box1" to='/license'><FontAwesomeIcon className='icon' style={{width: '60%'}} icon={faFileContract}/>
+    <b>LICENSE INFORMATION</b> </Link>
    
-    <div className="box1">
-    <Link to='/settingscreen'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faCogs}/>
+   
+    <Link className="box1" to='/settingscreen'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faCogs}/>
     <b>SETTINGS</b> </Link>
-    </div>
+   
 </div>
 <div  className="row1">
-    <div className="box1">
-    <Link to='/template'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faEnvelopeOpenText}/>
+   
+    <Link className="box1" to='/template'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faFileContract}/>
     <b style={{fontSize: "15px"}}>NEW TEMPLATE</b> </Link>
-    </div>
-    <div className="box1"><Link to='/recorder'><FontAwesomeIcon className='icon' style={{width: '65%'}} icon={faMicrophone}/>
-    <b>RECORD</b> </Link></div>
+   
+   <Link className="box1" to='/recorder'><FontAwesomeIcon className='icon' style={{width: '65%'}} icon={faMicrophone}/>
+    <b>RECORD</b> </Link>
 
 </div>
     <div className="row1">
     
-    <div className="box1">
-    <Link to='/helpscreen'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faQuestionCircle}/>
-    <b>NEED HELP?</b> </Link></div>
    
-    <div className="box1">
-    <Link to='/features'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faListAlt}/>
+    <Link className="box1" to='/helpscreen'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faQuestionCircle}/>
+    <b>NEED HELP?</b> </Link>
+   
+    
+    <Link className="box1" to='/features'><FontAwesomeIcon className='icon' style={{width: '100%'}} icon={faListAlt}/>
     <b>FEATURES</b> </Link>
-    </div>
+   
 </div>
 
         

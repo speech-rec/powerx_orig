@@ -11,6 +11,7 @@ import {logoutUser, setPreviousUserCredential} from './redux/user/user.action';
 import {selectAllTemplates} from './redux/template/template.selectors';
 import {setTemplates} from './redux/template/template.action';
 import {setDictionary} from './redux/customDictionary/dictionary.action';
+import {setUserPackages, setUserLicenseData} from './redux/licensing/licensing.action';
 import {createStructuredSelector} from 'reselect';
 import {connect} from 'react-redux';
 import Recorder from './pages/recorder/recording.recorder';
@@ -37,7 +38,7 @@ class App extends React.Component {
     if(templates != null && currentUser != null){
       try{
         log('yes');
-        const {setTemplates, setDictionary} = this.props;
+        const {setTemplates, setDictionary, setUserPackages, setUserLicenseData} = this.props;
         fetch(`/GetTemplatesByUserId/${currentUser.id}`).then(res => res.json()).then((result) => {
               
               log(result);
@@ -46,7 +47,7 @@ class App extends React.Component {
           }).catch((e) => {
               
               log(e);
-          });;
+          });
           fetch('/GetCustomDictionary').then(res => res.json()).then((result) => {
          
               
@@ -55,7 +56,19 @@ class App extends React.Component {
         }).catch((e) => {
             
             log(e);
-        });;
+        });
+        fetch(`/GetUserLicenseData/${currentUser.id}`).then(res => res.json()).then((result) => {
+         
+              
+          setUserPackages(result);
+                        if(result != null){
+                            setUserLicenseData(result.oRecord);
+                        }
+          
+      }).catch((e) => {
+          
+          log(e);
+      });
       }
       catch(e){
         console.error(e.message);
@@ -108,6 +121,8 @@ const mapDispatchToProps = dispatch => ({
   setTemplates: templates => dispatch(setTemplates(templates)),
   setDictionary: dictionary => dispatch(setDictionary(dictionary)),
   logoutUser: data => dispatch(logoutUser(data)),
-  setPreviousUserCredential: credential => dispatch(setPreviousUserCredential(credential))
+  setPreviousUserCredential: credential => dispatch(setPreviousUserCredential(credential)),
+  setUserPackages: userPackages => dispatch(setUserPackages(userPackages)),
+  setUserLicenseData: licenseData => dispatch(setUserLicenseData(licenseData))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);
