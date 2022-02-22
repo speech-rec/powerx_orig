@@ -153,73 +153,144 @@ if(this.state.isSoundActive){
                 var {IsAutoPunctuationActive, IsCustomDicionaryActive, IsDictaPhoneActive, keyWords, PunctuationKeyWords} = this.state;
 
                
-               if(IsCustomDicionaryActive){
-                   console.log(transcript);
-                  if(keyWords.length >=1){
+                if (IsCustomDicionaryActive) {
+                  console.log(transcript);
+                  if (keyWords.length >= 1) {
                       var filterTranscribe = "";
-                     
+
                       keyWords.forEach(kw => {
                           // if(transcript.includes("new paragraph")){
                           //     console.log(transcript.replace("new paragraph", "\n\n"))
                           // }
-                          if(kw.KeyValue.includes('\\n')){
+                          if (kw.KeyValue.includes('\\n')) {
                               kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
-                              var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
 
-                              //console.log(transcript.trim().match(regEx), "c1");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+
+                              var regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                              // console.log(transcript.match(regEx), "c4");
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                              }
+                              regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+
+                              //console.log(transcript.match(regEx), "c1");
+
+
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                              }
+
+                              //transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
                               regEx = new RegExp(kw.KeyName + '\\.', "ig");
                               // console.log(transcript.match(regEx), "c2");
                               transcript = transcript.replace(regEx, kw.KeyValue);
                               // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
+                              //transcript = transcript.replace(regEx, kw.KeyValue);
 
                               regEx = new RegExp(kw.KeyName + ' ', "ig");
                               //console.log(transcript.match(regEx), "c3");
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              }
+
                               //console.log(transcript.match(regEx), "c3");
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
-                              regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
-                         // console.log(transcript.match(regEx), "c4");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
-                         // console.log(transcript.match(regEx), "c4");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                              
+
+
+                              // console.log(transcript.match(regEx), "c4");
                               regEx = new RegExp(' ' + kw.KeyName, "ig");
                               // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
+                              // transcript = transcript.replace(regEx, kw.KeyValue);
                               // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
-                          }
-                          else{
-                              var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                              }
+
+                              regEx = new RegExp(' ' + kw.KeyName + '.', "ig");
+                              // console.log(transcript.match(regEx), "c2");
+                              // transcript = transcript.replace(regEx, kw.KeyValue);
+                              // console.log(transcript.match(regEx), "c2");
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                              }
+
+                          } else {
+
+                              var regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                              // console.log(transcript.match(regEx), "c4");
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                              }
+
+                              regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+
                               //console.log(transcript.match(regEx), "c1");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+
+
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                              }
+
+                              //transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
                               regEx = new RegExp(kw.KeyName + '\\.', "ig");
                               // console.log(transcript.match(regEx), "c2");
                               transcript = transcript.replace(regEx, kw.KeyValue);
-                              transcript = transcript.replace(regEx, kw.KeyValue);
+                              // console.log(transcript.match(regEx), "c2");
+                              //transcript = transcript.replace(regEx, kw.KeyValue);
 
-                              var regEx = new RegExp(kw.KeyName + ' ', "ig");
+                              regEx = new RegExp(kw.KeyName + ' ', "ig");
                               //console.log(transcript.match(regEx), "c3");
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
-                              regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
-                          //console.log(transcript.match(regEx), "c4");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                              }
+
+                              //console.log(transcript.match(regEx), "c3");
+                             
+
+
+                              // console.log(transcript.match(regEx), "c4");
                               regEx = new RegExp(' ' + kw.KeyName, "ig");
                               // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                              // transcript = transcript.replace(regEx, kw.KeyValue);
+                              // console.log(transcript.match(regEx), "c2");
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                              }
+
+                              regEx = new RegExp(' ' + kw.KeyName + '.', "ig");
+                              // console.log(transcript.match(regEx), "c2");
+                              // transcript = transcript.replace(regEx, kw.KeyValue);
+                              // console.log(transcript.match(regEx), "c2");
+                              if (kw.IsPunctuationKeyword == true) {
+                                  transcript = transcript.replace(regEx, kw.KeyValue);
+                              } else {
+                                  transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                              }
                           }
-                        
-                          
+
+
                       });
                   }
-                  
-               }
+
+              }
                
                if(IsDictaPhoneActive){
                   while(transcript.toLowerCase().includes('dictaphone')){
@@ -246,7 +317,7 @@ if(this.state.isSoundActive){
 
                 this.setState({
                   isProcessing: false,
-                  recordingText: transcript
+                  recordingText: transcript.replace(/  +/g, ' ')
                 }, () => {
                   //log(this.state.recordingText);
                 });
@@ -432,73 +503,144 @@ if(this.state.isSoundActive){
     var {IsAutoPunctuationActive, IsCustomDicionaryActive, IsDictaPhoneActive, keyWords, PunctuationKeyWords} = this.state;
 
               
-               if(IsCustomDicionaryActive){
-                   console.log(transcript);
-                  if(keyWords.length >=1){
-                      var filterTranscribe = "";
-                     
-                      keyWords.forEach(kw => {
-                          // if(transcript.includes("new paragraph")){
-                          //     console.log(transcript.replace("new paragraph", "\n\n"))
-                          // }
-                          if(kw.KeyValue.includes('\\n')){
-                              kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
-                              var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+    if (IsCustomDicionaryActive) {
+      console.log(transcript);
+      if (keyWords.length >= 1) {
+          var filterTranscribe = "";
 
-                              //console.log(transcript.trim().match(regEx), "c1");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
-                              regEx = new RegExp(kw.KeyName + '\\.', "ig");
-                              // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
-                              // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
+          keyWords.forEach(kw => {
+              // if(transcript.includes("new paragraph")){
+              //     console.log(transcript.replace("new paragraph", "\n\n"))
+              // }
+              if (kw.KeyValue.includes('\\n')) {
+                  kw.KeyValue = kw.KeyValue.replaceAll("\\n", "\n");
 
-                              regEx = new RegExp(kw.KeyName + ' ', "ig");
-                              //console.log(transcript.match(regEx), "c3");
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
-                              //console.log(transcript.match(regEx), "c3");
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
-                              regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
-                         // console.log(transcript.match(regEx), "c4");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
-                         // console.log(transcript.match(regEx), "c4");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
-                              regEx = new RegExp(' ' + kw.KeyName, "ig");
-                              // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
-                              // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
-                          }
-                          else{
-                              var regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
-                              //console.log(transcript.match(regEx), "c1");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
-                              regEx = new RegExp(kw.KeyName + '\\.', "ig");
-                              // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
-                              transcript = transcript.replace(regEx, kw.KeyValue);
 
-                              var regEx = new RegExp(kw.KeyName + ' ', "ig");
-                              //console.log(transcript.match(regEx), "c3");
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
-                              transcript = transcript.replace(regEx, kw.KeyValue + ' ');
-                              regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
-                          //console.log(transcript.match(regEx), "c4");
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
-                              regEx = new RegExp(' ' + kw.KeyName, "ig");
-                              // console.log(transcript.match(regEx), "c2");
-                              transcript = transcript.replace(regEx, kw.KeyValue);
-                              transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
-                          }
-                        
-                          
-                      });
+                  var regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                  // console.log(transcript.match(regEx), "c4");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
                   }
+                  regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+
+                  //console.log(transcript.match(regEx), "c1");
+
+
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                  }
+
+                  //transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                  regEx = new RegExp(kw.KeyName + '\\.', "ig");
+                  // console.log(transcript.match(regEx), "c2");
+                  transcript = transcript.replace(regEx, kw.KeyValue);
+                  // console.log(transcript.match(regEx), "c2");
+                  //transcript = transcript.replace(regEx, kw.KeyValue);
+
+                  regEx = new RegExp(kw.KeyName + ' ', "ig");
+                  //console.log(transcript.match(regEx), "c3");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                  }
+
+                  //console.log(transcript.match(regEx), "c3");
                   
-               }
+
+
+                  // console.log(transcript.match(regEx), "c4");
+                  regEx = new RegExp(' ' + kw.KeyName, "ig");
+                  // console.log(transcript.match(regEx), "c2");
+                  // transcript = transcript.replace(regEx, kw.KeyValue);
+                  // console.log(transcript.match(regEx), "c2");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                  }
+
+                  regEx = new RegExp(' ' + kw.KeyName + '.', "ig");
+                  // console.log(transcript.match(regEx), "c2");
+                  // transcript = transcript.replace(regEx, kw.KeyValue);
+                  // console.log(transcript.match(regEx), "c2");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                  }
+
+              } else {
+
+                  var regEx = new RegExp(' ' + kw.KeyName + ' ', "ig");
+                  // console.log(transcript.match(regEx), "c4");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue + ' ');
+                  }
+
+                  regEx = new RegExp(' ' + kw.KeyName + '\\.', "ig");
+
+                  //console.log(transcript.match(regEx), "c1");
+
+
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                  }
+
+                  //transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                  regEx = new RegExp(kw.KeyName + '\\.', "ig");
+                  // console.log(transcript.match(regEx), "c2");
+                  transcript = transcript.replace(regEx, kw.KeyValue);
+                  // console.log(transcript.match(regEx), "c2");
+                  //transcript = transcript.replace(regEx, kw.KeyValue);
+
+                  regEx = new RegExp(kw.KeyName + ' ', "ig");
+                  //console.log(transcript.match(regEx), "c3");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, kw.KeyValue + ' ');
+                  }
+
+                  //console.log(transcript.match(regEx), "c3");
+                 
+
+
+                  // console.log(transcript.match(regEx), "c4");
+                  regEx = new RegExp(' ' + kw.KeyName, "ig");
+                  // console.log(transcript.match(regEx), "c2");
+                  // transcript = transcript.replace(regEx, kw.KeyValue);
+                  // console.log(transcript.match(regEx), "c2");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue);
+                  }
+
+                  regEx = new RegExp(' ' + kw.KeyName + '.', "ig");
+                  // console.log(transcript.match(regEx), "c2");
+                  // transcript = transcript.replace(regEx, kw.KeyValue);
+                  // console.log(transcript.match(regEx), "c2");
+                  if (kw.IsPunctuationKeyword == true) {
+                      transcript = transcript.replace(regEx, kw.KeyValue);
+                  } else {
+                      transcript = transcript.replace(regEx, ' ' + kw.KeyValue + '.');
+                  }
+              }
+
+
+          });
+      }
+
+  }
                
                if(IsDictaPhoneActive){
                   while(transcript.toLowerCase().includes('dictaphone')){
@@ -522,7 +664,7 @@ if(this.state.isSoundActive){
                   } 
                }
     this.setState({
-      recordingText: transcript,
+      recordingText: transcript.replace(/  +/g, ' '),
       recTime: this.state.recTime + recTime
     });
     log(this.state.recTime);
