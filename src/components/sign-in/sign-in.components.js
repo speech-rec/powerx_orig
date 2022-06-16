@@ -15,8 +15,11 @@ import {createStructuredSelector} from 'reselect';
 import {log} from '../../aws/main';
 import {Link} from 'react-router-dom';
 
+import {BASE_URL} from '../../constants/urls.constants'
+
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 class SignIn extends React.Component{
     constructor(props){
@@ -82,7 +85,7 @@ class SignIn extends React.Component{
         
         try{
             log(email, password);
-            fetch(`/login/${email}/${password}`).then(res => res.json()).then((result) => {
+            fetch(`${BASE_URL}login&email=${email}&password=${password}`).then(res => res.json()).then((result) => {
                
                 if(result.IsError == true){
                     toast(result.ErrorMessage, {
@@ -99,15 +102,7 @@ class SignIn extends React.Component{
                 }else{
                     const {setTemplates, setCurrentuser, setSetting, setPunctuationKeyWords, setDictionary, setPackages, setUserPackages, setUserLicenseData} = this.props;
                     if(result.id != 0 && result.id != undefined){
-                        fetch(`/GetTemplatesByUserId/${result.id}`).then(res => res.json()).then((templates) => {
-                            log(templates);
-                                
-                                setTemplates(templates);
-                                
-                            }).catch((e) => {
-                                
-                                log(e);
-                            });;
+                        
                             
                         setCurrentuser(
                             {
@@ -121,7 +116,7 @@ class SignIn extends React.Component{
                            
                         
                         );
-
+                        setTemplates(result.oTemplates);
                         setSetting({
                             language: result.oSettings.Language.replace("\n", "").trim(),
                             speciality: result.oSettings.Speciality,
@@ -170,21 +165,7 @@ class SignIn extends React.Component{
                         });
                     log(e);
                 });;
-            // fetch(`http://notesapp.kapreonline.com/api/api.ashx?methodname=login&email=${email}&password=${password}`, headers
-            // ).then(res => res.json()).then((result) => {
-            //     if(result.id != 0){
-            //         const {setCurrentuser} = this.props;
-            //         setCurrentuser(
-            //             {
-            //                 email: this.state.email,
-            //                 displayName: result.userName,
-            //                 id: result.id,
-            //                 studentClass: null
-            //             }
-            //         );
-            //     }
-                
-            // }).catch((e) => alert(e));
+           
         }catch(error){
             toast('Oops! something went wrong.', {
                 position: "bottom-center",

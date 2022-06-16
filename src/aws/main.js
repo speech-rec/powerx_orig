@@ -8,6 +8,8 @@ import {
 import {
     NoiseKW
 } from './constants';
+
+import {BASE_URL} from '../constants/urls.constants';
 import 'react-toastify/dist/ReactToastify.css';
 const marshaller = require("@aws-sdk/eventstream-marshaller");
 const audioUtils = require('./audioUtils'); // for encoding audio data as PCM
@@ -141,7 +143,7 @@ export const startRecording = (lastValue, sampleRate, inputSpecialty, language, 
 
 export const createAudio = (recordingName, recordingText, userId, recordingTime, doSendEmail, email, successCallback) => {
     if (rec.state == "inactive") {
-        //let blob = new Blob(audioChunks, {type: 'audio/mpeg-3'});
+        let blob = new Blob(audioChunks, {type: 'audio/mpeg-3'});
         // var recordedAudio = document.getElementById("recordedAudio");
         // recordedAudio.src = URL.createObjectURL(blob);
         // recordedAudio.controls = true;
@@ -149,7 +151,7 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
         // recordedAudio.hidden = false;
         //log(blob);
         var formData = new FormData()
-        //formData.append('file', blob);
+        formData.append('file', blob, `${new Date().toLocaleDateString('en-US')}.mp3`);
         formData.append("userId", userId);
         formData.append("recordingText", encodeURI(recordingText));
         formData.append("recordingName", recordingName);
@@ -158,15 +160,16 @@ export const createAudio = (recordingName, recordingText, userId, recordingTime,
         formData.append("email", email);
         $.ajax({
             // url: `${process.env.REACT_APP_BASE_URL}/sendmail/${recordingName}/${encodeURI(recordingText)}/${userId}`,
-            url: `${process.env.REACT_APP_BASE_URL}/sendmail/0/0/0/0`,
+            url: `${BASE_URL}sendmail&userId=${userId}&name=${recordingName}&text=${encodeURI(recordingText)}
+            &recTime=${recordingTime}&doSendEmail=${doSendEmail}&email=${email}`,
             type: "POST",
             data: formData,
             processData: false,
             contentType: false,
             success: function (data) {
-                //log("response: ", JSON.parse(data));
+                console.log("data: ", data);
                 audioChunks = [];
-                successCallback(JSON.parse(data));
+                successCallback(data);
             }
         });
 

@@ -14,6 +14,9 @@ import {setDictionary} from './redux/customDictionary/dictionary.action';
 import {setUserPackages, setUserLicenseData} from './redux/licensing/licensing.action';
 import {createStructuredSelector} from 'reselect';
 import {connect} from 'react-redux';
+
+import {BASE_URL} from './constants/urls.constants';
+
 import Recorder from './pages/recorder/recording.recorder';
 import DashBoard from './pages/dashboard/dashboard';
 import SignInPage from './pages/signin/signin.pages';
@@ -39,7 +42,7 @@ class App extends React.Component {
       try{
         log('yes');
         const {setTemplates, setDictionary, setUserPackages, setUserLicenseData} = this.props;
-        fetch(`/GetTemplatesByUserId/${currentUser.id}`).then(res => res.json()).then((result) => {
+        fetch(`${BASE_URL}GetTemplatesByUserId&userId=${currentUser.id}`).then(res => res.json()).then((result) => {
               
               log(result);
               setTemplates(result);
@@ -48,7 +51,7 @@ class App extends React.Component {
               
               log(e);
           });
-          fetch('/GetCustomDictionary').then(res => res.json()).then((result) => {
+          fetch(`${BASE_URL}GetCustomDictionary`).then(res => res.json()).then((result) => {
          
               
             setDictionary(result);
@@ -57,7 +60,7 @@ class App extends React.Component {
             
             log(e);
         });
-        fetch(`/GetUserLicenseData/${currentUser.id}`).then(res => res.json()).then((result) => {
+        fetch(`${BASE_URL}GetUserLicenseData&uID=${currentUser.id}`).then(res => res.json()).then((result) => {
          
               
           setUserPackages(result);

@@ -1,0 +1,1 @@
+export const BASE_URL = 'http://localhost:50139/api/api.ashx?methodname=';

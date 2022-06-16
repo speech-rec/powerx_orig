@@ -9,6 +9,9 @@ import {log} from '../../aws/main';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import {ToastContainer, toast} from 'react-toastify';
+
+import {BASE_URL} from '../../constants/urls.constants';
+
 import 'react-toastify/dist/ReactToastify.css';
 import './sign-up.style.css';
 
@@ -68,7 +71,7 @@ class SignUp extends React.Component{
             //     return;
             // }
             try{
-                fetch(`/register/${displayName}/${email}/${password}`).then(res => res.json()).then((result) => {
+                fetch(`${BASE_URL}signup&email=${email}&password=${password}&name=${displayName}`).then(res => res.json()).then((result) => {
                  
                     if(result.IsError == true){
                         toast(result.ErrorMessage, {

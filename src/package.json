@@ -7,7 +7,7 @@
   },
   "author": {
     "name": "innovork",
-    "email": "ojha1361@gmail.com"
+    "email": "info@innovorks.com"
   },
   "scripts": {
     "build": "browserify lib/main.js -o dist/main.js -d"

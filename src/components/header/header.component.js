@@ -22,7 +22,7 @@ const Header = ({ currentUser, setCurrentuser, setTemplates, setSelectedTemplate
             // setTemplates(null);
             // setSelectedTemplate(0);
     logoutUser(undefined);
-    setPreviousUserCredential({"email": currentUser.email, "password": "currentUser.password"});
+    setPreviousUserCredential({"email": currentUser.email, "password": ""});
          } catch (error) {
              log('error', error.response, error)                        
          }

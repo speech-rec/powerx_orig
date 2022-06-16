@@ -10,6 +10,9 @@ import {selectCurrentUser} from '../../redux/user/user.selectors';
 import { createStructuredSelector } from 'reselect';
 import {withRouter} from 'react-router-dom';
 import {log} from '../../aws/main';
+
+import {BASE_URL} from '../../constants/urls.constants';
+
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "react-toastify/dist/ReactToastify.css";
@@ -84,7 +87,10 @@ class SettingPage extends React.Component{
         const {sampleRate, language, speciality, isSoundActive, streamType, IsCustomDicionaryActive, IsAutoPunctuationActive, IsDictaPhoneActive} = this.state;
         const { id } = this.props.currentUser;
         try{
-            fetch(`/updateSetting/${id}/${language}/${speciality}/${sampleRate}/${isSoundActive}/${streamType}/${IsCustomDicionaryActive}/${IsAutoPunctuationActive}/${IsDictaPhoneActive}`).then(res => res.json()).then((result) => {
+            fetch(`${BASE_URL}UpdateUserRecordingSettings&userId=${id}&language=${language}
+            &speciality=${speciality}&sampleRate=${sampleRate}&isSoundActive=${isSoundActive}&streamType=${streamType}
+            &IsCustomDicionaryActive=${IsCustomDicionaryActive}&IsAutoPunctuationActive=${IsAutoPunctuationActive}
+            &IsDictaPhoneActive=${IsDictaPhoneActive}`).then(res => res.json()).then((result) => {
                 log(result);
                 
                 const {setSetting} = this.props;

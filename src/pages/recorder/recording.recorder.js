@@ -17,6 +17,9 @@ import { startRecording, stopRecording, createAudio } from "../../aws/main";
 import startFile from '../../sounds/start.wav';
 import stopFile from '../../sounds/stop.wav';
 import {log} from '../../aws/main';
+
+import {BASE_URL} from '../../constants/urls.constants';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMicrophone,
@@ -452,7 +455,7 @@ if(this.state.isSoundActive){
     if(recTime > 0){
       const { id } = this.props.currentUser;
       const { recTime } = this.state;
-       fetch(`/recordRecording/${id}/${recTime}`)
+       fetch(`${BASE_URL}AddRecordingRecord&userId=${id}&recordingTime=${recTime}`)
           .then((res) => res.json())
           .then((result) => {
             log(result);

@@ -11,6 +11,9 @@ import {setTemplates} from '../../redux/template/template.action';
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 import {log} from '../../aws/main';
+
+import {BASE_URL} from '../../constants/urls.constants';
+
 import ResultBox from "../../components/transcribeResult/resultBox.transcribeResult";
 import CustomButton from "../../components/custom-button/custom-button.component";
 import {Languages} from '../../aws/constants';
@@ -317,7 +320,7 @@ playSound = (type) => {
             type: "info",
           });
           const { id } = this.props.currentUser;
-          axios.get(`${url}/addTemplate/${encodeURIComponent(templateName)}/${encodeURIComponent(templateText)}/${id}`).then((response) =>  {
+          axios.get(`${BASE_URL}AddTemplate&userId=${id}&templateName=${encodeURIComponent(templateName)}&templateText=${encodeURIComponent(templateText)}`).then((response) =>  {
           var result = response.data;  
           if (result.type == "error") {
               
@@ -334,7 +337,7 @@ playSound = (type) => {
             } else {
               try{
                   log('yes');
-                  fetch(`/GetTemplatesByUserId/${id}`).then(res => res.json()).then((result) => {
+                  fetch(`${BASE_URL}GetTemplatesByUserId&userId=${id}`).then(res => res.json()).then((result) => {
                     log(result);
                         const {setTemplates} = this.props;
                         setTemplates(result);
