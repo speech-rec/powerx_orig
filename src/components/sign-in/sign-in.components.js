@@ -212,7 +212,7 @@ type='info'
                 
                 <input type="email" value={this.state.email} name='email' onChange={this.handleChange} placeholder="Email" className="in-box"/>
                 <input type="password" value={this.state.password} name='password' onChange={this.handleChange} placeholder="Password" className="in-box"/>
-                <a href="http://an.pixcile.com/ForgetPassword.aspx" style={{display: 'flex', justifyContent: 'flex-end', color: '#464646', width: '90%'}} >Forgot Password?</a>
+                <a href="https://alphanotes.innovorks.com/ForgetPassword.aspx" style={{display: 'flex', justifyContent: 'flex-end', color: '#464646', width: '90%'}} >Forgot Password?</a>
                
                 <button onClick={this.handleSubmit} className="button">Sign In</button>
             </form>
