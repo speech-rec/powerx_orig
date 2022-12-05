@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://hidden-falls-42762.herokuapp.com/https://alphanotes.innovorks.com/api/api.ashx?methodname=';
+export const BASE_URL = 'https://cors-anywhere.herokuapp.com/https://alphanotes.innovorks.com/api/api.ashx?methodname=';
