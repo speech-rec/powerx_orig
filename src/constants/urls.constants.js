@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://cors-anywhere.herokuapp.com/https://alphanotes.innovorks.com/api/api.ashx?methodname=';
+export const BASE_URL = 'https://kind-gray-calf-tutu.cyclic.app/https://alphanotes.innovorks.com/api/api.ashx?methodname=';
