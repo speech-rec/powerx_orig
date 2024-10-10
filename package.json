@@ -6,8 +6,8 @@
   },
   "private": true,
   "dependencies": {
-    "@aws-sdk/eventstream-marshaller": "0.1.0-preview.2",
-    "@aws-sdk/util-utf8-node": "0.1.0-preview.1",
+    "@aws-sdk/eventstream-marshaller": "0.1.0-preview.2",       @aws-sdk/eventstream-codec
+    "@aws-sdk/util-utf8-node": "0.1.0-preview.1",              @aws-sdk/util-utf8.
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.13",
